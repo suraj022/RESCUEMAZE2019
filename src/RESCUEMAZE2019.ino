@@ -25,7 +25,7 @@ void setup() {
   delay(100);
 #endif
 
-    digitalWrite(9,HIGH);
+  digitalPinToInterrupt(9);
   //Setup Input and Output pins
   setupIO();
 
@@ -110,7 +110,7 @@ void loop() {
 indicateWalls();
   indicatePath(2);
   turn90(90, -1);
-  
+
   indicateWalls();
   indicatePath(1);
   moveStraight(300);
@@ -118,11 +118,11 @@ indicateWalls();
   indicateWalls();
   indicatePath(2);
   turn90(90, -1);
-  
+
   indicateWalls();
   indicatePath(1);
   moveStraight(300);
-  
+
   indicateWalls();
   indicatePath(2);
   turn90(90, -1);
@@ -138,21 +138,6 @@ indicateWalls();
   indicateWalls();
   indicatePath(2);
   turn90(90, 1);
-  
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, -1);
-  
-  
-  
-  
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
 
   indicateWalls();
   indicatePath(1);
@@ -161,7 +146,14 @@ indicateWalls();
   indicateWalls();
   indicatePath(2);
   turn90(90, -1);
-  
+
+
+
+
+  indicateWalls();
+  indicatePath(1);
+  moveStraight(300);
+
   indicateWalls();
   indicatePath(1);
   moveStraight(300);
@@ -169,11 +161,19 @@ indicateWalls();
   indicateWalls();
   indicatePath(2);
   turn90(90, -1);
-  
+
   indicateWalls();
   indicatePath(1);
   moveStraight(300);
-  
+
+  indicateWalls();
+  indicatePath(2);
+  turn90(90, -1);
+
+  indicateWalls();
+  indicatePath(1);
+  moveStraight(300);
+
   indicateWalls();
   indicatePath(2);
   turn90(90, -1);
@@ -181,20 +181,20 @@ indicateWalls();
   indicateWalls();
   indicatePath(2);
   turn90(90, -1);
-  
+
   indicateWalls();
   indicatePath(1);
   moveStraight(300);
-  
+
   indicateWalls();
   indicatePath(2);
   turn90(90, 1);
-  
+
   indicateWalls();
   indicatePath(1);
   moveStraight(300);
-  
-  
+
+
   indicateWalls();
   indicatePath(1);
   moveStraight(300);
