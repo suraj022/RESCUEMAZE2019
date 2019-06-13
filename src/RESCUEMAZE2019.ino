@@ -25,7 +25,7 @@ void setup() {
   delay(100);
 #endif
 
-  digitalPinToInterrupt(9);
+  digitalPinToInterrupt(99);
   //Setup Input and Output pins
   setupIO();
 
