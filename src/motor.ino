@@ -1,10 +1,10 @@
 void moveMotor(int L, int R) {
   if (L >= 0 ) {
-    analogWrite(LMF, L * 1.08);
+    analogWrite(LMF, L * 1.07);
     analogWrite(LMR, 0);
   } else {
     analogWrite(LMF, 0);
-    analogWrite(LMR, -L * 1.08);
+    analogWrite(LMR, -L * 1.07);
   }
   if (R >= 0) {
     analogWrite(RMF, R);
@@ -54,25 +54,10 @@ void moveStraight(int pos) {
         state = 3;
       }
       P = 0.3 * err;  //1.818
-      //I += 0.0001 * err * err; //0.4
-      //      D = 5 * (err - lastError);
-      //      lastError = err;
-      //      if (prevState != state) {
-      //        prevState = state;
-      //        lastError = 0;
-      //        err = 0;
-      //        P = 0;
-      //        I = 0;
-      //        D = 0;
-      //      }
-      offset = P - I + D ;
-      //offset = kalman.updateEstimate(offset);
-      //SerialUSB.println(offset);
-      //      if (pwm < 10) {
-      //        offset = 0;
-      //        pwm *= 2;
-      //      }
-      //SerialUSB.println(err);
+      I += 0 * err; //0.4
+      D = 0 * (err - lastError);
+      lastError = err;
+      offset = P + I + D ;
       moveMotor(pwm + offset, pwm - offset);
       //delay(1);
       yield();
