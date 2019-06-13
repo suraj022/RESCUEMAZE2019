@@ -113,24 +113,18 @@ void turn90(int angle, int dir) {
     unsigned long now = millis();
     double timeChange = (double)(now - lastTime);
     err = (ANGLE - abs(yaw));
-    //    if (err < 5) err *= 2;
-    //    if (abs(pitch) > 2.7) {
-    //      beep();
-    //      delay(80);
-    //    }
+    if (err < 5) err *= 2;
+      if (abs(pitch) > 2.7) {
+        beep();
+        delay(80);
+      }
     Pr = err;
     Ir += err * timeChange;
     Dr = (err - lastErrorTurn) / timeChange;
     lastErrorTurn = err;
     lastTime = now;
-    int diff = 1.5 * Pr; +/* 0.0000000001 * Ir + 0.3 * Dr*/
-    SerialUSB.print(err);
-    SerialUSB.print(",");
-    SerialUSB.println(diff);
-
+    int diff = 1.5 * Pr;
     moveMotor(dir * constrain(diff, 30, 100), -dir * constrain(diff, 30, 100));
-
-    //delayMicroseconds(500);
     delay(1);
     yield();
   } while (abs(err) > 16);
