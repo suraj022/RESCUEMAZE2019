@@ -25,6 +25,7 @@ void setup() {
   delay(100);
 #endif
 
+    digitalWrite(9,HIGH);
   //Setup Input and Output pins
   setupIO();
 
