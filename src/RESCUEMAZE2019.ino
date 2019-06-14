@@ -53,7 +53,7 @@ void setup() {
   beginNeopixel();
 
   //Clear pixels
-  clearPixels();
+  clearPixels();//JHGKF
 
   beep();
   //start parallel loops
