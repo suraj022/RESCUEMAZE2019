@@ -62,7 +62,6 @@ void setup() {
   delay(200);
   beep();
   indicateWalls();
-
   //wallDistance = (getDistance(0) + getDistance(2)) / 2;
 }
 
@@ -106,7 +105,7 @@ void loop() {
   indicatePath(1);
   moveStraight(300);
 
-indicateWalls();
+  indicateWalls();
   indicatePath(2);
   turn90(90, -1);
 

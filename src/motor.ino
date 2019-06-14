@@ -1,10 +1,10 @@
 void moveMotor(int L, int R) {
   if (L >= 0 ) {
-    analogWrite(LMF, L * 1.07);
+    analogWrite(LMF, L * 1.065);
     analogWrite(LMR, 0);
   } else {
     analogWrite(LMF, 0);
-    analogWrite(LMR, -L * 1.07);
+    analogWrite(LMR, -L);
   }
   if (R >= 0) {
     analogWrite(RMF, R);
@@ -16,7 +16,7 @@ void moveMotor(int L, int R) {
 }
 
 void moveStraight(int pos) {
-  offsetStraight(85);
+  offsetStraight(80);
   P = 0; I = 0; D = 0;
   lastError = 0;
   encoderposL = 0;
@@ -25,8 +25,8 @@ void moveStraight(int pos) {
   desiredposR = map(pos, 0, 300, 0, 350);
   int encoderpos = (encoderposL + encoderposR) / 2;
   int desiredpos = (desiredposL + desiredposR) / 2;
-  int state = 0, prevState = 0;
   yaw = 0;
+  delay(50);
   if ((desiredpos - encoderpos) > 0) {
     while ((desiredpos - encoderpos) > 10) {
       encoderpos = (encoderposL + encoderposR) / 2;
@@ -36,23 +36,19 @@ void moveStraight(int pos) {
       int wallL = getDistance(LEFT);
       int wallR = getDistance(RIGHT);
       if (wallL < WALLDISTANCE && wallR < WALLDISTANCE) {
-        //err = (wallR - wallL);
-        err = (wallDistance - wallL);
+        err = (wallR - wallL);
+        //err = (wallDistance - wallL);
         P = 0;
-        state = 0;
       } else if (wallL > WALLDISTANCE && wallR < WALLDISTANCE) {
         err = (wallR - wallDistance);
         P = 0;
-        state = 1;
       } else if (wallR > WALLDISTANCE && wallL < WALLDISTANCE) {
         err = (wallDistance - wallL);
         P = 0;
-        state = 2;
       } else if (wallR > WALLDISTANCE && wallL > WALLDISTANCE) {
-        //err  = yaw;//readGyroZ();
+        err  = yaw;//readGyroZ();
         P = 0; I = 0; D = 0;
         lastError = 0;
-        state = 3;
       }
       P = 0.3 * err;  //1.818
       I += 0 * err; //0.4
@@ -90,18 +86,13 @@ void moveStraight(int pos) {
 
 void turn90(int angle, int dir) {
   bool flag = false;
-  int ANGLE = 0;
+  int ANGLE = angle-5;
   if (getDistance(0) < WALLDISTANCE || getDistance(2) < WALLDISTANCE) {
     flag = true;
   }
-
-  if (dir == -1)
-    ANGLE = angle - 5;
-  else
-    ANGLE = angle;
   unsigned long lastTime=0;
   if (getDistance(1) < WALLDISTANCE) {
-    offsetStraight(45);
+    offsetStraight(40);
   }else{
     offsetStraight(80);
   }
@@ -144,29 +135,25 @@ void turn90(int angle, int dir) {
 
 
 void offsetStraight(int value) {
-  int offset = (getDistance(1) % 300);
-  if (offset > value) { //needs update
-    while (offset > value) {
-      offset = (getDistance(1) % 300);
-      int pwm = (offset - value);
-      if (pwm < 20) pwm *= 4;
-      else if (pwm < 30)pwm *= 2;
-      else pwm *= 1.1;
-      int YAW  = 0;//readGyroZ() / 14;
-      moveMotor(pwm + YAW, pwm - YAW);
-      delay(1);
+  yaw = 0;
+  delay(100);
+  int dist = (getDistance(1) % 300);
+  if (dist > value) {
+    while (dist > value) {
+      dist = (getDistance(1) % 300);
+      int pwm = constrain((dist - value),40,100);
+      int err  = 2 * yaw;//readGyroZ() / 14;
+      moveMotor(pwm + err, pwm - err);
+      delay(2);
       //yield();
     }
   } else {
-    while (offset < value) {  //needs update
-      offset = (getDistance(1) % 300);
-      int pwm = (value - offset);
-      if (pwm < 20) pwm *= 4;
-      else if (pwm < 30)pwm *= 2;
-      else pwm *= 1.1;
-      int YAW  = 0;//readGyroZ() / 14;
-      moveMotor(-(pwm + YAW), -(pwm - YAW));
-      delay(1);
+    while (dist < value) {
+      dist = (getDistance(1) % 300);
+      int pwm = constrain((value - dist),40,100);
+      int err = -2 * yaw;//readGyroZ() / 14;
+      moveMotor(-(pwm + err), -(pwm - err));
+      delay(2);
       //yield();
     }
   }
