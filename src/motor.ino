@@ -16,12 +16,13 @@ void moveMotor(int L, int R) {
 }
 
 void moveStraight(int pos) {
+  offsetStraight(85);
   P = 0; I = 0; D = 0;
   lastError = 0;
   encoderposL = 0;
   encoderposR = 0;
-  desiredposL = map(pos, 0, 300, 0, 400);
-  desiredposR = map(pos, 0, 300, 0, 400);
+  desiredposL = map(pos, 0, 300, 0, 350);
+  desiredposR = map(pos, 0, 300, 0, 350);
   int encoderpos = (encoderposL + encoderposR) / 2;
   int desiredpos = (desiredposL + desiredposR) / 2;
   int state = 0, prevState = 0;
@@ -59,24 +60,25 @@ void moveStraight(int pos) {
       lastError = err;
       offset = P + I + D ;
       moveMotor(pwm + offset, pwm - offset);
-      //delay(1);
+      delay(1);
       yield();
     }
   }
-  //else {
-  //    while ((encoderpos - desiredpos) > 0) {
-  //      encoderpos = (encoderposL + encoderposR) / 2;
-  //      int pwm = (encoderpos - desiredpos) / 1.5;
-  //      if (pwm < 50)pwm *= 1.5;
-  //      int yaw  = readGyroZ() / 7;
-  //      analogWrite(LMF, 0);
-  //      analogWrite(RMF, 0);
-  //      analogWrite(LMR, constrain(pwm - yaw, 0, MAXSPEED) * MotorOffset);
-  //      analogWrite(RMR, constrain(pwm + yaw, 0, MAXSPEED));
-  //      delay(2);
-  //      yield();
-  //    }
-  //  }
+  else {
+    while ((encoderpos - desiredpos) > 0) {
+      encoderpos = (encoderposL + encoderposR) / 2;
+      int pwm = constrain((desiredpos - encoderpos), 0, MAXSPEED);
+      int err = yaw;
+      P = 0.3 * err;  //1.818
+      I += 0 * err; //0.4
+      D = 0 * (err - lastError);
+      lastError = err;
+      int offset = P + I + D;
+      moveMotor(-(pwm - offset), -(pwm + offset));
+      delay(1);
+      yield();
+    }
+   }
   beep();
   P = 0; I = 0; D = 0;
   lastError = 0;

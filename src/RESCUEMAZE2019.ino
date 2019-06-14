@@ -1,5 +1,5 @@
 /* TODO list-
-    1. move 1 tile function DONE
+    1. move 1 tile function
     2. change encoder loop to function DONE
     3. implement rescue mechanism DONE
     4. Fix wall align using PID
