@@ -1,6 +1,6 @@
 void moveMotor(int L, int R) {
   if (L >= 0 ) {
-    analogWrite(LMF, L * 1.065);
+    analogWrite(LMF, L * 1.05);
     analogWrite(LMR, 0);
   } else {
     analogWrite(LMF, 0);
@@ -50,7 +50,7 @@ void moveStraight(int pos) {
         P = 0; I = 0; D = 0;
         lastError = 0;
       }
-      P = 0.3 * err;  //1.818
+      P = 0.35 * err;  //1.818
       I += 0 * err; //0.4
       D = 0 * (err - lastError);
       lastError = err;
@@ -86,20 +86,19 @@ void moveStraight(int pos) {
 
 void turn90(int angle, int dir) {
   bool flag = false;
-  int ANGLE = angle-5;
+  int ANGLE = angle - 8;
   if (getDistance(0) < WALLDISTANCE || getDistance(2) < WALLDISTANCE) {
     flag = true;
   }
   unsigned long lastTime=0;
   if (getDistance(1) < WALLDISTANCE) {
-    offsetStraight(40);
+    offsetStraight(35);
   }else{
     offsetStraight(80);
   }
   delay(10);
   moveMotor(0, 0);
   delay(10);
-  //CalibrateMPU6050(20);
   int err = 0;
   Pr = 0, Ir = 0, Dr = 0;
   pitch = 0; roll = 0; yaw = 0;
@@ -142,7 +141,7 @@ void offsetStraight(int value) {
     while (dist > value) {
       dist = (getDistance(1) % 300);
       int pwm = constrain((dist - value),40,100);
-      int err  = 2 * yaw;//readGyroZ() / 14;
+      int err  = 1.5 * yaw;//readGyroZ() / 14;
       moveMotor(pwm + err, pwm - err);
       delay(2);
       //yield();
@@ -151,7 +150,7 @@ void offsetStraight(int value) {
     while (dist < value) {
       dist = (getDistance(1) % 300);
       int pwm = constrain((value - dist),40,100);
-      int err = -2 * yaw;//readGyroZ() / 14;
+      int err = -1.5 * yaw;//readGyroZ() / 14;
       moveMotor(-(pwm + err), -(pwm - err));
       delay(2);
       //yield();

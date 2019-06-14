@@ -25,3 +25,20 @@ void beep() {
   delay(50);
   digitalWrite(buzzPin, LOW);
 }
+
+void waitForSignal(){
+  while (getDistance(1) > 80) {
+    for (int i = 0; i < 8; i++) {
+      pixels.setPixelColor(i, pixels.Color(20, 20, 20));
+      pixels.show();
+    }
+    delay(20);
+  }
+  //Move one tile sequence
+  clearPixels();
+  beep();
+  while (getDistance(1) < 100) {
+    delay(20);
+  }
+  delay(500);
+}

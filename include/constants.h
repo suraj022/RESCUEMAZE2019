@@ -30,7 +30,7 @@
 #define RMR    4      //Right Motor Reverse
 
 //define Wall Detect distance
-#define WALLDISTANCE 150
+#define WALLDISTANCE 190
 
 
 //Encoder Pins (0 = Right Encoder , 1 = Left Encoder)

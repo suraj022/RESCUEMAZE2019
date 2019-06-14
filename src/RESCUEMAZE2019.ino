@@ -61,25 +61,12 @@ void setup() {
   Scheduler.startLoop(gyroLoop); //Calculate Gyro roll pitch and yaw reading
   delay(200);
   beep();
-  indicateWalls();
   //wallDistance = (getDistance(0) + getDistance(2)) / 2;
+  //Wait until a signal is given
+  waitForSignal();
 }
 
 void loop() {
-  while (getDistance(1) > 80) {
-    for (int i = 0; i < 8; i++) {
-      pixels.setPixelColor(i, pixels.Color(20, 20, 20));
-      pixels.show();
-    }
-    delay(100);
-  }
-  //Move one tile sequence
-  clearPixels();
-  beep();
-  while (getDistance(1) < 100) {
-    delay(100);
-  }
-  delay(500);
 
   indicateWalls();
   indicatePath(1);
