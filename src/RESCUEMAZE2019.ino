@@ -41,7 +41,7 @@ void setup() {
   beginMotion();
 
   //Calibrate MPU6050
-  CalibrateMPU6050(65);
+  CalibrateMPU6050(50);
 
   //setup VL53L0x tof sensors
   setupTOF();
