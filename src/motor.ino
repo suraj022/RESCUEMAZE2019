@@ -99,9 +99,11 @@ void turn90(int angle, int dir) {
     ANGLE = angle - 5;
   else
     ANGLE = angle;
-  unsigned long lastTime;
+  unsigned long lastTime=0;
   if (getDistance(1) < WALLDISTANCE) {
-    offsetStraight(40);
+    offsetStraight(45);
+  }else{
+    offsetStraight(80);
   }
   delay(10);
   moveMotor(0, 0);
