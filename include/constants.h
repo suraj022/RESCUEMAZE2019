@@ -32,8 +32,8 @@
 //define Wall Detect distance
 #define WALLDISTANCE 190
 
-#define LEFTBUMP A3
-#define RIGHTBUMP A1
+#define LEFTBUMP A1
+#define RIGHTBUMP A3
 
 //Encoder Pins (0 = Right Encoder , 1 = Left Encoder)
 #define encoder0PinA  0

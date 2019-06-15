@@ -130,6 +130,7 @@ void moveStraight(int pos) {
 }
 
 void turn90(int angle, int dir) {
+  bumpcheck=false;
   bool flag = false;
   int ANGLE = angle;
   //int ANGLE = angle - 6;
@@ -180,6 +181,7 @@ void turn90(int angle, int dir) {
   }
   leftBumpFlag = false;
   rightBumpFlag = false;
+  bumpcheck = true;
 }
 
 

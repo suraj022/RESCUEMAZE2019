@@ -46,11 +46,17 @@ void waitForSignal(){
 }
 
 void bumpLoop(){
-  if (digitalRead(LEFTBUMP)){
-    leftBumpFlag=true;
-  }
-  if (digitalRead(RIGHTBUMP)){
-    rightBumpFlag=true;
+  if (bumpcheck){
+    if (!digitalRead(LEFTBUMP)){
+      leftBumpFlag=true;
+      delay(100);
+    }
+    if (!digitalRead(RIGHTBUMP)){
+      rightBumpFlag=true;
+      delay(100);
+    }
+  }else{
+    delay(100);
   }
   yield();
 }

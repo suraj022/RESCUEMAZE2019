@@ -13,6 +13,7 @@ int pos = 0;
 //bump flags
 bool leftBumpFlag = false;
 bool rightBumpFlag = false;
+bool bumpcheck = true;
 
 // Timers
 const int MPU_addr = 0x68; // I2C address of the MPU-6050
