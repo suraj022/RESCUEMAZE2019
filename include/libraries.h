@@ -1,5 +1,5 @@
-#ifndef LIBRARIES_H
-#define LIBRARIES_H
+#ifndef _LIBRARIES_H
+#define _LIBRARIES_H
 
 //Scheduler library for multitasking
 #include <Scheduler.h>
@@ -21,5 +21,8 @@
 
 //Servo library
 #include <Servo.h>
+
+//Library for managing stacks
+#include "StackArray.h"
 
 #endif

@@ -16,29 +16,12 @@
 #include "libraries.h"
 #include "objects.h"
 #include "variables.h"
-#include "StackArray.h"
-
-struct tile {
-  /* data */
-  int f=0,l=0,r=0;
-  int pos_x,pos_y;
-  int is_visited=0; //0 for not visited 1 for visited
-  int is_node=0;    //0 for not node 1 for node
-  int no_go=0;      //0 for go 1 for no go
-
-};
-
-tile cell[150];
-
-StackArray <int> stack1;
-StackArray <int> stack2;
-
-// stack.push(s_cell[0]);
-// stack.pop();
-
 
 void setup() {
+
+//
 tile* s_cell;
+
 #ifdef DEBUG
   beginSerialUSB();
 #else
