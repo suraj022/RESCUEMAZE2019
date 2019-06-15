@@ -68,191 +68,37 @@ void setup() {
 
 void loop() {
 
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
+  //basic Left wall follow
+  bool L = (getDistance(LEFT) < WALLDISTANCE) ? true:false;
+  bool F = (getDistance(FRONT) < WALLDISTANCE) ? true:false;
+  bool R = (getDistance(RIGHT) < WALLDISTANCE) ? true:false;
 
   indicateWalls();
-  indicatePath(2);
-  turn90(90, 1);
+  delay(300);
 
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, 1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, -1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, -1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, -1);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, -1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, 1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, -1);
-
-
-
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, -1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, -1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, -1);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, -1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, 1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, 1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, 1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, -1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, 1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, -1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, -1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, -1);
-
-  indicateWalls();
-  indicatePath(1);
-  moveStraight(300);
-
-  indicateWalls();
-  indicatePath(2);
-  turn90(90, -1);
-  turn90(90, -1);
-
-  delay(500);
+  if (!L){                    //left wall open
+    indicatePath(LEFT);
+    turn90(90, -1);
+    indicatePath(FRONT);
+    moveStraight(300);
+  }else if (L && !F && !R){   //wall on left
+    indicatePath(FRONT);
+    moveStraight(300);
+  }else if (L && !F && R){    //wall on left and right
+    indicatePath(FRONT);
+    moveStraight(300);
+  }else if (L && F && !R){    //wall on left and front
+    indicatePath(RIGHT);
+    turn90(90, 1);
+    indicatePath(FRONT);
+    moveStraight(300);
+  }else if (L && F && R){     //all sides closed
+    indicatePath(RIGHT);
+    turn90(90, -1);
+    indicatePath(RIGHT);
+    turn90(90, -1);
+    indicatePath(FRONT);
+    moveStraight(300);
+  }
   yield();
 }

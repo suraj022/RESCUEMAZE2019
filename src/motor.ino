@@ -80,13 +80,24 @@ void moveStraight(int pos) {
   lastError = 0;
   delay(50);
   moveMotor(0, 0); //stop motors
+  // if (yaw>1){
+  //   while(yaw>1){
+  //     moveMotor(30,-30);
+  //     delay(2);
+  //   }
+  // }else{
+  //   while(yaw<-1){
+  //     moveMotor(-30,30);
+  //   }
+  // }
   P = 0; I = 0; D = 0;
   lastError = 0;
 }
 
 void turn90(int angle, int dir) {
   bool flag = false;
-  int ANGLE = angle - 8;
+  int ANGLE = angle;
+  //int ANGLE = angle - 6;
   if (getDistance(0) < WALLDISTANCE || getDistance(2) < WALLDISTANCE) {
     flag = true;
   }
@@ -117,18 +128,20 @@ void turn90(int angle, int dir) {
     Dr = (err - lastErrorTurn) / timeChange;
     lastErrorTurn = err;
     lastTime = now;
-    int diff = 1.5 * Pr;
-    moveMotor(dir * constrain(diff, 30, 100), -dir * constrain(diff, 30, 100));
-    delay(1);
+    int diff = 1.1 * Pr;
+    moveMotor(dir * constrain(diff, 5, 100), -dir * constrain(diff, 5, 100));
+    delay(2);
     yield();
-  } while (abs(err) > 16);
+  } while (abs(err) > 5);
   //delay(10);
+  beep();
   moveMotor(0, 0);
   delay(50);
   if (flag) {
     moveMotor(-50, -50);
     delay(1000);
     moveMotor(0, 0);
+    yaw = 0;
   }
 }
 
