@@ -89,6 +89,26 @@ void moveStraight(int pos) {
 }
 
 void turn90(int angle, int dir) {
+
+if (dir==1) {
+  if(head==3){
+    head=0;
+  }
+  else{
+    head+= dir;
+  }
+}
+
+if (dir==-1) {
+  if(head==0){
+    head=3;
+  }
+  else{
+    head-= dir;
+  }
+}
+
+
   bool flag = false;
   int ANGLE = 0;
   if (getDistance(0) < WALLDISTANCE || getDistance(2) < WALLDISTANCE) {
