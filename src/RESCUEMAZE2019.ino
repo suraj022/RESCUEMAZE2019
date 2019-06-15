@@ -57,13 +57,18 @@ void setup() {
 
   beep();
   //start parallel loops
-  Scheduler.startLoop(MLXloop); //constantly read temperatures
-  Scheduler.startLoop(gyroLoop); //Calculate Gyro roll pitch and yaw reading
+  Scheduler.startLoop(MLXloop);   //constantly read temperatures
+  Scheduler.startLoop(gyroLoop);  //Calculate Gyro roll pitch and yaw reading
+  Scheduler.startLoop(bumpLoop);  //detect left and right bumps
   delay(200);
   beep();
   //wallDistance = (getDistance(0) + getDistance(2)) / 2;
   //Wait until a signal is given
   waitForSignal();
+  if ((getDistance(FRONT) < WALLDISTANCE) ? false:true){
+    indicatePath(FRONT);
+    moveStraight(300);
+  }
 }
 
 void loop() {

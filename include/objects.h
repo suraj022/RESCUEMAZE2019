@@ -16,6 +16,6 @@ VL53L0X sensorR;    //right
 //object for Servo on medkit dispencer
 Servo dispencer;
 
-//SimpleKalmanFilter kalman(2, 2, 0.01);
+SimpleKalmanFilter kalmanX(2, 2, 0.01), kalmanY(2, 2, 0.01), kalmanZ(2, 2, 0.01);
 
 #endif

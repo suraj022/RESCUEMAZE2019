@@ -8,6 +8,8 @@ void setupIO() {
   pinMode(encoder1PinA, INPUT_PULLUP);
   pinMode(encoder1PinB, INPUT_PULLUP);
   pinMode(buzzPin, OUTPUT);
+  pinMode(LEFTBUMP,INPUT);
+  pinMode(RIGHTBUMP,INPUT);
 }
 
 void beginSerialUSB() {
@@ -41,4 +43,14 @@ void waitForSignal(){
     delay(20);
   }
   delay(500);
+}
+
+void bumpLoop(){
+  if (digitalRead(LEFTBUMP)){
+    leftBumpFlag=true;
+  }
+  if (digitalRead(RIGHTBUMP)){
+    rightBumpFlag=true;
+  }
+  yield();
 }

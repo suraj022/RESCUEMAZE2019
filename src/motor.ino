@@ -25,6 +25,8 @@ void moveStraight(int pos) {
   desiredposR = map(pos, 0, 300, 0, 350);
   int encoderpos = (encoderposL + encoderposR) / 2;
   int desiredpos = (desiredposL + desiredposR) / 2;
+  int encoderbackupL = 0;
+  int encoderbackupR = 0;
   yaw = 0;
   delay(50);
   if ((desiredpos - encoderpos) > 0) {
@@ -36,8 +38,8 @@ void moveStraight(int pos) {
       int wallL = getDistance(LEFT);
       int wallR = getDistance(RIGHT);
       if (wallL < WALLDISTANCE && wallR < WALLDISTANCE) {
-        err = (wallR - wallL);
-        //err = (wallDistance - wallL);
+        //err = (wallR - wallL);
+        err = (wallDistance - wallL);
         P = 0;
       } else if (wallL > WALLDISTANCE && wallR < WALLDISTANCE) {
         err = (wallR - wallDistance);
@@ -56,7 +58,39 @@ void moveStraight(int pos) {
       lastError = err;
       offset = P + I + D ;
       moveMotor(pwm + offset, pwm - offset);
-      delay(1);
+      if (leftBumpFlag){
+        leftBumpFlag = false;
+        rightBumpFlag = false;
+        encoderbackupL =encoderposL;
+        encoderbackupR =encoderposR;
+        moveMotor(0,0);
+        delay(50);
+        moveMotor(-40,-40);
+        delay(800);
+        moveMotor(50,0);
+        delay(500);
+        moveMotor(0,50);
+        delay(500);
+        encoderposL = encoderbackupL;
+        encoderposR = encoderbackupR;
+      }else if (rightBumpFlag){
+        leftBumpFlag = false;
+        rightBumpFlag = false;
+        encoderbackupL =encoderposL;
+        encoderbackupR =encoderposR;
+        moveMotor(0,0);
+        delay(50);
+        moveMotor(-40,-40);
+        delay(800);
+        moveMotor(0,50);
+        delay(500);
+        moveMotor(50,0);
+        delay(500);
+        encoderposL = encoderbackupL;
+        encoderposR = encoderbackupR;
+      }
+      delayMicroseconds(500);
+      //delay(1);
       yield();
     }
   }
@@ -71,7 +105,8 @@ void moveStraight(int pos) {
       lastError = err;
       int offset = P + I + D;
       moveMotor(-(pwm - offset), -(pwm + offset));
-      delay(1);
+      delayMicroseconds(500);
+      //delay(1);
       yield();
     }
    }
@@ -129,10 +164,10 @@ void turn90(int angle, int dir) {
     lastErrorTurn = err;
     lastTime = now;
     int diff = 1.1 * Pr;
-    moveMotor(dir * constrain(diff, 5, 100), -dir * constrain(diff, 5, 100));
-    delay(2);
+    moveMotor(dir * constrain(diff, 20, 100), -dir * constrain(diff, 20, 100));
+    delay(1);
     yield();
-  } while (abs(err) > 5);
+  } while (abs(err) > 8);
   //delay(10);
   beep();
   moveMotor(0, 0);
@@ -143,6 +178,8 @@ void turn90(int angle, int dir) {
     moveMotor(0, 0);
     yaw = 0;
   }
+  leftBumpFlag = false;
+  rightBumpFlag = false;
 }
 
 

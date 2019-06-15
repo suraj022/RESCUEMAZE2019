@@ -10,12 +10,17 @@ unsigned long previoustime2 = 0;
 //Servo position
 int pos = 0;
 
+//bump flags
+bool leftBumpFlag = false;
+bool rightBumpFlag = false;
+
 // Timers
 const int MPU_addr = 0x68; // I2C address of the MPU-6050
 int16_t CGyX, CGyY, CGyZ, GyX, GyY, GyZ;
 float pitch = 0;
 float roll = 0;
 float yaw = 0;
+long accX, accY, accZ, accCX, accCY, accCZ;
 
 //Triggers for temperature sensors
 bool Ltemp = false, Rtemp = false;

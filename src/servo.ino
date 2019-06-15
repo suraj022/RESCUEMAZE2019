@@ -1,5 +1,5 @@
 void initServo() {
-  dispencer.attach(A1);  // attaches the servo on pin 9 to the servo object
+  dispencer.attach(A2);  // attaches the servo on pin 9 to the servo object
   dispencer.write(100);
 }
 
