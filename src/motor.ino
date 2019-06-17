@@ -1,5 +1,5 @@
 void moveMotor(int L, int R) {
-  if (L >= 0 ) {
+  if (L >= 0) {
     analogWrite(LMF, L * 1.05);
     analogWrite(LMR, 0);
   } else {
@@ -17,7 +17,9 @@ void moveMotor(int L, int R) {
 
 void moveStraight(int pos) {
   offsetStraight(80);
-  P = 0; I = 0; D = 0;
+  P = 0;
+  I = 0;
+  D = 0;
   lastError = 0;
   encoderposL = 0;
   encoderposR = 0;
@@ -38,7 +40,7 @@ void moveStraight(int pos) {
       int wallL = getDistance(LEFT);
       int wallR = getDistance(RIGHT);
       if (wallL < WALLDISTANCE && wallR < WALLDISTANCE) {
-        //err = (wallR - wallL);
+        // err = (wallR - wallL);
         err = (wallDistance - wallL);
         P = 0;
       } else if (wallL > WALLDISTANCE && wallR < WALLDISTANCE) {
@@ -48,12 +50,14 @@ void moveStraight(int pos) {
         err = (wallDistance - wallL);
         P = 0;
       } else if (wallR > WALLDISTANCE && wallL > WALLDISTANCE) {
-        err  = yaw;//readGyroZ();
-        P = 0; I = 0; D = 0;
+        err = yaw; // readGyroZ();
+        P = 0;
+        I = 0;
+        D = 0;
         lastError = 0;
       }
-      P = 0.35 * err; //1.818
-      I += 0 * err; //0.4
+      P = 0.35 * err; // 1.818
+      I += 0 * err;   // 0.4
       D = 0 * (err - lastError);
       lastError = err;
       offset = P + I + D;
@@ -108,14 +112,13 @@ void moveStraight(int pos) {
       delayMicroseconds(500);
       yield();
     }
-  }
-  else {
+  } else {
     while ((encoderpos - desiredpos) > 0) {
       encoderpos = (encoderposL + encoderposR) / 2;
       int pwm = constrain((desiredpos - encoderpos), 0, MAXSPEED);
       int err = yaw;
-      P = 0.3 * err; //1.818
-      I += 0 * err; //0.4
+      P = 0.3 * err; // 1.818
+      I += 0 * err;  // 0.4
       D = 0 * (err - lastError);
       lastError = err;
       int offset = P + I + D;
@@ -125,10 +128,12 @@ void moveStraight(int pos) {
     }
   }
   beep();
-  P = 0; I = 0; D = 0;
+  P = 0;
+  I = 0;
+  D = 0;
   lastError = 0;
   delay(50);
-  moveMotor(0, 0); //stop motors
+  moveMotor(0, 0); // stop motors
   lastError = 0;
 }
 
@@ -136,8 +141,9 @@ void turn90(int angle, int dir) {
   bumpcheck = false;
   bool flag = false;
   int ANGLE = angle;
-  //int ANGLE = angle - 6;
-  if (getDistance(0) < WALLDISTANCE && dir == 1 || getDistance(2) < WALLDISTANCE && dir == -1) {
+  // int ANGLE = angle - 6;
+  if (getDistance(0) < WALLDISTANCE && dir == 1 ||
+      getDistance(2) < WALLDISTANCE && dir == -1) {
     flag = true;
   }
   unsigned long lastTime = 0;
@@ -151,13 +157,16 @@ void turn90(int angle, int dir) {
   delay(10);
   int err = 0;
   Pr = 0, Ir = 0, Dr = 0;
-  pitch = 0; roll = 0; yaw = 0;
+  pitch = 0;
+  roll = 0;
+  yaw = 0;
   delay(10);
   do {
     unsigned long now = millis();
     double timeChange = (double)(now - lastTime);
     err = (ANGLE - abs(yaw));
-    if (err < 5) err *= 2;
+    if (err < 5)
+      err *= 2;
     if (abs(pitch) > 2.7) {
       beep();
       delay(80);
@@ -172,7 +181,7 @@ void turn90(int angle, int dir) {
     delay(1);
     yield();
   } while (abs(err) > 20);
-  //delay(10);
+  // delay(10);
   beep();
   moveMotor(0, 0);
   delay(50);
@@ -187,7 +196,6 @@ void turn90(int angle, int dir) {
   bumpcheck = true;
 }
 
-
 void offsetStraight(int value) {
   yaw = 0;
   delay(100);
@@ -196,25 +204,24 @@ void offsetStraight(int value) {
     while (dist > value) {
       dist = (getDistance(1) % 300);
       int pwm = constrain((dist - value), 40, 100);
-      int err  = 1.5 * yaw;//readGyroZ() / 14;
+      int err = 1.5 * yaw; // readGyroZ() / 14;
       moveMotor(pwm + err, pwm - err);
       delay(2);
-      //yield();
+      // yield();
     }
   } else {
     while (dist < value) {
       dist = (getDistance(1) % 300);
       int pwm = constrain((value - dist), 40, 100);
-      int err = -1.5 * yaw;//readGyroZ() / 14;
+      int err = -1.5 * yaw; // readGyroZ() / 14;
       moveMotor(-(pwm + err), -(pwm - err));
       delay(2);
-      //yield();
+      // yield();
     }
   }
 }
 
-
-//int rpmOffset() {
+// int rpmOffset() {
 //  int L = 60000 / (((currentpulsetime1) / 1000.0) * 562.215);
 //  L = constrain(L, 0, 255);
 //  float KL = kalman.updateEstimate(L);

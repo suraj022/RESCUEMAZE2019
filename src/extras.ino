@@ -36,7 +36,7 @@ void waitForSignal() {
     }
     delay(20);
   }
-  //Move one tile sequence
+  // Move one tile sequence
   clearPixels();
   beep();
   while (getDistance(1) < 100) {

@@ -101,9 +101,9 @@ void loop() {
     moveStraight(300);
   } else if (L && F && R) { //all sides closed
     indicatePath(RIGHT);
-    turn90(90, -1);
+    turn90(90, 1);
     indicatePath(RIGHT);
-    turn90(90, -1);
+    turn90(90, 1);
     indicatePath(FRONT);
     moveStraight(300);
   }

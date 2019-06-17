@@ -1,6 +1,4 @@
-void beginNeopixel() {
-  pixels.begin();
-}
+void beginNeopixel() { pixels.begin(); }
 
 void clearPixels() {
   for (int i = 0; i < 8; i++) {
@@ -46,22 +44,22 @@ void indicatePath(int x) {
   clearPixels();
   delay(10);
   switch (x) {
-    case 0:
-      setPixelColour(LEFTPIXEL - 1, GREEN, 5);
-      setPixelColour(LEFTPIXEL, GREEN, 50);
-      setPixelColour(LEFTPIXEL + 1, GREEN, 5);
-      break;
-    case 1:
-      setPixelColour(FRONTPIXEL - 1, GREEN, 5);
-      setPixelColour(FRONTPIXEL, GREEN, 50);
-      setPixelColour(FRONTPIXEL + 1, GREEN, 5);
-      break;
-    case 2:
-      setPixelColour(RIGHTPIXEL - 1, GREEN, 5);
-      setPixelColour(RIGHTPIXEL, GREEN, 50);
-      setPixelColour(RIGHTPIXEL + 1, GREEN, 5);
-      break;
-    default:
-      break;
+  case 0:
+    setPixelColour(LEFTPIXEL - 1, GREEN, 5);
+    setPixelColour(LEFTPIXEL, GREEN, 50);
+    setPixelColour(LEFTPIXEL + 1, GREEN, 5);
+    break;
+  case 1:
+    setPixelColour(FRONTPIXEL - 1, GREEN, 5);
+    setPixelColour(FRONTPIXEL, GREEN, 50);
+    setPixelColour(FRONTPIXEL + 1, GREEN, 5);
+    break;
+  case 2:
+    setPixelColour(RIGHTPIXEL - 1, GREEN, 5);
+    setPixelColour(RIGHTPIXEL, GREEN, 50);
+    setPixelColour(RIGHTPIXEL + 1, GREEN, 5);
+    break;
+  default:
+    break;
   }
 }

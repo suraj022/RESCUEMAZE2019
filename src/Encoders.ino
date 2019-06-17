@@ -1,4 +1,4 @@
-void doEncoderL() { //ISR routine for left encoder
+void doEncoderL() { // ISR routine for left encoder
   if (digitalRead(encoder1PinA) == digitalRead(encoder1PinB)) {
     encoderposL++;
   } else {
@@ -8,7 +8,7 @@ void doEncoderL() { //ISR routine for left encoder
   previoustime1 = micros();
 }
 
-void doEncoderR() { //ISR routine for right encoder
+void doEncoderR() { // ISR routine for right encoder
   if (digitalRead(encoder0PinA) == digitalRead(encoder0PinB)) {
     encoderposR++;
   } else {
