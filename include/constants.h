@@ -9,9 +9,12 @@
 #define ki                        0.01   //Integral
 #define kd                        3      //derivative
 
+//Vistims temperature
 #define victimTemperature         29
 
+//define i2c address of mpu6050 imu
 #define MPU_addr                  0x68
+
 //Define maximum speed of the motor (Out of 255)
 #define MAXSPEED                  100
 
