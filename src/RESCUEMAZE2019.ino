@@ -82,14 +82,6 @@ void setup() {
 }
 
 void loop() {
-  while (getDistance(1) > 80) {
-    for (int i = 0; i < 8; i++) {
-      pixels.setPixelColor(i, pixels.Color(20, 20, 20));
-      pixels.show();
-    }
-    delay(100);
-  }
-
   clearPixels();
   beep();
   while (getDistance(1) < 100) {
@@ -112,20 +104,20 @@ void loop() {
   }
 
   else if (cell[p_x][p_y].r == 0) {
-    turn90(90, 1,true);
+    turn90(90, 1, true);
     moveStraight(300);
     pr_x = p_x;
     pr_y = p_y;
 
   } else {
-    turn90(90, 1,true);
-    turn90(90, 1,true);
+    turn90(90, 1, true);
+    turn90(90, 1, true);
     moveStraight(300);
     heading();
     while (cell[p_x][p_y].is_node == 0) {
       heading();
       if (cell[p_x][p_y].l == 0) {
-        turn90(90, -1,true);
+        turn90(90, -1, true);
         moveStraight(300);
 
       } else if (cell[p_x][p_y].f == 0) {
