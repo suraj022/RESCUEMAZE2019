@@ -15,6 +15,11 @@ bool leftBumpFlag = false;
 bool rightBumpFlag = false;
 bool bumpcheck = true;
 
+// Colour flags
+bool whiteFlag = false;
+bool blackFlag = false;
+bool silverFlag = false;
+
 // MPU-6050 related variables
 int16_t CGyX, CGyY, CGyZ, GyX, GyY, GyZ;
 float pitch = 0;

@@ -60,3 +60,27 @@ void bumpLoop() {
   }
   yield();
 }
+
+void colourLoop() {
+  int val = analogRead(COLOURPIN);
+  val = kalmanX.updateEstimate(val);
+  switch (val) {
+  case (SILVER - 10)...(SILVER + 10):
+    silverFlag = true;
+    whiteFlag = false;
+    blackFlag = false;
+    break;
+  case (WHITE - 10)...(WHITE + 10):
+    silverFlag = false;
+    whiteFlag = true;
+    blackFlag = false;
+    break;
+  case (BLACK - 10)...(BLACK + 10):
+    silverFlag = false;
+    whiteFlag = false;
+    blackFlag = true;
+    break;
+  }
+  delay(10);
+  yield();
+}

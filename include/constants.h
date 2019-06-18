@@ -45,6 +45,19 @@
 #define encoder1PinA 3
 #define encoder1PinB 2
 
+/*
+  Colour ranges
+  853-873 - silver
+  895-915 - white
+  935-955 - black
+*/
+
+// colour Values
+#define COLOURPIN A4
+#define SILVER 863
+#define WHITE 905
+#define BLACK 945
+
 // sensor numbers for TOF sensors
 #define LEFT 0
 #define FRONT 1

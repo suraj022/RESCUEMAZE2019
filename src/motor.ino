@@ -74,12 +74,8 @@ void moveStraight(int pos) {
         delay(300);
         moveMotor(0, 0);
         delay(50);
-        moveMotor(40, 40);
-        delay(500);
-        moveMotor(-20, 40);
-        delay(300);
-        moveMotor(40, 40);
-        delay(100);
+        moveMotor(40, 50);
+        delay(600);
         encoderposL = encoderbackupL;
         encoderposR = encoderbackupR;
         leftBumpFlag = false;
@@ -97,12 +93,8 @@ void moveStraight(int pos) {
         delay(300);
         moveMotor(0, 0);
         delay(50);
-        moveMotor(40, 40);
-        delay(500);
-        moveMotor(40, -20);
-        delay(300);
-        moveMotor(40, 40);
-        delay(100);
+        moveMotor(50, 40);
+        delay(600);
         encoderposL = encoderbackupL;
         encoderposR = encoderbackupR;
         leftBumpFlag = false;
@@ -115,9 +107,9 @@ void moveStraight(int pos) {
   } else {
     while ((encoderpos - desiredpos) > 0) {
       encoderpos = (encoderposL + encoderposR) / 2;
-      int pwm = constrain((desiredpos - encoderpos), 0, MAXSPEED);
-      int err = yaw;
-      P = 0.3 * err; // 1.818
+      int pwm = constrain((encoderpos - desiredpos), 0, MAXSPEED);
+      int err = -yaw;
+      P = 0.4 * err; // 1.818
       I += 0 * err;  // 0.4
       D = 0 * (err - lastError);
       lastError = err;
@@ -137,7 +129,7 @@ void moveStraight(int pos) {
   lastError = 0;
 }
 
-void turn90(int angle, int dir) {
+void turn90(int angle, int dir, bool align) {
   bumpcheck = false;
   bool flag = false;
   int ANGLE = angle;
@@ -150,7 +142,7 @@ void turn90(int angle, int dir) {
   if (getDistance(1) < WALLDISTANCE) {
     offsetStraight(35);
   } else {
-    offsetStraight(80);
+    offsetStraight(55);
   }
   delay(10);
   moveMotor(0, 0);
@@ -185,7 +177,7 @@ void turn90(int angle, int dir) {
   beep();
   moveMotor(0, 0);
   delay(50);
-  if (flag) {
+  if (flag && align) {
     moveMotor(-50, -50);
     delay(800);
     moveMotor(0, 0);
