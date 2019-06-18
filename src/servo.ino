@@ -1,21 +1,20 @@
 void initServo() {
-  dispencer.attach(A1);  // attaches the servo on pin 9 to the servo object
+  dispencer.attach(A2); // attaches the servo on pin 9 to the servo object
   dispencer.write(100);
 }
 
 void servoMovement() {
-  for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-    dispencer.write(pos);              // tell servo to go to position in variable 'pos'
-    delay(5);                       // waits 15ms for the servo to reach the position
+  for (pos = 100; pos >= 0; pos -= 1) { // goes from 100 degrees to 0 degrees
+    dispencer.write(pos); // tell servo to go to position in variable 'pos'
+    delay(5);             // waits 5ms for the servo to reach the position
   }
   delay(100);
-  for (pos = 0; pos <= 100; pos += 1) { // goes from 0 degrees to 180 degrees
+  for (pos = 0; pos <= 100; pos += 1) { // goes from 0 degrees to 100 degrees
     // in steps of 1 degree
-    dispencer.write(pos);              // tell servo to go to position in variable 'pos'
-    delay(5);                       // waits 15ms for the servo to reach the position
+    dispencer.write(pos); // tell servo to go to position in variable 'pos'
+    delay(5);             // waits 5ms for the servo to reach the position
   }
 }
-
 
 void dispence() {
   if (Ltemp) {
