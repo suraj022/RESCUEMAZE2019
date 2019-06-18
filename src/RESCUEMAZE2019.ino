@@ -18,22 +18,8 @@
 #include "variables.h"
 //#include "Stack.h"
 
-struct tile {
-  /* data */
-  int nos;
-  int f=0, l=0, r=0;
-  int pre_x,pre_y;
-  //int pos_x,pos_y;
-  int is_visited=0; //0 for not visited 1 for visited
-  int is_node=0;    //0 for not node 1 for node
-  int no_go=0;      //0 for go 1 for no go
-
-};
-
-tile cell[20][20];
-
-//StackArray <int> stack1;
-//StackArray <int> stack2;
+// StackArray <int> stack1;
+// StackArray <int> stack2;
 
 // stack.push(s_cell[0]);
 // stack.pop();
@@ -110,109 +96,106 @@ void loop() {
     delay(100);
   }
 
-update_cell();
+  update_cell();
 
-if (cell[p_x][p_y].l==0){
-  turn90(90,-1);
-  moveStraight(300);
-  pr_x=p_x;
-  pr_y=p_y;
+  if (cell[p_x][p_y].l == 0) {
+    turn90(90, -1, true);
+    moveStraight(300);
+    pr_x = p_x;
+    pr_y = p_y;
 
-}
-else if (cell[p_x][p_y].f==0) {
-  moveStraight(300);
-  pr_x=p_x;
-  pr_y=p_y;
+  } else if (cell[p_x][p_y].f == 0) {
+    moveStraight(300);
+    pr_x = p_x;
+    pr_y = p_y;
 
-}
+  }
 
-else if (cell[p_x][p_y].r==0) {
-  turn90(90,1);
-  moveStraight(300);
-  pr_x=p_x;
-  pr_y=p_y;
+  else if (cell[p_x][p_y].r == 0) {
+    turn90(90, 1,true);
+    moveStraight(300);
+    pr_x = p_x;
+    pr_y = p_y;
 
-}
-else
-{
-  turn90(90,1);
-  turn90(90,1);
-  moveStraight(300);
-heading();
-while(cell[p_x][p_y].is_node==0){
+  } else {
+    turn90(90, 1,true);
+    turn90(90, 1,true);
+    moveStraight(300);
+    heading();
+    while (cell[p_x][p_y].is_node == 0) {
       heading();
-      if (cell[p_x][p_y].l==0){
-        turn90(90,-1);
+      if (cell[p_x][p_y].l == 0) {
+        turn90(90, -1,true);
+        moveStraight(300);
+
+      } else if (cell[p_x][p_y].f == 0) {
         moveStraight(300);
 
       }
-      else if (cell[p_x][p_y].f==0) {
-        moveStraight(300);
 
-      }
-
-      else if (cell[p_x][p_y].r==0) {
-        turn90(90,1);
+      else if (cell[p_x][p_y].r == 0) {
+        turn90(90, 1, true);
         moveStraight(300);
       }
+    }
+  }
 
-}
-}
-
-count++;
-// pr_x=p_x;
-// pr_y=p_y;
-heading();
+  count++;
+  // pr_x=p_x;
+  // pr_y=p_y;
+  heading();
   delay(500);
   yield();
 }
 
+void update_cell() {
+  cell[p_x][p_y].nos = count;
+  cell[p_x][p_y].pre_x = pr_x;
+  cell[p_x][p_y].pre_y = pr_y;
+  if (getDistance(1) < 190)
+    cell[p_x][p_y].f = 1;
+  if (getDistance(2) < 190)
+    cell[p_x][p_y].r = 1;
+  if (getDistance(0) < 190)
+    cell[p_x][p_y].l = 1;
 
-void update_cell(){
-  cell[p_x][p_y].nos= count;
-  cell[p_x][p_y].pre_x=pr_x;
-  cell[p_x][p_y].pre_y=pr_y;
-  if(getDistance(1) < 190)
-    cell[p_x][p_y].f=1;
-  if(getDistance(2) < 190)
-    cell[p_x][p_y].r=1;
-  if(getDistance(0) < 190)
-    cell[p_x][p_y].l=1;
+  int check = 0;
+  bitWrite(check, 0, cell[p_x][p_y].r);
+  bitWrite(check, 1, cell[p_x][p_y].f);
+  bitWrite(check, 2, cell[p_x][p_y].l);
 
-  int check=0;
-  bitWrite(check,0,cell[p_x][p_y].r);
-  bitWrite(check,1,cell[p_x][p_y].f);
-  bitWrite(check,2,cell[p_x][p_y].l);
+  if (check == 0 || check == 1 || check == 2 || check == 4)
+    cell[p_x][p_y].is_node = 1;
 
-  if(check==0||check==1||check==2||check==4)
-  cell[p_x][p_y].is_node=1;
-
-  if(cell[p_x][p_y].is_visited!=1)
-    cell[p_x][p_y].is_visited=1;
-
+  if (cell[p_x][p_y].is_visited != 1)
+    cell[p_x][p_y].is_visited = 1;
 }
 
-void heading(){
+void heading() {
   switch (head) {
-    case 0: p_x++;
-              if(p_x>19){
-                p_x=0;
-              }
-            break;
-    case 1: p_y++;
-              if(p_y>19){
-                p_y=0;
-              }
-            break;
-    case 2: p_x--;
-              if(p_x<0){
-                p_x=20+p_x;
-              }
-            break;
-    case 3: p_y--;
-              if(p_y<0){
-                p_y=20+p_y;
-              }
-            break;
+  case 0:
+    p_x++;
+    if (p_x > 19) {
+      p_x = 0;
+    }
+    break;
+  case 1:
+    p_y++;
+    if (p_y > 19) {
+      p_y = 0;
+    }
+    break;
+  case 2:
+    p_x--;
+    if (p_x < 0) {
+      p_x = 20 + p_x;
+    }
+    break;
+  case 3:
+    p_y--;
+    if (p_y < 0) {
+      p_y = 20 + p_y;
+    }
+    break;
   }
 }

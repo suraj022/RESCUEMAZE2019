@@ -128,25 +128,23 @@ void moveStraight(int pos) {
   moveMotor(0, 0); // stop motors
   lastError = 0;
 }
-void turn90(int angle, int dir) {
+void turn90(int angle, int dir, int align) {
 
-if (dir==1) {
-  if(head==3){
-    head=0;
+  if (dir == 1) {
+    if (head == 3) {
+      head = 0;
+    } else {
+      head += dir;
+    }
   }
-  else{
-    head+= dir;
-  }
-}
 
-if (dir==-1) {
-  if(head==0){
-    head=3;
+  if (dir == -1) {
+    if (head == 0) {
+      head = 3;
+    } else {
+      head -= dir;
+    }
   }
-  else{
-    head-= dir;
-  }
-}
   bumpcheck = false;
   bool flag = false;
   int ANGLE = angle;
