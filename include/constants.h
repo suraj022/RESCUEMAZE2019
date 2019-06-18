@@ -34,7 +34,7 @@
 #define RMR 4 // Right Motor Reverse
 
 // define Wall Detect distance
-#define WALLDISTANCE 190
+#define WALLDISTANCE 160
 
 #define LEFTBUMP A1
 #define RIGHTBUMP A3

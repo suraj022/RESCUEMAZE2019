@@ -1,15 +1,15 @@
 /* TODO list-
-  1. move 1 tile function
+  1. move 1 tile function DONE
   2. change encoder loop to function DONE
   3. implement rescue mechanism DONE
-  4. Fix wall align using PID
-  5. Fix encoder movement using PID
+  4. Fix wall align using PID DONE
+  5. Fix encoder movement using PID DONE
   6. Heated victim DONE
-  7. Add basic wall follow algorithm
+  7. Add basic wall follow algorithm DONE
   8. Depth first search algorithm
   9. Visual victim Identification
-  10. Turn 90 degree using mpu6050
-  11. Implement colour sensor
+  10. Turn 90 degree using mpu6050 DONE
+  11. Implement colour sensor DONE
 */
 
 #include "constants.h"
@@ -100,7 +100,11 @@ void loop() {
     moveStraight(-300);
     indicatePath(LEFT);
     turn90(90, -1, false);
+    moveMotor(-50, -50);
+    delay(200);
     turn90(90, -1, true);
+    moveMotor(-50, -50);
+    delay(200);
   } else {
     if (!L) { // left wall open
       indicatePath(LEFT);
@@ -121,7 +125,7 @@ void loop() {
     } else if (L && F && R) { // all sides closed
       indicatePath(RIGHT);
       turn90(90, 1, false);
-      turn90(90, 1, false);
+      turn90(90, 1, true);
       indicatePath(FRONT);
       moveStraight(300);
     }
