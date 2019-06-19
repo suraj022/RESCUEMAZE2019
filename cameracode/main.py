@@ -56,35 +56,35 @@ while(True):
     if match_found:
 
         MidY = best_match.cy()
-        TopY = best_match.y();
-        BotY = best_match.y() + best_match.h()
-        BotX = best_match.x() + best_match.w()
+        TopY = best_match.y()
+        WH = best_match.w()
+        HH = best_match.h()
+        BotY = best_match.y() + HH
+        BotX = best_match.x() + WH
         TopX = best_match.x()
 
 
-        lastWhite = True
-
         for Y in range(TopY,BotY,2):
-            if img.get_pixel(TopX+int((BotX - TopX)/6), Y) == 0:
+            if img.get_pixel(TopX+int(WH/6), Y) == 0:
                 leftline += 1
-        leftline=leftline/(BotY - TopY)
+        leftline=leftline/HH
 
         for Y in range(TopY,BotY,2):
-            if img.get_pixel(TopX+int((BotX - TopX)*5/6), Y) == 0:
+            if img.get_pixel(TopX+int(WH*5/6), Y) == 0:
                 rightline += 1
-        rightline=rightline/(BotY - TopY)
+        rightline=rightline/HH
 
         for X in range(TopX,BotX,2):
             if img.get_pixel(X, MidY) == 0:
                 middleline += 1
-        middleline=middleline/(BotX - TopX)
+        middleline=middleline/WH
 
-        Detectedletter = int((leftline + middleline + rightline)*1000 - 1000)
-        img.draw_rectangle((TopX,TopY,BotX-TopX,BotY-TopY),color = (150,150,150))
-        img.draw_line((TopX,MidY,BotX,MidY),color = (150,150,150))
-        img.draw_line((TopX+int((BotX - TopX)/6),TopY,TopX+int((BotX - TopX)/6),BotY),color = (150,150,150))
-        img.draw_line((TopX+int((BotX - TopX)*5/6),TopY,TopX+int((BotX - TopX)*5/6),BotY),color = (150,150,150))
-        lastWhite = True
+        # Detectedletter = int((leftline + middleline + rightline)*1000 - 1000)
+        # img.draw_rectangle((TopX,TopY,BotX-TopX,BotY-TopY),color = (150,150,150))
+        # img.draw_line((TopX,MidY,BotX,MidY),color = (150,150,150))
+        # img.draw_line((TopX+int((BotX - TopX)/6),TopY,TopX+int((BotX - TopX)/6),BotY),color = (150,150,150))
+        # img.draw_line((TopX+int((BotX - TopX)*5/6),TopY,TopX+int((BotX - TopX)*5/6),BotY),color = (150,150,150))
+        # lastWhite = True
 
     #debug
     #print("left " + str(int(leftline*100)) + "   middle " + str(int(middleline*100)) + "   right " + str(int(rightline*100)))

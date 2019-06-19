@@ -74,7 +74,7 @@ void moveStraight(int pos) {
         delay(300);
         moveMotor(0, 0);
         delay(50);
-        moveMotor(40, 50);
+        moveMotor(60, 50);
         delay(600);
         encoderposL = encoderbackupL;
         encoderposR = encoderbackupR;
@@ -93,7 +93,7 @@ void moveStraight(int pos) {
         delay(300);
         moveMotor(0, 0);
         delay(50);
-        moveMotor(50, 40);
+        moveMotor(50, 60);
         delay(600);
         encoderposL = encoderbackupL;
         encoderposR = encoderbackupR;
@@ -161,7 +161,7 @@ void turn90(int angle, int dir, bool align) {
       delay(80);
     }
     Pr = err;
-    Ir += err * 0.001;
+    // Ir += err * 0.001;
     int diff = 1.1 * Pr + Ir;
     moveMotor(dir * constrain(diff, 30, 100), -dir * constrain(diff, 30, 100));
     delay(1);
@@ -187,7 +187,7 @@ void offsetStraight(int value) {
   delay(100);
   int dist = (getDistance(1) % 300);
   if (dist > value) {
-    while (dist > value && getDistance(1) < value) {
+    while (dist > value) {
       dist = (getDistance(1) % 300);
       int pwm = constrain((dist - value), 40, 100);
       int err = 1.5 * yaw; // readGyroZ() / 14;
