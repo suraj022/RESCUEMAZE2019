@@ -53,7 +53,11 @@ int lastError = 0, lastErrorTurn = 0;
 volatile int encoderposR = 0, encoderposL = 0;
 
 // Variables for each tile
+<<<<<<< HEAD
 tile cell[80];
+=======
+tile cell[40][40];
+>>>>>>> f27416c60a8903d0925b7cd24056f17d4e9cad65
 
 // Stacks to store paths.
 StackArray<int> stack1;
