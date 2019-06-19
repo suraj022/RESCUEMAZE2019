@@ -23,7 +23,8 @@
 
 // stack.push(s_cell[0]);
 // stack.pop();
-
+int tracePath[100];
+int count1=0;
 void setup() {
 
   tile *s_cell;
@@ -84,20 +85,26 @@ void setup() {
 void loop() {
   clearPixels();
   beep();
-  while (getDistance(1) < 100) {
-    delay(100);
-  }
 
   update_cell();
 
   if (cell[p_x][p_y].l == 0) {
     turn90(90, -1, true);
+    tracePath[count1]=1;
+    count1++;
+
     moveStraight(300);
+    tracePath[count1]=0;
+    count1++;
+
     pr_x = p_x;
     pr_y = p_y;
 
   } else if (cell[p_x][p_y].f == 0) {
     moveStraight(300);
+    tracePath[count1]=0;
+    count1++;
+
     pr_x = p_x;
     pr_y = p_y;
 
@@ -105,31 +112,22 @@ void loop() {
 
   else if (cell[p_x][p_y].r == 0) {
     turn90(90, 1, true);
+    tracePath[count1]=-1;
+    count1++;
+
     moveStraight(300);
+    tracePath[count1]=0;
+    count1++;
+
     pr_x = p_x;
     pr_y = p_y;
 
   } else {
+    turn90(90, 1, false);
+    //heading();
     turn90(90, 1, true);
-    turn90(90, 1, true);
-    moveStraight(300);
-    heading();
-    while (cell[p_x][p_y].is_node == 0) {
-      heading();
-      if (cell[p_x][p_y].l == 0) {
-        turn90(90, -1, true);
-        moveStraight(300);
-
-      } else if (cell[p_x][p_y].f == 0) {
-        moveStraight(300);
-
-      }
-
-      else if (cell[p_x][p_y].r == 0) {
-        turn90(90, 1, true);
-        moveStraight(300);
-      }
-    }
+    //heading();
+    retrace();
   }
 
   count++;
@@ -144,11 +142,11 @@ void update_cell() {
   cell[p_x][p_y].nos = count;
   cell[p_x][p_y].pre_x = pr_x;
   cell[p_x][p_y].pre_y = pr_y;
-  if (getDistance(1) < 190)
+  if (getDistance(1) < WALLDISTANCE)
     cell[p_x][p_y].f = 1;
-  if (getDistance(2) < 190)
+  if (getDistance(2) < WALLDISTANCE)
     cell[p_x][p_y].r = 1;
-  if (getDistance(0) < 190)
+  if (getDistance(0) < WALLDISTANCE)
     cell[p_x][p_y].l = 1;
 
   int check = 0;
@@ -156,8 +154,13 @@ void update_cell() {
   bitWrite(check, 1, cell[p_x][p_y].f);
   bitWrite(check, 2, cell[p_x][p_y].l);
 
-  if (check == 0 || check == 1 || check == 2 || check == 4)
+  if (check == 0 || check == 1 || check == 2 || check == 4){
     cell[p_x][p_y].is_node = 1;
+    for (int i = 0; i < 8; i++) {
+      pixels.setPixelColor(i, pixels.Color(0, 20, 20));
+      pixels.show();
+    }
+  }
 
   if (cell[p_x][p_y].is_visited != 1)
     cell[p_x][p_y].is_visited = 1;
@@ -190,4 +193,39 @@ void heading() {
     }
     break;
   }
+}
+
+
+void retrace(){
+  while(cell[p_x][p_y].is_node==0){
+    if(tracePath[count1]==0){
+      moveStraight(300);
+      count1--;
+      heading();
+      for (int i = 0; i < 8; i++) {
+        pixels.setPixelColor(i, pixels.Color(20, 0, 0));
+        pixels.show();
+      }
+    }
+    else if(tracePath[count1]==-1){
+      turn90(90,-1, true);
+      count1--;
+      for (int i = 0; i < 8; i++) {
+        pixels.setPixelColor(i, pixels.Color(0, 20, 0));
+        pixels.show();
+      }
+    }
+    else if(tracePath[count1]==1){
+      turn90(90,1, true);
+      count1--;
+      for (int i = 0; i < 8; i++) {
+        pixels.setPixelColor(i, pixels.Color(0, 0, 20));
+        pixels.show();
+      }
+    }
+
+    //heading();
+  }
+//  heading();
+
 }

@@ -16,6 +16,10 @@ void moveMotor(int L, int R) {
 }
 
 void moveStraight(int pos) {
+
+
+
+
   offsetStraight(80);
   P = 0;
   I = 0;
@@ -131,6 +135,8 @@ void moveStraight(int pos) {
 void turn90(int angle, int dir, int align) {
 
   if (dir == 1) {
+
+
     if (head == 3) {
       head = 0;
     } else {
@@ -139,6 +145,7 @@ void turn90(int angle, int dir, int align) {
   }
 
   if (dir == -1) {
+
     if (head == 0) {
       head = 3;
     } else {
