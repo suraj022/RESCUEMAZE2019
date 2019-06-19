@@ -102,6 +102,19 @@ void loop() {
     turn90(90, -1, false);
     turn90(90, -1, true);
   } else {
+    if (silverFlag) {
+      for (int i = 0; i < 8; i++) {
+        setPixelColour(i, BLUE, 50);
+      }
+      delay(200);
+      clearPixels();
+      delay(200);
+      for (int i = 0; i < 8; i++) {
+        setPixelColour(i, BLUE, 50);
+      }
+      delay(200);
+      clearPixels();
+    }
     if (!L) { // left wall open
       indicatePath(LEFT);
       turn90(90, -1, true);

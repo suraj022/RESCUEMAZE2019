@@ -138,11 +138,10 @@ void turn90(int angle, int dir, bool align) {
       getDistance(2) < WALLDISTANCE && dir == -1) {
     flag = true;
   }
-  unsigned long lastTime = 0;
   if (getDistance(1) < WALLDISTANCE) {
     offsetStraight(35);
   } else {
-    offsetStraight(55);
+    offsetStraight(75);
   }
   delay(10);
   moveMotor(0, 0);
@@ -154,8 +153,6 @@ void turn90(int angle, int dir, bool align) {
   yaw = 0;
   delay(10);
   do {
-    unsigned long now = millis();
-    double timeChange = (double)(now - lastTime);
     err = (ANGLE - abs(yaw));
     if (err < 5)
       err *= 2;
@@ -164,11 +161,8 @@ void turn90(int angle, int dir, bool align) {
       delay(80);
     }
     Pr = err;
-    Ir += err * timeChange;
-    Dr = (err - lastErrorTurn) / timeChange;
-    lastErrorTurn = err;
-    lastTime = now;
-    int diff = 1.1 * Pr;
+    Ir += err * 0.001;
+    int diff = 1.1 * Pr + Ir;
     moveMotor(dir * constrain(diff, 30, 100), -dir * constrain(diff, 30, 100));
     delay(1);
     yield();
@@ -193,7 +187,7 @@ void offsetStraight(int value) {
   delay(100);
   int dist = (getDistance(1) % 300);
   if (dist > value) {
-    while (dist > value) {
+    while (dist > value && getDistance(1) < value) {
       dist = (getDistance(1) % 300);
       int pwm = constrain((dist - value), 40, 100);
       int err = 1.5 * yaw; // readGyroZ() / 14;
