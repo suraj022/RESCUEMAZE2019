@@ -2,7 +2,7 @@
 #define _CONSTANTS_H
 
 // Uncomment the following to enable USB debug messages
-//#define DEBUG
+#define DEBUG
 
 // PID tuning constants
 #define kp 0.4  // proportional

@@ -89,6 +89,9 @@ void loop() {
   update_cell();
 
   if (cell[p_x][p_y].l == 0) {
+    SerialUSB.print(p_x);
+    SerialUSB.print(",");
+    SerialUSB.println(p_y);
     turn90(90, -1, true);
     tracePath[count1]=1;
     count1++;
@@ -101,6 +104,9 @@ void loop() {
     pr_y = p_y;
 
   } else if (cell[p_x][p_y].f == 0) {
+    SerialUSB.print(p_x);
+    SerialUSB.print(",");
+    SerialUSB.println(p_y);
     moveStraight(300);
     tracePath[count1]=0;
     count1++;
@@ -111,6 +117,9 @@ void loop() {
   }
 
   else if (cell[p_x][p_y].r == 0) {
+    SerialUSB.print(p_x);
+    SerialUSB.print(",");
+    SerialUSB.println(p_y);
     turn90(90, 1, true);
     tracePath[count1]=-1;
     count1++;
@@ -126,8 +135,11 @@ void loop() {
     turn90(90, 1, false);
     turn90(90, 1, true);
     moveStraight(300);
-    p_x=pr_x ;
-    p_y=pr_y ;
+    p_x=cell[p_x][p_y].pre_x ;
+    p_y=cell[p_x][p_y].pre_x ;
+    SerialUSB.print(p_x);
+    SerialUSB.print(",");
+    SerialUSB.println(p_y);
     //heading();
     while(cell[p_x][p_y].is_node==0){
       beep();
@@ -236,6 +248,7 @@ void retrace(){
 //
 
 if (cell[p_x][p_y].r == 0) {
+beep();
   turn90(90, -1, true);
 
   count1--;
@@ -244,21 +257,27 @@ if (cell[p_x][p_y].r == 0) {
 
   count1--;
 
-  p_x=pr_x ;
-  p_y=pr_y ;
-
+  p_x=cell[p_x][p_y].pre_x ;
+  p_y=cell[p_x][p_y].pre_x ;
+  SerialUSB.print(p_x);
+  SerialUSB.print(",");
+  SerialUSB.println(p_y);
 }
 else if (cell[p_x][p_y].f == 0) {
+beep();beep();
   moveStraight(300);
   tracePath[count1]=0;
   count1++;
 
-  p_x=pr_x ;
-  p_y=pr_y ;
-
+  p_x=cell[p_x][p_y].pre_x ;
+  p_y=cell[p_x][p_y].pre_x ;
+  SerialUSB.print(p_x);
+  SerialUSB.print(",");
+  SerialUSB.println(p_y);
 }
 
 else if (cell[p_x][p_y].l == 0) {
+beep();beep();beep();
   turn90(90, 1, true);
   count1--;
 
@@ -266,9 +285,11 @@ else if (cell[p_x][p_y].l == 0) {
 
   count1--;
 
-  p_x=pr_x ;
-  p_y=pr_y ;
-
+  p_x=cell[p_x][p_y].pre_x ;
+  p_y=cell[p_x][p_y].pre_x ;
+  SerialUSB.print(p_x);
+  SerialUSB.print(",");
+  SerialUSB.println(p_y);
 }
 heading();
 
