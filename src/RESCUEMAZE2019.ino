@@ -124,10 +124,15 @@ void loop() {
 
   } else {
     turn90(90, 1, false);
-    //heading();
     turn90(90, 1, true);
+    moveStraight(300);
+    p_x=pr_x ;
+    p_y=pr_y ;
     //heading();
+    while(cell[p_x][p_y].is_node==0){
+      beep();
     retrace();
+  }
   }
 
   count++;
@@ -159,7 +164,9 @@ void update_cell() {
     for (int i = 0; i < 8; i++) {
       pixels.setPixelColor(i, pixels.Color(0, 20, 20));
       pixels.show();
-    }
+          }
+          delay(100);
+          clearPixels();
   }
 
   if (cell[p_x][p_y].is_visited != 1)
@@ -197,35 +204,75 @@ void heading() {
 
 
 void retrace(){
-  while(cell[p_x][p_y].is_node==0){
-    if(tracePath[count1]==0){
-      moveStraight(300);
-      count1--;
-      heading();
-      for (int i = 0; i < 8; i++) {
-        pixels.setPixelColor(i, pixels.Color(20, 0, 0));
-        pixels.show();
-      }
-    }
-    else if(tracePath[count1]==-1){
-      turn90(90,-1, true);
-      count1--;
-      for (int i = 0; i < 8; i++) {
-        pixels.setPixelColor(i, pixels.Color(0, 20, 0));
-        pixels.show();
-      }
-    }
-    else if(tracePath[count1]==1){
-      turn90(90,1, true);
-      count1--;
-      for (int i = 0; i < 8; i++) {
-        pixels.setPixelColor(i, pixels.Color(0, 0, 20));
-        pixels.show();
-      }
-    }
+  //while(cell[p_x][p_y].is_node==0)
+    // if(tracePath[count1]==0){
+    //   moveStraight(300);
+    //   count1--;
+    //   heading();
+    //   for (int i = 0; i < 8; i++) {
+    //     pixels.setPixelColor(i, pixels.Color(20, 0, 0));
+    //     pixels.show();
+    //   }
+    // }
+    // else if(tracePath[count1]==-1){
+    //   turn90(90,-1, true);
+    //   count1--;
+    //   for (int i = 0; i < 8; i++) {
+    //     pixels.setPixelColor(i, pixels.Color(0, 20, 0));
+    //     pixels.show();
+    //   }
+    // }
+    // else if(tracePath[count1]==1){
+    //   turn90(90,1, true);
+    //   count1--;
+    //   for (int i = 0; i < 8; i++) {
+    //     pixels.setPixelColor(i, pixels.Color(0, 0, 20));
+    //     pixels.show();
+    //   }
+    // }
 
     //heading();
-  }
-//  heading();
+
+//
+
+if (cell[p_x][p_y].r == 0) {
+  turn90(90, -1, true);
+
+  count1--;
+
+  moveStraight(300);
+
+  count1--;
+
+  p_x=pr_x ;
+  p_y=pr_y ;
+
+}
+else if (cell[p_x][p_y].f == 0) {
+  moveStraight(300);
+  tracePath[count1]=0;
+  count1++;
+
+  p_x=pr_x ;
+  p_y=pr_y ;
+
+}
+
+else if (cell[p_x][p_y].l == 0) {
+  turn90(90, 1, true);
+  count1--;
+
+  moveStraight(300);
+
+  count1--;
+
+  p_x=pr_x ;
+  p_y=pr_y ;
+
+}
+heading();
+
+
+
 
 }
