@@ -134,8 +134,8 @@ void turn90(int angle, int dir, bool align) {
   bool flag = false;
   int ANGLE = angle;
   // int ANGLE = angle - 6;
-  if (getDistance(0) < WALLDISTANCE && dir == 1 ||
-      getDistance(2) < WALLDISTANCE && dir == -1) {
+  if ((getDistance(0) < WALLDISTANCE && dir == 1) ||
+      (getDistance(2) < WALLDISTANCE && dir == -1)) {
     flag = true;
   }
   if (getDistance(1) < WALLDISTANCE) {

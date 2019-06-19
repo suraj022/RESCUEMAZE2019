@@ -19,8 +19,6 @@
 
 void setup() {
 
-  tile *s_cell;
-
 #ifdef DEBUG
   beginSerialUSB();
 #else
