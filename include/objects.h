@@ -22,12 +22,11 @@ SimpleKalmanFilter kalmanZ(2, 2, 0.01);
 
 // structure for tiles in the maze
 struct tile {
-  /* data */
-  int f = 0, l = 0, r = 0;
-  int pos_x, pos_y;
-  int is_visited = 0; // 0 for not visited 1 for visited
-  int is_node = 0;    // 0 for not node 1 for node
-  int no_go = 0;      // 0 for go 1 for no go
+  bool N = false, E = false, W = false, S = false;
+  uint8_t pos_x, pos_y;
+  bool is_visited = false; // 0 for not visited 1 for visited
+  bool is_node = false;    // 0 for not node 1 for node
+  bool no_go = false;      // 0 for go 1 for no go
 };
 
 #endif
