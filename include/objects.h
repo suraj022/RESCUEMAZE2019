@@ -19,14 +19,15 @@ Servo dispencer;
 SimpleKalmanFilter kalmanX(2, 2, 0.01);
 SimpleKalmanFilter kalmanY(2, 2, 0.01);
 SimpleKalmanFilter kalmanZ(2, 2, 0.01);
+SimpleKalmanFilter kalmanColour(2, 2, 0.01);
 
 // structure for tiles in the maze
-struct tile {
-  bool N = false, E = false, W = false, S = false;
-  uint8_t pos_x, pos_y;
-  bool is_visited = false; // 0 for not visited 1 for visited
-  bool is_node = false;    // 0 for not node 1 for node
-  bool no_go = false;      // 0 for go 1 for no go
+struct tile { // num stored in array index
+  bool N = false, E = false, S = false, W = false;
+  int8_t backWay; // N = 0, E = 1, S = 2, W = 3;
+  int8_t x, y;
+  bool is_node = false;
+  bool no_go = false;
 };
 
 #endif

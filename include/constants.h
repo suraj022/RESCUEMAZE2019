@@ -34,7 +34,7 @@
 #define RMR 4 // Right Motor Reverse
 
 // define Wall Detect distance
-#define WALLDISTANCE 190
+#define WALLDISTANCE 170
 
 #define LEFTBUMP A1
 #define RIGHTBUMP A3
@@ -55,8 +55,8 @@
 // colour Values
 #define COLOURPIN A4
 #define SILVER 863
-#define WHITE 905
-#define BLACK 945
+#define NORMAL 905
+#define HAZARD 945
 
 // sensor numbers for TOF sensors
 #define LEFT 0
