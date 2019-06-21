@@ -87,6 +87,10 @@ if (cell[p_x][p_y].is_visited==0) {
 update_cell();
 }
 else {
+      if(cell[p_x][p_y].is_visited>=1)
+      {cell[p_x][p_y].is_visited+=1;}
+
+
         if(cell[p_x][p_y].is_node==1){
             while(cell[p_x][p_y].h!=head){
                 switch (head) {
@@ -103,7 +107,6 @@ else {
                           //heading();
                           break;
                   case  2:turn90(90, 1, false);
-                          //heading();
                           break;
                   case  3:turn90(90,-1, false);
                           //heading();
@@ -119,47 +122,48 @@ indicateWalls();
 delay(300);
 
 if (cell[p_x][p_y].l == 0) {             //left wall open
-  if (cell[pr_x][pr_y].is_node==1) {
-  cell[cell[p_x][p_y].pre_x][cell[p_x][p_y].pre_y].l==1;
-  }
   // pr_x = p_x;
   // pr_y = p_y;
   indicatePath(LEFT);
   turn90(90, -1,true);
   indicatePath(FRONT);
   moveStraight(300);
+  if (cell[p_x][p_y].is_node==1) {
+    cell[p_x][p_y].l=1;
+  }
   heading();
   disp();
+    nodeBlock();
 
   }
 
   else if(cell[p_x][p_y].f == 0) { //wall on left and right
-  if (cell[pr_x][pr_y].is_node==1) {
-  cell[cell[p_x][p_y].pre_x][cell[p_x][p_y].pre_y].f==1;
-  }
-  // pr_x = p_x;
   // pr_y = p_y;
+  // pr_x = p_x;
   indicatePath(FRONT);
   moveStraight(300);
+  if (cell[p_x][p_y].is_node==1) {
+    cell[p_x][p_y].f=1;
+  }
   heading();
   disp();
-
+nodeBlock();
   }
 
 
   else if (cell[p_x][p_y].r == 0) { //wall on left and front
-    if (cell[pr_x][pr_y].is_node==1) {
-    cell[cell[p_x][p_y].pre_x][cell[p_x][p_y].pre_y].r==1;
-    }
   // pr_x = p_x;
   // pr_y = p_y;
   indicatePath(RIGHT);
   turn90(90, 1,true);
   indicatePath(FRONT);
   moveStraight(300);
+  if (cell[p_x][p_y].is_node==1) {
+    cell[p_x][p_y].l=1;
+  }
   heading();
   disp();
-
+nodeBlock();
 
 } else {//if (L && F && R) { //all sides closed
   indicatePath(RIGHT);
@@ -175,13 +179,13 @@ if (cell[p_x][p_y].l == 0) {             //left wall open
     beep();
     retrace();
   }
-    if (cell[p_x][p_y].l==0) {
-    cell[p_x][p_y].l=1;
-  } else if (cell[p_x][p_y].f==0) {
-    cell[p_x][p_y].f=1;
-  } else if(cell[p_x][p_y].r==0){
-    cell[p_x][p_y].r=1;
-  }
+  //   if (cell[p_x][p_y].l==0) {
+  //   cell[p_x][p_y].l=1;
+  // } else if (cell[p_x][p_y].f==0) {
+  //   cell[p_x][p_y].f=1;
+  // } else if(cell[p_x][p_y].r==0){
+  //   cell[p_x][p_y].r=1;
+  // }
 
   cell[p_x][p_y].check = 0;
   bitWrite(cell[p_x][p_y].check, 0, cell[p_x][p_y].r);
@@ -216,34 +220,34 @@ void update_cell() {
   if (getDistance(0) < WALLDISTANCE)
     cell[p_x][p_y].l = 1;
 
-    switch (cell[p_x][p_y].h) {
-      case 0: cell[p_x][p_y].pre_x = p_x-1;
-              cell[p_x][p_y].pre_y = p_y;
-              if (cell[p_x][p_y].pre_x<0) {
-                cell[p_x][p_y].pre_x = 20 + cell[p_x][p_y].pre_x;
-              }
-              break;
-      case 1:cell[p_x][p_y].pre_y = p_y-1;
-              cell[p_x][p_y].pre_x = p_x;
-              if (cell[p_x][p_y].pre_y<0) {
-                cell[p_x][p_y].pre_y = 20 + cell[p_x][p_y].pre_y;
-              }
-              break;
-      case 2:cell[p_x][p_y].pre_x = p_x +1;
-              cell[p_x][p_y].pre_y = p_y;
-              if (cell[p_x][p_y].pre_x>19) {
-                cell[p_x][p_y].pre_x = 0;
-              }
-              break;
-      case 3:cell[p_x][p_y].pre_y = p_y-1;
-              cell[p_x][p_y].pre_x = p_x;
-              if (cell[p_x][p_y].pre_y>19) {
-                cell[p_x][p_y].pre_y = 0;
-              }
-              break;
-    }
-    cell[p_x][p_y].pre_x = pr_x;
-    cell[p_x][p_y].pre_y = pr_y;
+    // switch (cell[p_x][p_y].h) {
+    //   case 0: cell[p_x][p_y].pre_x = p_x-1;
+    //           cell[p_x][p_y].pre_y = p_y;
+    //           if (cell[p_x][p_y].pre_x<0) {
+    //             cell[p_x][p_y].pre_x = 20 + cell[p_x][p_y].pre_x;
+    //           }
+    //           break;
+    //   case 1:cell[p_x][p_y].pre_y = p_y-1;
+    //           cell[p_x][p_y].pre_x = p_x;
+    //           if (cell[p_x][p_y].pre_y<0) {
+    //             cell[p_x][p_y].pre_y = 20 + cell[p_x][p_y].pre_y;
+    //           }
+    //           break;
+    //   case 2:cell[p_x][p_y].pre_x = p_x +1;
+    //           cell[p_x][p_y].pre_y = p_y;
+    //           if (cell[p_x][p_y].pre_x>19) {
+    //             cell[p_x][p_y].pre_x = 0;
+    //           }
+    //           break;
+    //   case 3:cell[p_x][p_y].pre_y = p_y-1;
+    //           cell[p_x][p_y].pre_x = p_x;
+    //           if (cell[p_x][p_y].pre_y>19) {
+    //             cell[p_x][p_y].pre_y = 0;
+    //           }
+    //           break;
+    // }
+    // cell[p_x][p_y].pre_x = pr_x;
+    // cell[p_x][p_y].pre_y = pr_y;
 
   cell[p_x][p_y].check = 0;
   bitWrite(cell[p_x][p_y].check, 0, cell[p_x][p_y].r);
@@ -347,4 +351,22 @@ void retrace(){
 
 
 
+}
+
+
+void nodeBlock(){
+if (cell[p_x][p_y].is_node==1) {
+  if(cell[p_x][p_y].is_visited>=1)
+
+  switch (head) {
+  case 0: cell[p_x][p_y].f=1;
+          break;
+  case 1: cell[p_x][p_y].r=1;
+          break;
+  case 2:
+          break;
+  case 3: cell[p_x][p_y].l=1;
+          break;
+  }
+}
 }
