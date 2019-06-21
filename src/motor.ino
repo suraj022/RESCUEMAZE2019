@@ -135,22 +135,20 @@ void moveStraight(int pos) {
 void turn90(int angle, int dir, int align) {
 
   if (dir == 1) {
+    head++;
 
-
-    if (head == 3) {
+    if (head > 3) {
       head = 0;
-    } else {
-      head += dir;
     }
   }
 
   if (dir == -1) {
-
-    if (head == 0) {
+    head --;
+    if (head < 0) {
       head = 3;
-    } else {
-      head -= dir;
     }
+
+
   }
   bumpcheck = false;
   bool flag = false;
@@ -162,7 +160,7 @@ void turn90(int angle, int dir, int align) {
   }
   unsigned long lastTime = 0;
   if (getDistance(1) < WALLDISTANCE) {
-    offsetStraight(35);
+    offsetStraight(40);
   } else {
     offsetStraight(75);
   }
@@ -217,7 +215,7 @@ void offsetStraight(int value) {
   if (dist > value) {
     while (dist > value) {
       dist = (getDistance(1) % 300);
-      int pwm = constrain((dist - value), 40, 100);
+      int pwm = constrain((dist - value), 45, 100);
       int err = 1.5 * yaw; // readGyroZ() / 14;
       moveMotor(pwm + err, pwm - err);
       delay(2);
@@ -226,7 +224,7 @@ void offsetStraight(int value) {
   } else {
     while (dist < value) {
       dist = (getDistance(1) % 300);
-      int pwm = constrain((value - dist), 40, 100);
+      int pwm = constrain((value - dist), 45, 100);
       int err = -1.5 * yaw; // readGyroZ() / 14;
       moveMotor(-(pwm + err), -(pwm - err));
       delay(2);

@@ -19,10 +19,15 @@ Servo dispencer;
 SimpleKalmanFilter kalmanX(2, 2, 0.01);
 SimpleKalmanFilter kalmanY(2, 2, 0.01);
 SimpleKalmanFilter kalmanZ(2, 2, 0.01);
+SimpleKalmanFilter kalmanColour(2, 2, 0.01);
+
+Adafruit_SSD1306 display(12);
+
 
 // structure for tiles in the maze
 struct tile {
   /* data */
+  int h;
   int nos;
   int f = 0, l = 0, r = 0;
   int pre_x, pre_y;
@@ -30,6 +35,9 @@ struct tile {
   int is_visited = 0; // 0 for not visited 1 for visited
   int is_node = 0;    // 0 for not node 1 for node
   int no_go = 0;      // 0 for go 1 for no go
+
+  //for cell walls
+  int check;
 };
 
 #endif

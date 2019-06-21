@@ -23,17 +23,17 @@ void setPixelColour(int x, int colour, int Brightness) {
 void indicateWalls() {
   clearPixels();
   delay(10);
-  if (getDistance(LEFT) < WALLDISTANCE)
+  if (cell[p_x][p_y].l == 1)
     setPixelColour(LEFTPIXEL, RED, 20);
   else
     setPixelColour(LEFTPIXEL, GREEN, 20);
 
-  if (getDistance(FRONT) < WALLDISTANCE)
+  if (cell[p_x][p_y].f  == 1)
     setPixelColour(FRONTPIXEL, RED, 20);
   else
     setPixelColour(FRONTPIXEL, GREEN, 20);
 
-  if (getDistance(RIGHT) < WALLDISTANCE)
+  if (cell[p_x][p_y].r  == 1)
     setPixelColour(RIGHTPIXEL, RED, 20);
   else
     setPixelColour(RIGHTPIXEL, GREEN, 20);

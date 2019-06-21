@@ -57,6 +57,9 @@ int pr_x = 0, pr_y = 0;
 
 // Count the tile number
 int count = 0;
+// Count the node number
+int node=0;
+
 
 // Variables to store encoder positions for Left and Right encoders
 // set to volatile type to ensure it doesn't get omitted during compile time.
@@ -65,8 +68,6 @@ volatile int encoderposR = 0, encoderposL = 0;
 // Variables for each tile
 tile cell[20][20];
 
-// Stacks to store paths.
-StackArray<int> stack1;
-StackArray<int> stack2;
+
 
 #endif

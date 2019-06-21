@@ -23,9 +23,12 @@
 
 // stack.push(s_cell[0]);
 // stack.pop();
+int tracePath[100];
+int count1=0;
 void setup() {
 
-  #ifdef DEBUG
+  tile *s_cell;
+#ifdef DEBUG
   beginSerialUSB();
 #else
   delay(100);
@@ -77,137 +80,143 @@ void setup() {
   waitForSignal();
 }
 
-void loop(){
-
+void loop() {
   clearPixels();
   beep();
 
-
-if (cell[p_x][p_y].is_visited==0) {
-update_cell();
-}
-else {
-        if(cell[p_x][p_y].is_node==1){
-            while(cell[p_x][p_y].h!=head){
-                switch (head) {
-                  case -1:turn90(90, -1, false);
-                          //heading();
-                          break;
-                  case -2:turn90(90, -1, false);
-                          //heading();
-                          break;
-                  case -3:turn90(90, 1, false);
-                          //heading();
-                          break;
-                  case  1:turn90(90, 1, false);
-                          //heading();
-                          break;
-                  case  2:turn90(90, 1, false);
-                          //heading();
-                          break;
-                  case  3:turn90(90,-1, false);
-                          //heading();
-                          break;
-            }
-        }
-}}
-
-
-
-
-indicateWalls();
-delay(300);
-
-if (cell[p_x][p_y].l == 0) {             //left wall open
-  if (cell[pr_x][pr_y].is_node==1) {
-  cell[cell[p_x][p_y].pre_x][cell[p_x][p_y].pre_y].l==1;
+  if (cell[p_x][p_y].is_visited==0) {
+  update_cell();
   }
-  // pr_x = p_x;
-  // pr_y = p_y;
-  indicatePath(LEFT);
-  turn90(90, -1,true);
-  indicatePath(FRONT);
-  moveStraight(300);
-  heading();
-  disp();
-
-  }
-
-  else if(cell[p_x][p_y].f == 0) { //wall on left and right
-  if (cell[pr_x][pr_y].is_node==1) {
-  cell[cell[p_x][p_y].pre_x][cell[p_x][p_y].pre_y].f==1;
-  }
-  // pr_x = p_x;
-  // pr_y = p_y;
-  indicatePath(FRONT);
-  moveStraight(300);
-  heading();
-  disp();
-
-  }
-
-
-  else if (cell[p_x][p_y].r == 0) { //wall on left and front
-    if (cell[pr_x][pr_y].is_node==1) {
-    cell[cell[p_x][p_y].pre_x][cell[p_x][p_y].pre_y].r==1;
+  else{
+    if(cell[p_x][p_y].is_node==1){
+    while(cell[p_x][p_y].h!=head)
+    switch (head) {
+      case -1:turn90(90, -1, false);
+              //heading();
+              break;
+      case -2:turn90(90, -1, false);
+              //heading();
+              break;
+      case -3:turn90(90, 1, false);
+              //heading();
+              break;
+      case  1:turn90(90, 1, false);
+              //heading();
+              break;
+      case  2:turn90(90, 1, false);
+              //heading();
+              break;
+      case  3:turn90(90,-1, false);
+              //heading();
+              break;
     }
-  // pr_x = p_x;
-  // pr_y = p_y;
-  indicatePath(RIGHT);
-  turn90(90, 1,true);
-  indicatePath(FRONT);
-  moveStraight(300);
-  heading();
-  disp();
-
-
-} else {//if (L && F && R) { //all sides closed
-  indicatePath(RIGHT);
-  turn90(90, 1,true);
-  indicatePath(RIGHT);
-  turn90(90, 1,true);
-  indicatePath(FRONT);
-  moveStraight(300);
-  heading();
-  disp();
-
-  while(cell[p_x][p_y].is_node==0){
-    beep();
-    retrace();
   }
-    if (cell[p_x][p_y].l==0) {
-    cell[p_x][p_y].l=1;
-  } else if (cell[p_x][p_y].f==0) {
-    cell[p_x][p_y].f=1;
-  } else if(cell[p_x][p_y].r==0){
-    cell[p_x][p_y].r=1;
-  }
-
-  cell[p_x][p_y].check = 0;
-  bitWrite(cell[p_x][p_y].check, 0, cell[p_x][p_y].r);
-  bitWrite(cell[p_x][p_y].check, 1, cell[p_x][p_y].f);
-  bitWrite(cell[p_x][p_y].check, 2, cell[p_x][p_y].l);
-
-  if (cell[p_x][p_y].check == 7){
-    while(p_x!=0 &&p_y!=0) {
-        beep();
-        for (int i = 0; i < 8; i++) {
-          pixels.setPixelColor(i, pixels.Color(20, 20, 20));
-          pixels.show();
-        }
-        retrace();
+    if (cell[p_x][p_y].is_visited==1)
+    {
+      cell[p_x][p_y].is_visited++;
+    }
+    else if(cell[p_x][p_y].is_visited>=2){
+      if(cell[p_x][p_y].is_node==1){
+      clearScreen();
+      displayPos(0,0,"cur:",p_x,p_y);
+      displayPos(0,21,"pre:",cell[p_x][p_y].pre_x,cell[p_x][p_y].pre_y);
+      delay(200);
+      turn90(90, -1, false);
+      turn90(90, -1, false);
+      moveStraight(300);
+      heading();
+      clearScreen();
+      displayPos(0,0,"cur:",p_x,p_y);
+      displayPos(0,21,"pre:",cell[p_x][p_y].pre_x,cell[p_x][p_y].pre_y);
+      delay(200);
+      do  {
+          beep();
+          for (int i = 0; i < 8; i++) {
+            pixels.setPixelColor(i, pixels.Color(20, 20, 20));
+            pixels.show();
+          }
+          retrace();
+        }while(p_x!=0 &&p_y!=0);
+        // while (p_x==0 &&p_y==0)) {
+        //  for (int i = 0; i < 8; i++) {
+        //   pixels.setPixelColor(i, pixels.Color(20, 20, 20));
+        //   pixels.show();
+        //  }}
       }
+    }
   }
 
+  if (cell[p_x][p_y].l == 0) {
+    clearScreen();
+    displayPos(0,0,"cur:",p_x,p_y);
+    displayPos(0,21,"pre:",cell[p_x][p_y].pre_x,cell[p_x][p_y].pre_y);
+    delay(200);
+    turn90(90, -1, true);
+    moveStraight(300);
+    heading();
+    pr_x = p_x;
+    pr_y = p_y;
+  } else if (cell[p_x][p_y].f == 0) {
+    clearScreen();
+    displayPos(0,0,"cur:",p_x,p_y);
+    displayPos(0,21,"pre:",cell[p_x][p_y].pre_x,cell[p_x][p_y].pre_y);
+    delay(200);
+    moveStraight(300);
+    pr_x = p_x;
+    pr_y = p_y;
+    heading();
+  }
 
+  else if (cell[p_x][p_y].r == 0) {
+    clearScreen();
+    displayPos(0,0,"cur:",p_x,p_y);
+    displayPos(0,21,"pre:",cell[p_x][p_y].pre_x,cell[p_x][p_y].pre_y);
+    delay(200);
+    turn90(90, 1, true);
+    moveStraight(300);
+    pr_x = p_x;
+    pr_y = p_y;
+    heading();
+  } else {
+    clearScreen();
+    displayPos(0,0,"cur:",p_x,p_y);
+    displayPos(0,21,"pre:",cell[p_x][p_y].pre_x,cell[p_x][p_y].pre_y);
+    delay(200);
+    turn90(90, 1, false);
+    turn90(90, 1, true);
+    moveStraight(300);
+    heading();
+    clearScreen();
+    displayPos(0,0,"cur:",p_x,p_y);
+    displayPos(0,21,"pre:",cell[p_x][p_y].pre_x,cell[p_x][p_y].pre_y);
+    delay(200);
+
+    while(cell[p_x][p_y].is_node==0){
+      beep();
+      retrace();
+    }
+    // turn90(90, -1, false);
+    if (cell[p_x][p_y].l==0) {
+      cell[p_x][p_y].l=1;
+    } else if (cell[p_x][p_y].f==0) {
+      cell[p_x][p_y].f=1;
+    } else if(cell[p_x][p_y].r==0){
+      cell[p_x][p_y].r=1;
+    }
+  }
+
+  count++;
+  // pr_x=p_x;
+  // pr_y=p_y;
+  //heading();
+  delay(500);
+  yield();
 }
-
-
-}//loop end
-
 
 void update_cell() {
   cell[p_x][p_y].nos = count;
+  cell[p_x][p_y].pre_x = pr_x;
+  cell[p_x][p_y].pre_y = pr_y;
   cell[p_x][p_y].h= head;
   if (getDistance(1) < WALLDISTANCE)
     cell[p_x][p_y].f = 1;
@@ -216,41 +225,12 @@ void update_cell() {
   if (getDistance(0) < WALLDISTANCE)
     cell[p_x][p_y].l = 1;
 
-    switch (cell[p_x][p_y].h) {
-      case 0: cell[p_x][p_y].pre_x = p_x-1;
-              cell[p_x][p_y].pre_y = p_y;
-              if (cell[p_x][p_y].pre_x<0) {
-                cell[p_x][p_y].pre_x = 20 + cell[p_x][p_y].pre_x;
-              }
-              break;
-      case 1:cell[p_x][p_y].pre_y = p_y-1;
-              cell[p_x][p_y].pre_x = p_x;
-              if (cell[p_x][p_y].pre_y<0) {
-                cell[p_x][p_y].pre_y = 20 + cell[p_x][p_y].pre_y;
-              }
-              break;
-      case 2:cell[p_x][p_y].pre_x = p_x +1;
-              cell[p_x][p_y].pre_y = p_y;
-              if (cell[p_x][p_y].pre_x>19) {
-                cell[p_x][p_y].pre_x = 0;
-              }
-              break;
-      case 3:cell[p_x][p_y].pre_y = p_y-1;
-              cell[p_x][p_y].pre_x = p_x;
-              if (cell[p_x][p_y].pre_y>19) {
-                cell[p_x][p_y].pre_y = 0;
-              }
-              break;
-    }
-    cell[p_x][p_y].pre_x = pr_x;
-    cell[p_x][p_y].pre_y = pr_y;
+  check = 0;
+  bitWrite(check, 0, cell[p_x][p_y].r);
+  bitWrite(check, 1, cell[p_x][p_y].f);
+  bitWrite(check, 2, cell[p_x][p_y].l);
 
-  cell[p_x][p_y].check = 0;
-  bitWrite(cell[p_x][p_y].check, 0, cell[p_x][p_y].r);
-  bitWrite(cell[p_x][p_y].check, 1, cell[p_x][p_y].f);
-  bitWrite(cell[p_x][p_y].check, 2, cell[p_x][p_y].l);
-
-  if (cell[p_x][p_y].check == 0 || cell[p_x][p_y].check == 1 || cell[p_x][p_y].check == 2 || cell[p_x][p_y].check == 4){
+  if (check == 0 || check == 1 || check == 2 || check == 4){
     cell[p_x][p_y].is_node = 1;
     for (int i = 0; i < 8; i++) {
       pixels.setPixelColor(i, pixels.Color(0, 20, 20));
@@ -263,6 +243,7 @@ void update_cell() {
   if (cell[p_x][p_y].is_visited != 1)
     cell[p_x][p_y].is_visited = 1;
 }
+
 void heading() {
   switch (head) {
   case 0:
@@ -291,6 +272,8 @@ void heading() {
     break;
   }
 }
+
+
 void retrace(){
   //basic Left wall follow
   bool L = (getDistance(LEFT) < WALLDISTANCE) ? true : false;
