@@ -82,36 +82,56 @@ void setup() {
 
 void loop() {
   // Check walls
-  switch (HEAD) {
-  case 0: // Heading north
-    cell[count].N = (getDistance(FRONT) < WALLDISTANCE);
-    cell[count].E = (getDistance(RIGHT) < WALLDISTANCE);
-    cell[count].S = false;
-    cell[count].W = (getDistance(LEFT) < WALLDISTANCE);
-    break;
-  case 1: // heading east
-    cell[count].N = (getDistance(LEFT) < WALLDISTANCE);
-    cell[count].E = (getDistance(FRONT) < WALLDISTANCE);
-    cell[count].S = (getDistance(RIGHT) < WALLDISTANCE);
-    cell[count].W = false;
-    break;
-  case 2: // heading south
-    cell[count].N = false;
-    cell[count].E = (getDistance(LEFT) < WALLDISTANCE);
-    cell[count].S = (getDistance(FRONT) < WALLDISTANCE);
-    cell[count].W = (getDistance(RIGHT) < WALLDISTANCE);
-    break;
-  case 3: // heading west
-    cell[count].N = (getDistance(RIGHT) < WALLDISTANCE);
-    cell[count].E = false;
-    cell[count].S = (getDistance(LEFT) < WALLDISTANCE);
-    cell[count].W = (getDistance(FRONT) < WALLDISTANCE);
-    break;
+  if (!cell[count].visited) {
+    cell[count].visited = true;
+    switch (HEAD) {
+    case 0: // Heading north
+      cell[count].N = (getDistance(FRONT) < WALLDISTANCE);
+      cell[count].E = (getDistance(RIGHT) < WALLDISTANCE);
+      cell[count].S = false;
+      cell[count].W = (getDistance(LEFT) < WALLDISTANCE);
+      cell[count].backWay = 2;
+      break;
+    case 1: // heading east
+      cell[count].N = (getDistance(LEFT) < WALLDISTANCE);
+      cell[count].E = (getDistance(FRONT) < WALLDISTANCE);
+      cell[count].S = (getDistance(RIGHT) < WALLDISTANCE);
+      cell[count].W = false;
+      cell[count].backWay = 3;
+      break;
+    case 2: // heading south
+      cell[count].N = false;
+      cell[count].E = (getDistance(LEFT) < WALLDISTANCE);
+      cell[count].S = (getDistance(FRONT) < WALLDISTANCE);
+      cell[count].W = (getDistance(RIGHT) < WALLDISTANCE);
+      cell[count].backWay = 0;
+      break;
+    case 3: // heading west
+      cell[count].N = (getDistance(RIGHT) < WALLDISTANCE);
+      cell[count].E = false;
+      cell[count].S = (getDistance(LEFT) < WALLDISTANCE);
+      cell[count].W = (getDistance(FRONT) < WALLDISTANCE);
+      cell[count].backWay = 1;
+      break;
+    }
+    int8_t num = 0;
+    bitWrite(num, 2, (getDistance(RIGHT) < WALLDISTANCE));
+    bitWrite(num, 1, (getDistance(FRONT) < WALLDISTANCE));
+    bitWrite(num, 0, (getDistance(LEFT) < WALLDISTANCE));
+    cell[count].node = ((num >= 0 && num <= 2) || num == 4);
   }
 
-  setHeading();
-  moveStraight(300);
-  count++;
+  if (setHeading(cell[count]) == -1) {
+    // enable backtrack here
+  } else {
+    moveStraight(300);
+    // int8_t back = HEAD - 2;
+    // if (back < 0)
+    //   back += 4;
+    // cell[count].backWay = back;
+    count++;
+    countMax++;
+  }
   yield();
 }
 
@@ -152,4 +172,6 @@ int8_t setHeading(tile currtile) {
   case 0:
     break;
   }
+  indicateWalls();
+  delay(200);
 }

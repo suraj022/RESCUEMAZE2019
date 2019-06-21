@@ -26,8 +26,9 @@ struct tile { // num stored in array index
   bool N = false, E = false, S = false, W = false;
   int8_t backWay; // N = 0, E = 1, S = 2, W = 3;
   int8_t x, y;
-  bool is_node = false;
-  bool no_go = false;
+  bool node = false;
+  bool visited = false;
+  bool nogo = false;
 };
 
 #endif
