@@ -16,13 +16,7 @@
 #include "libraries.h"
 #include "objects.h"
 #include "variables.h"
-//#include "Stack.h"
 
-// StackArray <int> stack1;
-// StackArray <int> stack2;
-
-// stack.push(s_cell[0]);
-// stack.pop();
 void setup() {
 
   #ifdef DEBUG
@@ -90,9 +84,8 @@ else {
       if(cell[p_x][p_y].is_visited>=1)
       {cell[p_x][p_y].is_visited+=1;}
 
-
         if(cell[p_x][p_y].is_node==1){
-            while(cell[p_x][p_y].h!=head){
+            while(head!=cell[p_x][p_y].h){
                 switch (head) {
                   case -1:turn90(90, -1, false);
                           //heading();
@@ -187,21 +180,21 @@ nodeBlock();
   //   cell[p_x][p_y].r=1;
   // }
 
-  cell[p_x][p_y].check = 0;
-  bitWrite(cell[p_x][p_y].check, 0, cell[p_x][p_y].r);
-  bitWrite(cell[p_x][p_y].check, 1, cell[p_x][p_y].f);
-  bitWrite(cell[p_x][p_y].check, 2, cell[p_x][p_y].l);
-
-  if (cell[p_x][p_y].check == 7){
-    while(p_x!=0 &&p_y!=0) {
-        beep();
-        for (int i = 0; i < 8; i++) {
-          pixels.setPixelColor(i, pixels.Color(20, 20, 20));
-          pixels.show();
-        }
-        retrace();
-      }
-  }
+  // cell[p_x][p_y].check = 0;
+  // bitWrite(cell[p_x][p_y].check, 0, cell[p_x][p_y].r);
+  // bitWrite(cell[p_x][p_y].check, 1, cell[p_x][p_y].f);
+  // bitWrite(cell[p_x][p_y].check, 2, cell[p_x][p_y].l);
+  //
+  // if (cell[p_x][p_y].check == 7){
+  //   while(p_x!=0 &&p_y!=0) {
+  //       beep();
+  //       for (int i = 0; i < 8; i++) {
+  //         pixels.setPixelColor(i, pixels.Color(20, 20, 20));
+  //         pixels.show();
+  //       }
+  //       retrace();
+  //     }
+  // }
 
 
 }
@@ -310,32 +303,24 @@ void retrace(){
     indicatePath(FRONT);
     moveStraight(300);
     heading();
-    displayPos(0,0,"cur:",p_x,p_y);
-    displayPos(0,21,"pre:",cell[p_x][p_y].pre_x,cell[p_x][p_y].pre_y);
-    delay(200);
+    disp();
   } else if (L && !F && !R) { //wall on left
     indicatePath(FRONT);
     moveStraight(300);
     heading();
-    displayPos(0,0,"cur:",p_x,p_y);
-    displayPos(0,21,"pre:",cell[p_x][p_y].pre_x,cell[p_x][p_y].pre_y);
-    delay(200);
+    disp();
   } else if (L && !F && R) { //wall on left and right
     indicatePath(FRONT);
     moveStraight(300);
     heading();
-    displayPos(0,0,"cur:",p_x,p_y);
-    displayPos(0,21,"pre:",cell[p_x][p_y].pre_x,cell[p_x][p_y].pre_y);
-    delay(200);
+    disp();
   } else if (L && F && !R) { //wall on left and front
     indicatePath(RIGHT);
     turn90(90, 1,true);
     indicatePath(FRONT);
     moveStraight(300);
     heading();
-    displayPos(0,0,"cur:",p_x,p_y);
-    displayPos(0,21,"pre:",cell[p_x][p_y].pre_x,cell[p_x][p_y].pre_y);
-    delay(200);
+    disp();
   } else if (L && F && R) { //all sides closed
     indicatePath(RIGHT);
     turn90(90, 1,true);
@@ -344,9 +329,7 @@ void retrace(){
     indicatePath(FRONT);
     moveStraight(300);
     heading();
-    displayPos(0,0,"cur:",p_x,p_y);
-    displayPos(0,21,"pre:",cell[p_x][p_y].pre_x,cell[p_x][p_y].pre_y);
-    delay(200);
+    disp();
   }
 
 
@@ -362,8 +345,6 @@ if (cell[p_x][p_y].is_node==1) {
   case 0: cell[p_x][p_y].f=1;
           break;
   case 1: cell[p_x][p_y].r=1;
-          break;
-  case 2:
           break;
   case 3: cell[p_x][p_y].l=1;
           break;

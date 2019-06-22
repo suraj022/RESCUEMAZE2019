@@ -20,7 +20,6 @@ void moveStraight(int pos) {
 
 
 
-  offsetStraight(80);
   P = 0;
   I = 0;
   D = 0;
@@ -56,7 +55,7 @@ void moveStraight(int pos) {
       } else if (wallR > WALLDISTANCE && wallL > WALLDISTANCE) {
         err = yaw; // readGyroZ();
         P = 0;
-        I = 0;
+        I = 0.001;
         D = 0;
         lastError = 0;
       }
@@ -111,9 +110,9 @@ void moveStraight(int pos) {
   } else {
     while ((encoderpos - desiredpos) > 0) {
       encoderpos = (encoderposL + encoderposR) / 2;
-      int pwm = constrain((encoderpos - desiredpos), 0, MAXSPEED);
+      int pwm = constrain((encoderpos - desiredpos), 0, MAXSPEED/1.5);
       int err = -yaw;
-      P = 0.4 * err; // 1.818
+      P = 2 * err; // 1.818
       I += 0 * err;  // 0.4
       D = 0 * (err - lastError);
       lastError = err;
@@ -131,6 +130,7 @@ void moveStraight(int pos) {
   delay(50);
   moveMotor(0, 0); // stop motors
   lastError = 0;
+  offsetStraight(125);
 }
 void turn90(int angle, int dir, int align) {
 
@@ -160,9 +160,9 @@ void turn90(int angle, int dir, int align) {
   }
   unsigned long lastTime = 0;
   if (getDistance(1) < WALLDISTANCE) {
-    offsetStraight(40);
+    offsetStraight(53);
   } else {
-    offsetStraight(75);
+    offsetStraight(78);
   }
   delay(10);
   moveMotor(0, 0);
@@ -213,25 +213,29 @@ void offsetStraight(int value) {
   delay(100);
   int dist = (getDistance(1) % 300);
   if (dist > value) {
-    while (dist > value) {
+    while (dist - value >10) {
       dist = (getDistance(1) % 300);
-      int pwm = constrain((dist - value), 45, 100);
+      int pwm = constrain((dist - value), 30, 70);
+      pwm+=(dist - value)*0.001;
       int err = 1.5 * yaw; // readGyroZ() / 14;
       moveMotor(pwm + err, pwm - err);
       delay(2);
       // yield();
     }
   } else {
-    while (dist < value) {
+    while (value-dist>10) {
       dist = (getDistance(1) % 300);
-      int pwm = constrain((value - dist), 45, 100);
+      int pwm = constrain((value - dist), 30, 70);
+      pwm+=(value - dist)*0.001;
       int err = -1.5 * yaw; // readGyroZ() / 14;
       moveMotor(-(pwm + err), -(pwm - err));
       delay(2);
       // yield();
     }
   }
+moveMotor(0,0);
 }
+
 
 // int rpmOffset() {
 //  int L = 60000 / (((currentpulsetime1) / 1000.0) * 562.215);
