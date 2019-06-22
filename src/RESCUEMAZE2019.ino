@@ -53,7 +53,7 @@ void setup() {
   beginNeopixel();
 
   // Clear pixels
-  clearPixels(); // JHGKF
+  clearPixels();
 
   beep();
   // start parallel loops
@@ -66,6 +66,10 @@ void setup() {
   beep();
   // wallDistance = (getDistance(0) + getDistance(2)) / 2;
   // Wait until a signal is given
+  // while (1) {
+  //   SerialUSB.println(getDistance(FRONT) % 300, DEC);
+  //   delay(100);
+  // }
   waitForSignal();
   if ((getDistance(FRONT) < WALLDISTANCE) ? false : true) {
     indicatePath(FRONT);
@@ -83,59 +87,59 @@ void loop() {
   indicateWalls();
   delay(300);
 
-  if (blackFlag) {
-    for (int i = 0; i < 8; i++) {
-      setPixelColour(i, RED, 50);
-    }
-    delay(200);
-    clearPixels();
-    delay(200);
-    for (int i = 0; i < 8; i++) {
-      setPixelColour(i, RED, 50);
-    }
-    delay(200);
-    clearPixels();
-    moveStraight(-300);
+  // if (blackFlag) {
+  //   for (int i = 0; i < 8; i++) {
+  //     setPixelColour(i, RED, 50);
+  //   }
+  //   delay(200);
+  //   clearPixels();
+  //   delay(200);
+  //   for (int i = 0; i < 8; i++) {
+  //     setPixelColour(i, RED, 50);
+  //   }
+  //   delay(200);
+  //   clearPixels();
+  //   moveStraight(-300);
+  //   indicatePath(LEFT);
+  //   turn90(90, -1, false);
+  //   turn90(90, -1, true);
+  // } else {
+  //   if (silverFlag) {
+  //     for (int i = 0; i < 8; i++) {
+  //       setPixelColour(i, BLUE, 50);
+  //     }
+  //     delay(200);
+  //     clearPixels();
+  //     delay(200);
+  //     for (int i = 0; i < 8; i++) {
+  //       setPixelColour(i, BLUE, 50);
+  //     }
+  //     delay(200);
+  //     clearPixels();
+  //   }
+  if (!L) { // left wall open
     indicatePath(LEFT);
-    turn90(90, -1, false);
     turn90(90, -1, true);
-  } else {
-    if (silverFlag) {
-      for (int i = 0; i < 8; i++) {
-        setPixelColour(i, BLUE, 50);
-      }
-      delay(200);
-      clearPixels();
-      delay(200);
-      for (int i = 0; i < 8; i++) {
-        setPixelColour(i, BLUE, 50);
-      }
-      delay(200);
-      clearPixels();
-    }
-    if (!L) { // left wall open
-      indicatePath(LEFT);
-      turn90(90, -1, true);
-      indicatePath(FRONT);
-      moveStraight(300);
-    } else if (L && !F && !R) { // wall on left
-      indicatePath(FRONT);
-      moveStraight(300);
-    } else if (L && !F && R) { // wall on left and right
-      indicatePath(FRONT);
-      moveStraight(300);
-    } else if (L && F && !R) { // wall on left and front
-      indicatePath(RIGHT);
-      turn90(90, 1, true);
-      indicatePath(FRONT);
-      moveStraight(300);
-    } else if (L && F && R) { // all sides closed
-      indicatePath(RIGHT);
-      turn90(90, 1, false);
-      turn90(90, 1, false);
-      indicatePath(FRONT);
-      moveStraight(300);
-    }
+    indicatePath(FRONT);
+    moveStraight(300);
+  } else if (L && !F && !R) { // wall on left
+    indicatePath(FRONT);
+    moveStraight(300);
+  } else if (L && !F && R) { // wall on left and right
+    indicatePath(FRONT);
+    moveStraight(300);
+  } else if (L && F && !R) { // wall on left and front
+    indicatePath(RIGHT);
+    turn90(90, 1, true);
+    indicatePath(FRONT);
+    moveStraight(300);
+  } else if (L && F && R) { // all sides closed
+    indicatePath(RIGHT);
+    turn90(90, 1, false);
+    turn90(90, 1, false);
+    indicatePath(FRONT);
+    moveStraight(300);
   }
+  // }
   yield();
 }

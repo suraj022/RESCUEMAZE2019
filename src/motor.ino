@@ -16,7 +16,7 @@ void moveMotor(int L, int R) {
 }
 
 void moveStraight(int pos) {
-  offsetStraight(80);
+  // offsetStraight(125);
   P = 0;
   I = 0;
   D = 0;
@@ -31,7 +31,7 @@ void moveStraight(int pos) {
   int encoderbackupR = 0;
   yaw = 0;
   delay(50);
-  if ((desiredpos - encoderpos) > 0) {
+  if ((desiredpos - encoderpos) > 5) {
     while ((desiredpos - encoderpos) > 10) {
       encoderpos = (encoderposL + encoderposR) / 2;
       int pwm = constrain((desiredpos - encoderpos), 0, MAXSPEED);
@@ -56,8 +56,8 @@ void moveStraight(int pos) {
         D = 0;
         lastError = 0;
       }
-      P = 0.35 * err; // 1.818
-      I += 0 * err;   // 0.4
+      P = 0.35 * err;   // 1.818
+      I += 0.001 * err; // 0.4
       D = 0 * (err - lastError);
       lastError = err;
       offset = P + I + D;
@@ -105,12 +105,12 @@ void moveStraight(int pos) {
       yield();
     }
   } else {
-    while ((encoderpos - desiredpos) > 0) {
+    while ((encoderpos - desiredpos) > 5) {
       encoderpos = (encoderposL + encoderposR) / 2;
-      int pwm = constrain((encoderpos - desiredpos), 0, MAXSPEED);
-      int err = -yaw;
-      P = 0.4 * err; // 1.818
-      I += 0 * err;  // 0.4
+      int pwm = constrain((encoderpos - desiredpos), 0, MAXSPEED / 1.5);
+      int err = yaw;
+      P = 2 * err;      // 1.818
+      I += 0.001 * err; // 0.4
       D = 0 * (err - lastError);
       lastError = err;
       int offset = P + I + D;
@@ -127,6 +127,7 @@ void moveStraight(int pos) {
   delay(50);
   moveMotor(0, 0); // stop motors
   lastError = 0;
+  offsetStraight(125);
 }
 
 void turn90(int angle, int dir, bool align) {
@@ -139,9 +140,9 @@ void turn90(int angle, int dir, bool align) {
     flag = true;
   }
   if (getDistance(1) < WALLDISTANCE) {
-    offsetStraight(35);
+    offsetStraight(53);
   } else {
-    offsetStraight(75);
+    offsetStraight(78);
   }
   delay(10);
   moveMotor(0, 0);
@@ -163,7 +164,7 @@ void turn90(int angle, int dir, bool align) {
     Pr = err;
     // Ir += err * 0.001;
     int diff = 1.1 * Pr + Ir;
-    moveMotor(dir * constrain(diff, 30, 100), -dir * constrain(diff, 30, 100));
+    moveMotor(dir * constrain(diff, 25, 100), -dir * constrain(diff, 25, 100));
     delay(1);
     yield();
   } while (abs(err) > 20);
@@ -187,24 +188,29 @@ void offsetStraight(int value) {
   delay(100);
   int dist = (getDistance(1) % 300);
   if (dist > value) {
-    while (dist > value) {
+    while (dist - value > 10) {
       dist = (getDistance(1) % 300);
-      int pwm = constrain((dist - value), 40, 100);
+      float pwm = constrain((dist - value), 30, 70);
+      pwm += (dist - value) * 0.001;
+      // SerialUSB.println((dist - value));
       int err = 1.5 * yaw; // readGyroZ() / 14;
       moveMotor(pwm + err, pwm - err);
       delay(2);
       // yield();
     }
   } else {
-    while (dist < value) {
+    while (value - dist > 10) {
       dist = (getDistance(1) % 300);
-      int pwm = constrain((value - dist), 40, 100);
+      float pwm = constrain((value - dist), 30, 70);
+      pwm += (value - dist) * 0.001;
+      // SerialUSB.println(-(value - dist));
       int err = -1.5 * yaw; // readGyroZ() / 14;
       moveMotor(-(pwm + err), -(pwm - err));
       delay(2);
       // yield();
     }
   }
+  moveMotor(0, 0);
 }
 
 // int rpmOffset() {
