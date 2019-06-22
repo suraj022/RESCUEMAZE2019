@@ -1,11 +1,11 @@
 /* TODO list-
-  1. move 1 tile function
+  1. move 1 tile function DONE
   2. change encoder loop to function DONE
   3. implement rescue mechanism DONE
   4. Fix wall align using PID DONE
-  5. Fix encoder movement using PID
+  5. Fix encoder movement using PID DONE
   6. Heated victim DONE
-  7. Add basic wall follow algorithm DONE
+  7. try basic wall follow algorithm DONE
   8. Depth first search algorithm
   9. Visual victim Identification DONE
   10. Turn 90 degree using mpu6050 DONE
@@ -55,6 +55,9 @@ void setup() {
   // Clear pixels
   clearPixels();
 
+  // begin Oled function
+  oledbegin();
+
   beep();
   // start parallel loops
   Scheduler.startLoop(MLXloop);    // constantly read temperatures
@@ -66,10 +69,6 @@ void setup() {
   beep();
 
   // Wait until a signal is given
-  // while (1) {
-  //   SerialUSB.println(getDistance(FRONT) % 300, DEC);
-  //   delay(100);
-  // }
   waitForSignal();
 
   // move forward once only if front wall is open
@@ -77,186 +76,62 @@ void setup() {
   //   indicatePath(FRONT);
   //   moveStraight(300);
   // }
-  count = 0;
-  countMax = 0;
+  COUNT = 0;
   gridX = 0;
   gridY = 0;
   HEAD = 3;
+  cell[COUNT].E = true;
 }
+
+/*
+  DFS tile sequence
+    0. update x, y coordinates of current tile
+    1. set walls
+    2. set heading
+    3. if deadend then backtrack to last node
+    4. else check next tile
+    5. if next tile is not visited then move forward and count++
+    6. else teleCount++ and backtrack to last node
+*/
 
 void loop() {
-  // update x,y
-  cell[count].x = gridX;
-  cell[count].y = gridY;
+  // update x, y coordinates of current tile
+  cell[COUNT].x = gridX;
+  cell[COUNT].y = gridY;
 
-  // Check walls
-  if (!cell[count].visited) {
-    cell[count].visited = true;
-    switch (HEAD) {
-    case 0: // Heading north
-      cell[count].N = (getDistance(FRONT) < WALLDISTANCE);
-      cell[count].E = (getDistance(RIGHT) < WALLDISTANCE);
-      cell[count].S = false;
-      cell[count].W = (getDistance(LEFT) < WALLDISTANCE);
-      cell[count].backWay = 2;
-      break;
-    case 1: // heading east
-      cell[count].N = (getDistance(LEFT) < WALLDISTANCE);
-      cell[count].E = (getDistance(FRONT) < WALLDISTANCE);
-      cell[count].S = (getDistance(RIGHT) < WALLDISTANCE);
-      cell[count].W = false;
-      cell[count].backWay = 3;
-      break;
-    case 2: // heading south
-      cell[count].N = false;
-      cell[count].E = (getDistance(LEFT) < WALLDISTANCE);
-      cell[count].S = (getDistance(FRONT) < WALLDISTANCE);
-      cell[count].W = (getDistance(RIGHT) < WALLDISTANCE);
-      cell[count].backWay = 0;
-      break;
-    case 3: // heading west
-      cell[count].N = (getDistance(RIGHT) < WALLDISTANCE);
-      cell[count].E = false;
-      cell[count].S = (getDistance(LEFT) < WALLDISTANCE);
-      cell[count].W = (getDistance(FRONT) < WALLDISTANCE);
-      cell[count].backWay = 1;
-      break;
-    }
-    int8_t num = 0;
-    bitWrite(num, 2, (getDistance(RIGHT) < WALLDISTANCE));
-    bitWrite(num, 1, (getDistance(FRONT) < WALLDISTANCE));
-    bitWrite(num, 0, (getDistance(LEFT) < WALLDISTANCE));
-    cell[count].node = ((num >= 0 && num <= 2) || num == 4);
-  }
-  int8_t testCount = setHeading(cell[count]);
-  cell[count].testCount = testCount;
-  if (testCount == -1) {
-    beep();
-    delay(100);
-    beep();
-    delay(100);
-    beep();
-    cell[count].nogo = true;
-    while (cell[count].node) {
-      orient(cell[count].backWay);
-      moveStraight(300);
-      delay(300);
-      count--;
-    }
-    // rest backtrack code here
+  displayPos(0, 0, "cur:", HEAD, 0);
+  delay(100);
+  // set walls
+  setWalls();
 
-  } else {
-    int flag = false;
-    int tmpX = cell[count].x;
-    int tmpY = cell[count].y;
-    int i = countMax;
-    // N = 0, E = 1, S = 2, W = 3;
-    switch (HEAD) {
-    case 0:
-      while (i >= 0) {
-        if (cell[i].x == tmpX && cell[i].y == tmpY + 1) {
-          if (cell[i].visited == true) {
-            flag = true;
-            break;
-          }
-        }
-        i--;
-      }
-      break;
-    case 1:
-      while (i >= 0) {
-        if (cell[i].x == tmpX + 1 && cell[i].y == tmpY) {
-          if (cell[i].visited == true) {
-            flag = true;
-            break;
-          }
-        }
-        i--;
-      }
-      break;
-    case 2:
-      while (i >= 0) {
-        if (cell[i].x == tmpX && cell[i].y == tmpY - 1) {
-          if (cell[i].visited == true) {
-            flag = true;
-            break;
-          }
-        }
-        i--;
-      }
-      break;
-    case 3:
-      while (i >= 0) {
-        if (cell[i].x == tmpX - 1 && cell[i].y == tmpY) {
-          if (cell[i].visited == true) {
-            flag = true;
-            break;
-          }
-        }
-        i--;
-      }
-      break;
+  // set heading
+  bool headingResult = setHeading();
+
+  // displayPos(0, 0, "result:", headingResult, NULL);
+  delay(100);
+  if (!headingResult) { // if deadend then backtrack to last node
+    // backtrack code here
+    while (1) {
+      beep();
+      delay(100);
+      beep();
+      delay(100);
     }
-    if (!flag) {
+  } else { // else check next tile
+    bool nexttile = nextTile(cell[COUNT].x, cell[COUNT].y);
+    if (!nexttile) { // if next tile not found then move forward and count++
       moveStraight(300);
-      count++;
-      countMax++;
+      COUNT++;
+    } else { // else teleCount++ and backtrack to last node
+      // backtrack code here
+      while (1) {
+        beep();
+        delay(100);
+        beep();
+        delay(100);
+      }
     }
-    // int8_t back = HEAD - 2;
-    // if (back < 0)
-    //   back += 4;
-    // cell[count].backWay = back;
   }
+
   yield();
-}
-
-int8_t setHeading(tile currtile) {
-  int head = 0;
-  int testCount = 0;
-  if (!currtile.S && currtile.testCount < 1) {
-    head = 2;
-    testCount = 1;
-  } else if (!currtile.W && currtile.testCount < 2) {
-    head = 3;
-    testCount = 2;
-  } else if (!currtile.N && currtile.testCount < 3) {
-    head = 0;
-    testCount = 3;
-  } else if (!currtile.E && currtile.testCount < 4) {
-    head = 1;
-    testCount = 4;
-  } else {
-    return -1;
-  }
-
-  orient(head);
-  return testCount;
-}
-
-void orient(int head) {
-  int result = head - HEAD;
-  switch (result) {
-  case -3:
-  case 1:
-    turn90(90, 1, true);
-    break;
-  case -2:
-  case 2:
-    if (getDistance(LEFT) > getDistance(RIGHT)) {
-      turn90(90, -1, false);
-      turn90(90, -1, true);
-    } else {
-      turn90(90, 1, false);
-      turn90(90, 1, true);
-    }
-    break;
-  case -1:
-  case 3:
-    turn90(90, -1, true);
-    break;
-  case 0:
-    break;
-  }
-  indicateWalls();
-  delay(200);
 }

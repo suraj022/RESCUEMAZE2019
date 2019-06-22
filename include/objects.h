@@ -21,16 +21,18 @@ SimpleKalmanFilter kalmanY(2, 2, 0.01);
 SimpleKalmanFilter kalmanZ(2, 2, 0.01);
 SimpleKalmanFilter kalmanColour(2, 2, 0.01);
 
+// object for 0.96inch SSD1306 oled diplay
+Adafruit_SSD1306 display(12);
+
 // structure for tiles in the maze
 struct tile { // num stored in array index
   bool N = false, E = false, S = false, W = false;
   // bool NC = false, EC = false, SC = false, WC = false;
   int8_t testCount = 0;
   int8_t backWay; // N = 0, E = 1, S = 2, W = 3;
-  int8_t x, y;
+  int8_t x = -1, y = -1;
   bool node = false;
-  bool visited = false;
-  bool nogo = false;
+  // bool visited = false;
 };
 
 #endif

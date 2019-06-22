@@ -12,8 +12,9 @@ void gyroLoop() {
   Wire.endTransmission();
   Wire.beginTransmission(MPU_addr);
   Wire.requestFrom(MPU_addr, 6); // request a total of 6 registers
-  while (Wire.available() < 6)
-    ;
+  while (Wire.available() < 6) {
+    delay(1);
+  }
   GyX =
       Wire.read() << 8 | Wire.read(); // 0x43 (GYRO_XOUT_H) & 0x44 (GYRO_XOUT_L)
   GyY =

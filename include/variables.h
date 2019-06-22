@@ -62,13 +62,13 @@ tile cell[80];
   2=SOUTH
   3=WEST
 */
+
 int8_t HEAD = 3;
 
 // Global count
-int8_t countMax = 0;
-int8_t count = 0;
+int8_t COUNT = 0;
 
-bool movedstraight = false;
+// bool movedstraight = false;
 
 int8_t gridX = 0, gridY = 0;
 #endif
