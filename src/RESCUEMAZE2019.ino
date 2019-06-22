@@ -53,7 +53,7 @@ void setup() {
   beginNeopixel();
 
   // Clear pixels
-  clearPixels(); // JHGKF
+  clearPixels();
 
   beep();
   // start parallel loops
@@ -66,6 +66,10 @@ void setup() {
   beep();
 
   // Wait until a signal is given
+  // while (1) {
+  //   SerialUSB.println(getDistance(FRONT) % 300, DEC);
+  //   delay(100);
+  // }
   waitForSignal();
 
   // move forward once only if front wall is open
@@ -203,7 +207,6 @@ void loop() {
     //   back += 4;
     // cell[count].backWay = back;
   }
-
   yield();
 }
 

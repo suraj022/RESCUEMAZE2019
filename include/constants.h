@@ -2,7 +2,7 @@
 #define _CONSTANTS_H
 
 // Uncomment the following to enable USB debug messages
-#define DEBUG
+//#define DEBUG
 
 // PID tuning constants
 #define kp 0.4  // proportional
@@ -34,7 +34,7 @@
 #define RMR 4 // Right Motor Reverse
 
 // define Wall Detect distance
-#define WALLDISTANCE 170
+#define WALLDISTANCE 200
 
 #define LEFTBUMP A1
 #define RIGHTBUMP A3
