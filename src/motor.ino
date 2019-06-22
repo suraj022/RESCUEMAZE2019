@@ -119,6 +119,7 @@ void moveStraight(int pos) {
       yield();
     }
   }
+  offsetStraight(80);
   beep();
   P = 0;
   I = 0;
@@ -128,12 +129,32 @@ void moveStraight(int pos) {
   moveMotor(0, 0); // stop motors
   lastError = 0;
   offsetStraight(125);
+  switch (HEAD) {
+  case 0:
+    gridY++;
+    break;
+  case 1:
+    gridX++;
+    break;
+  case 2:
+    gridY--;
+    break;
+  case 3:
+    gridX--;
+    break;
+  }
 }
 
 void turn90(int angle, int dir, bool align) {
   bumpcheck = false;
   bool flag = false;
   int ANGLE = angle;
+  if (dir == 1)
+    indicatePath(RIGHT);
+  else
+    indicatePath(LEFT);
+  delay(200);
+
   // int ANGLE = angle - 6;
   if ((getDistance(0) < WALLDISTANCE && dir == 1) ||
       (getDistance(2) < WALLDISTANCE && dir == -1)) {
@@ -172,12 +193,21 @@ void turn90(int angle, int dir, bool align) {
   beep();
   moveMotor(0, 0);
   delay(50);
+
   if (flag && align) {
     moveMotor(-50, -50);
     delay(800);
     moveMotor(0, 0);
     yaw = 0;
   }
+
+  // update heading on rotation
+  HEAD += dir;
+  if (HEAD > 3)
+    HEAD = 0;
+  if (HEAD < 0)
+    HEAD = 3;
+
   leftBumpFlag = false;
   rightBumpFlag = false;
   bumpcheck = true;

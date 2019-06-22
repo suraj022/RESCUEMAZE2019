@@ -63,19 +63,19 @@ void bumpLoop() {
 
 void colourLoop() {
   int val = analogRead(COLOURPIN);
-  val = kalmanX.updateEstimate(val);
+  val = kalmanColour.updateEstimate(val);
   switch (val) {
   case (SILVER - 10)...(SILVER + 10):
     silverFlag = true;
     whiteFlag = false;
     blackFlag = false;
     break;
-  case (WHITE - 10)...(WHITE + 10):
+  case (NORMAL - 10)...(NORMAL + 10):
     silverFlag = false;
     whiteFlag = true;
     blackFlag = false;
     break;
-  case (BLACK - 10)...(BLACK + 10):
+  case (HAZARD - 10)...(HAZARD + 10):
     silverFlag = false;
     whiteFlag = false;
     blackFlag = true;
