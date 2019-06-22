@@ -24,6 +24,8 @@ SimpleKalmanFilter kalmanColour(2, 2, 0.01);
 // structure for tiles in the maze
 struct tile { // num stored in array index
   bool N = false, E = false, S = false, W = false;
+  // bool NC = false, EC = false, SC = false, WC = false;
+  int8_t testCount = 0;
   int8_t backWay; // N = 0, E = 1, S = 2, W = 3;
   int8_t x, y;
   bool node = false;

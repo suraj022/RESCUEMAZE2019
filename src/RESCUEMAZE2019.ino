@@ -81,6 +81,10 @@ void setup() {
 }
 
 void loop() {
+  // update x,y
+  cell[count].x = gridX;
+  cell[count].y = gridY;
+
   // Check walls
   if (!cell[count].visited) {
     cell[count].visited = true;
@@ -120,35 +124,113 @@ void loop() {
     bitWrite(num, 0, (getDistance(LEFT) < WALLDISTANCE));
     cell[count].node = ((num >= 0 && num <= 2) || num == 4);
   }
+  int8_t testCount = setHeading(cell[count]);
+  cell[count].testCount = testCount;
+  if (testCount == -1) {
+    beep();
+    delay(100);
+    beep();
+    delay(100);
+    beep();
+    cell[count].nogo = true;
+    while (cell[count].node) {
+      orient(cell[count].backWay);
+      moveStraight(300);
+      delay(300);
+      count--;
+    }
+    // rest backtrack code here
 
-  if (setHeading(cell[count]) == -1) {
-    // enable backtrack here
   } else {
-    moveStraight(300);
+    int flag = false;
+    int tmpX = cell[count].x;
+    int tmpY = cell[count].y;
+    int i = countMax;
+    // N = 0, E = 1, S = 2, W = 3;
+    switch (HEAD) {
+    case 0:
+      while (i >= 0) {
+        if (cell[i].x == tmpX && cell[i].y == tmpY + 1) {
+          if (cell[i].visited == true) {
+            flag = true;
+            break;
+          }
+        }
+        i--;
+      }
+      break;
+    case 1:
+      while (i >= 0) {
+        if (cell[i].x == tmpX + 1 && cell[i].y == tmpY) {
+          if (cell[i].visited == true) {
+            flag = true;
+            break;
+          }
+        }
+        i--;
+      }
+      break;
+    case 2:
+      while (i >= 0) {
+        if (cell[i].x == tmpX && cell[i].y == tmpY - 1) {
+          if (cell[i].visited == true) {
+            flag = true;
+            break;
+          }
+        }
+        i--;
+      }
+      break;
+    case 3:
+      while (i >= 0) {
+        if (cell[i].x == tmpX - 1 && cell[i].y == tmpY) {
+          if (cell[i].visited == true) {
+            flag = true;
+            break;
+          }
+        }
+        i--;
+      }
+      break;
+    }
+    if (!flag) {
+      moveStraight(300);
+      count++;
+      countMax++;
+    }
     // int8_t back = HEAD - 2;
     // if (back < 0)
     //   back += 4;
     // cell[count].backWay = back;
-    count++;
-    countMax++;
   }
+
   yield();
 }
 
 int8_t setHeading(tile currtile) {
   int head = 0;
-  if (!currtile.S) {
+  int testCount = 0;
+  if (!currtile.S && currtile.testCount < 1) {
     head = 2;
-  } else if (!currtile.W) {
+    testCount = 1;
+  } else if (!currtile.W && currtile.testCount < 2) {
     head = 3;
-  } else if (!currtile.N) {
+    testCount = 2;
+  } else if (!currtile.N && currtile.testCount < 3) {
     head = 0;
-  } else if (!currtile.E) {
+    testCount = 3;
+  } else if (!currtile.E && currtile.testCount < 4) {
     head = 1;
+    testCount = 4;
   } else {
     return -1;
   }
 
+  orient(head);
+  return testCount;
+}
+
+void orient(int head) {
   int result = head - HEAD;
   switch (result) {
   case -3:
