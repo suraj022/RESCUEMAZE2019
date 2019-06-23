@@ -70,48 +70,48 @@ bool nextTile(int x, int y) {
   return flag;
 }
 
-bool setHeading() { // DONE
+bool setHeading() {
   int head = -1;
   bool flag = false;
-  if (!cell[COUNT].S && cell[COUNT].testCount < 1) {
-    if (prevTile(2, cell[COUNT].x, cell[COUNT].y) && flag == false) {
+  if (!cell[COUNT].S && cell[COUNT].testCount < 1 && flag == false) {
+    if (prevTile(2, cell[COUNT].x, cell[COUNT].y)) {
       cell[COUNT].backWay = 2;
-      flag = true;
     } else {
       head = 2;
+      flag = true;
     }
     cell[COUNT].testCount = 1;
   }
-  if (!cell[COUNT].W && cell[COUNT].testCount < 2) {
-    if (prevTile(3, cell[COUNT].x, cell[COUNT].y) && flag == false) {
+  if (!cell[COUNT].W && cell[COUNT].testCount < 2 && flag == false) {
+    if (prevTile(3, cell[COUNT].x, cell[COUNT].y)) {
       cell[COUNT].backWay = 3;
-      flag = true;
     } else {
       head = 3;
+      flag = true;
     }
     cell[COUNT].testCount = 2;
   }
-  if (!cell[COUNT].N && cell[COUNT].testCount < 3) {
-    if (prevTile(0, cell[COUNT].x, cell[COUNT].y) && flag == false) {
+  if (!cell[COUNT].N && cell[COUNT].testCount < 3 && flag == false) {
+    if (prevTile(0, cell[COUNT].x, cell[COUNT].y)) {
       cell[COUNT].backWay = 0;
-      flag = true;
     } else {
       head = 0;
+      flag = true;
     }
     cell[COUNT].testCount = 3;
   }
 
-  if (!cell[COUNT].E && cell[COUNT].testCount < 4) {
-    if (prevTile(1, cell[COUNT].x, cell[COUNT].y) && flag == false) {
+  if (!cell[COUNT].E && cell[COUNT].testCount < 4 && flag == false) {
+    if (prevTile(1, cell[COUNT].x, cell[COUNT].y)) {
       cell[COUNT].backWay = 1;
-      flag = true;
     } else {
       head = 1;
+      flag = true;
     }
     cell[COUNT].testCount = 4;
   }
 
-  if (cell[COUNT].testCount == 4) {
+  if (cell[COUNT].testCount > 3) {
     return false;
   } else {
     orient(head);

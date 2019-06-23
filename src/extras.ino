@@ -16,15 +16,15 @@ void beginSerialUSB() {
   int count = 0;
   SerialUSB.begin(9600);
   while (!SerialUSB && count < 4) {
-    beep();
+    beep(50);
     delay(32);
     count++;
   }
 }
 
-void beep() {
+void beep(int duration) {
   digitalWrite(buzzPin, HIGH);
-  delay(50);
+  delay(duration);
   digitalWrite(buzzPin, LOW);
 }
 
@@ -38,7 +38,7 @@ void waitForSignal() {
   }
   // Move one tile sequence
   clearPixels();
-  beep();
+  beep(50);
   while (getDistance(1) < 100) {
     delay(20);
   }

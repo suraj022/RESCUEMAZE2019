@@ -1,5 +1,5 @@
 /*
- *  Swapping numbers by using a generic, dynamic stack data structure.
+ *  Reverse a string by using a generic, dynamic stack data structure.
  *
  *  Copyright (C) 2010  Efstathios Chatzikyriakidis (contact@efxa.org)
  *
@@ -20,38 +20,34 @@
 // include stack library header.
 #include <StackArray.h>
 
-// declare two numbers.
-double a = 1.1;
-double b = 2.2;
+// declare a string message.
+const String msg = "Happy Hacking!";
 
-// create a stack of numbers.
-StackArray <double> stack;
+// create a stack of characters.
+StackArray<char> stack;
 
 // startup point entry (runs once).
-void
-setup () {
+void stackSetup() {
   // start serial communication.
-  Serial.begin (9600);
+  Serial.begin(9600);
 
   // set the printer of the stack.
-  stack.setPrinter (Serial);
-}
+  stack.setPrinter(SerialUSB);
 
-// loop the main sketch.
-void
-loop () {
-  // print the values of the numbers.
-  Serial.print ("a: "); Serial.println (a);
-  Serial.print ("b: "); Serial.println (b);
+  // print the message before reversing.
+  Serial.println("Normal String: " + msg);
 
-  // push the numbers to the stack.
-  stack.push (a);
-  stack.push (b);
+  // push all the message's characters to the stack.
+  for (int i = 0; i < msg.length(); i++)
+    stack.push(msg.charAt(i));
 
-  // pop the numbers from the stack.
-  a = stack.pop ();
-  b = stack.pop ();
+  // print the message after reversing.
+  Serial.print("Reversed String: ");
 
-  // delay 1 second.
-  delay (1000);
+  // pop all the message's characters from the stack.
+  while (!stack.isEmpty())
+    Serial.print(stack.pop());
+
+  // print end of line character.
+  Serial.println();
 }

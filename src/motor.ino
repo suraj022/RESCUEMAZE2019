@@ -120,7 +120,7 @@ void moveStraight(int pos) {
     }
   }
   offsetStraight(80);
-  beep();
+  beep(50);
   P = 0;
   I = 0;
   D = 0;
@@ -179,7 +179,7 @@ void turn90(int angle, int dir, bool align) {
     if (err < 5)
       err *= 2;
     if (abs(pitch) > 2.7) {
-      beep();
+      beep(50);
       delay(80);
     }
     Pr = err;
@@ -190,7 +190,7 @@ void turn90(int angle, int dir, bool align) {
     yield();
   } while (abs(err) > 20);
   // delay(10);
-  beep();
+  beep(50);
   moveMotor(0, 0);
   delay(50);
 
@@ -214,30 +214,29 @@ void turn90(int angle, int dir, bool align) {
 }
 
 void offsetStraight(int value) {
-  yaw = 0;
-  delay(100);
+  // yaw = 0;
+  delay(20);
+  int expGain = 0;
   int dist = (getDistance(1) % 300);
   if (dist > value) {
     while (dist - value > 10) {
       dist = (getDistance(1) % 300);
       float pwm = constrain((dist - value), 30, 70);
-      pwm += (dist - value) * 0.001;
-      // SerialUSB.println((dist - value));
-      int err = 1.5 * yaw; // readGyroZ() / 14;
+      expGain += (dist - value) * 0.0001;
+      pwm += expGain;
+      int err = 1.5 * yaw;
       moveMotor(pwm + err, pwm - err);
       delay(2);
-      // yield();
     }
   } else {
     while (value - dist > 10) {
       dist = (getDistance(1) % 300);
       float pwm = constrain((value - dist), 30, 70);
-      pwm += (value - dist) * 0.001;
-      // SerialUSB.println(-(value - dist));
-      int err = -1.5 * yaw; // readGyroZ() / 14;
+      expGain += (value - dist) * 0.0001;
+      pwm += expGain;
+      int err = -1.5 * yaw;
       moveMotor(-(pwm + err), -(pwm - err));
       delay(2);
-      // yield();
     }
   }
   moveMotor(0, 0);
