@@ -4,11 +4,6 @@
 // Uncomment the following to enable USB debug messages
 //#define DEBUG
 
-// PID tuning constants
-#define kp 0.4  // proportional
-#define ki 0.01 // Integral
-#define kd 3    // derivative
-
 // Vistims temperature
 #define victimTemperature 29
 
@@ -44,13 +39,6 @@
 #define encoder0PinB 1
 #define encoder1PinA 3
 #define encoder1PinB 2
-
-/*
-  Colour ranges
-  853-873 - silver
-  895-915 - white
-  935-955 - black
-*/
 
 // colour Values
 #define COLOURPIN A4

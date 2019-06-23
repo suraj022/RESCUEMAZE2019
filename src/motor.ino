@@ -145,7 +145,7 @@ void moveStraight(int pos) {
   }
 }
 
-void turn90(int angle, int dir, bool align) {
+void turnBot(int angle, int dir, bool align) {
   bumpcheck = false;
   bool flag = false;
   int ANGLE = angle;

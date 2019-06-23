@@ -124,21 +124,21 @@ void orient(int head) {
   switch (result) {
   case -3:
   case 1:
-    turn90(90, 1, true);
+    turnBot(90, 1, true);
     break;
   case -2:
   case 2:
     if (getDistance(LEFT) > getDistance(RIGHT)) {
-      turn90(90, -1, false);
-      turn90(90, -1, true);
+      turnBot(90, -1, false);
+      turnBot(90, -1, true);
     } else {
-      turn90(90, 1, false);
-      turn90(90, 1, true);
+      turnBot(90, 1, false);
+      turnBot(90, 1, true);
     }
     break;
   case -1:
   case 3:
-    turn90(90, -1, true);
+    turnBot(90, -1, true);
     break;
   case 0:
     break;

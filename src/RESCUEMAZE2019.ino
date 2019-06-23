@@ -107,23 +107,25 @@ void loop() {
   cell[COUNT].x = gridX;
   cell[COUNT].y = gridY;
 
+  // Display coordinates on Oled
   displayPos(0, 0, "cur:", gridX, gridY);
 
-  delay(100);
   // set walls
   setWalls();
 
   //**********************
-  // Add victim code here
+  // Add victim check code here
+  // for both visual and heated victims
   //**********************
 
   // set heading
   bool headingResult = setHeading();
-
-  // displayPos(0, 0, "result:", headingResult, NULL);
+  bool nextTileFound = nextTile(cell[COUNT].x, cell[COUNT].y);
+  displayPos(0, 0, "H,N: ", headingResult, nextTileFound);
   delay(100);
-  if (headingResult && !nextTile(cell[COUNT].x, cell[COUNT].y)) {
-    // if available way, if next tile is empty then move forward and count++
+
+  if (headingResult && !nextTileFound) {
+    // if available way and next tile is empty then move forward and count++
     moveStraight(300);
     COUNT++;
   } else { // else backtrack to last node
