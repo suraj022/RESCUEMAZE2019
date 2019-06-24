@@ -84,11 +84,11 @@ void setup() {
   // }
 
   // Intialize grid variables
-  COUNT = 0;
+  COUNT = 1;
   gridX = 0;
   gridY = 0;
   HEAD = 3;
-  cell[COUNT].E = true;
+  // cell[COUNT].E = true;
 }
 
 /***************************************************
@@ -103,39 +103,54 @@ void setup() {
 ***************************************************/
 
 void loop() {
-  // update x, y coordinates of current tile
-  cell[COUNT].x = gridX;
-  cell[COUNT].y = gridY;
 
-  // Display coordinates on Oled
-  displayPos(0, 0, "cur:", gridX, gridY);
+  do {
+    // update x, y coordinates of current tile
+    cell[COUNT].x = gridX;
+    cell[COUNT].y = gridY;
 
-  // set walls
-  setWalls();
+    // Display coordinates on Oled
+    displayPos(0, 0, "COUNT:", COUNT, HEAD);
 
-  //**********************
-  // Add victim check code here
-  // for both visual and heated victims
-  //**********************
+    // set walls
+    setWalls();
 
-  // set heading
-  bool headingResult = setHeading();
-  bool nextTileFound = nextTile(cell[COUNT].x, cell[COUNT].y);
-  displayPos(0, 0, "H,N: ", headingResult, nextTileFound);
-  delay(100);
+    //**********************
+    // Add victim check code here
+    // for both visual and heated victims
+    //**********************
 
-  if (headingResult && !nextTileFound) {
-    // if available way and next tile is empty then move forward and count++
-    moveStraight(300);
-    COUNT++;
-  } else { // else backtrack to last node
-    // backtrack code here and count-- until last node
-    while (1) {
-      beep(200);
-      delay(200);
-      beep(200);
-      delay(200);
+    // set heading
+    bool headingResult = setHeading();
+    bool nextTileFound = nextTile(cell[COUNT].x, cell[COUNT].y);
+    // displayPos(0, 0, "H,N: ", headingResult, nextTileFound);
+    delay(100);
+
+    if (headingResult && !nextTileFound) {
+      // if available way and next tile is empty then move forward and count++
+      moveStraight(300);
+      COUNT++;
+      // tile tmp;
+      // cell[COUNT] = tmp;
+    } else { // else backtrack to last node
+      // backtrack code here and count-- until last node
+      if (cell[COUNT].backWay >= 0) {
+        orient(cell[COUNT].backWay);
+      } else {
+        setWalls();
+        delay(50);
+        bool tmmp = setHeading();
+      }
+      moveStraight(300);
+      tile tmp;
+      cell[COUNT] = tmp;
+      COUNT--;
     }
-  }
+    yield();
+  } while (COUNT >= 1);
+  turnBot(90, 1, true);
+  turnBot(90, 1, true);
+  displayPos(0, 0, "FINISH!", 0, 0);
+  waitForSignal();
   yield();
 }

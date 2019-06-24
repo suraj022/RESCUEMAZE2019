@@ -19,9 +19,6 @@
 // Define base speed of the motor
 #define BASESPEED 90
 
-// Timeout duration to neutralize encoders (not in milliseconds).
-#define TIMEOUT 100
-
 // Motor variables
 #define LMF 7 // Left Motor Forward
 #define LMR 6 // Left Motor Reverse
@@ -29,7 +26,7 @@
 #define RMR 4 // Right Motor Reverse
 
 // define Wall Detect distance
-#define WALLDISTANCE 200
+#define WALLDISTANCE 190
 
 #define LEFTBUMP A1
 #define RIGHTBUMP A3

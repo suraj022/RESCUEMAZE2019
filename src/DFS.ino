@@ -3,25 +3,25 @@ void setWalls() {
   case 0: // Heading north
     cell[COUNT].N = (getDistance(FRONT) < WALLDISTANCE);
     cell[COUNT].E = (getDistance(RIGHT) < WALLDISTANCE);
-    cell[COUNT].S = false;
+    // cell[COUNT].S = false;
     cell[COUNT].W = (getDistance(LEFT) < WALLDISTANCE);
     break;
   case 1: // heading east
     cell[COUNT].N = (getDistance(LEFT) < WALLDISTANCE);
     cell[COUNT].E = (getDistance(FRONT) < WALLDISTANCE);
     cell[COUNT].S = (getDistance(RIGHT) < WALLDISTANCE);
-    cell[COUNT].W = false;
+    // cell[COUNT].W = false;
     break;
   case 2: // heading south
-    cell[COUNT].N = false;
+    // cell[COUNT].N = false;
     cell[COUNT].E = (getDistance(LEFT) < WALLDISTANCE);
     cell[COUNT].S = (getDistance(FRONT) < WALLDISTANCE);
     cell[COUNT].W = (getDistance(RIGHT) < WALLDISTANCE);
     break;
   case 3: // heading west
     cell[COUNT].N = (getDistance(RIGHT) < WALLDISTANCE);
-    if (COUNT != 0)
-      cell[COUNT].E = false;
+    // if (COUNT != 0)
+    //   cell[COUNT].E = false;
     cell[COUNT].S = (getDistance(LEFT) < WALLDISTANCE);
     cell[COUNT].W = (getDistance(FRONT) < WALLDISTANCE);
     break;
@@ -32,6 +32,14 @@ void setWalls() {
   bitWrite(ways, 0, (getDistance(LEFT) < WALLDISTANCE));
 
   cell[COUNT].node = ((ways >= 0 && ways <= 2) || ways == 4);
+  if (cell[COUNT].node) {
+    for (int i = 0; i < 8; i++) {
+      pixels.setPixelColor(i, pixels.Color(0, 20, 20));
+      pixels.show();
+    }
+    delay(100);
+    clearPixels();
+  }
 }
 
 bool nextTile(int x, int y) {
@@ -111,7 +119,7 @@ bool setHeading() {
     cell[COUNT].testCount = 4;
   }
 
-  if (cell[COUNT].testCount > 3) {
+  if (!flag) {
     return false;
   } else {
     orient(head);
@@ -129,12 +137,15 @@ void orient(int head) {
   case -2:
   case 2:
     if (getDistance(LEFT) > getDistance(RIGHT)) {
-      turnBot(90, -1, false);
+      turnBot(90, -1, true);
       turnBot(90, -1, true);
     } else {
-      turnBot(90, 1, false);
+      turnBot(90, 1, true);
       turnBot(90, 1, true);
     }
+    moveMotor(-50, -50);
+    delay(200);
+    moveMotor(0, 0);
     break;
   case -1:
   case 3:
@@ -144,26 +155,26 @@ void orient(int head) {
     break;
   }
   indicateWalls();
-  delay(200);
+  delay(20);
 }
 
 bool prevTile(int head, int x, int y) {
   bool flag = false;
   switch (head) {
   case 0: // north
-    if (cell[COUNT - 1].x == x && cell[COUNT - 1].y == y - 1)
-      flag = true;
-    break;
-  case 1: // east
-    if (cell[COUNT - 1].x == x - 1 && cell[COUNT - 1].y == y)
-      flag = true;
-    break;
-  case 2: // south
     if (cell[COUNT - 1].x == x && cell[COUNT - 1].y == y + 1)
       flag = true;
     break;
-  case 3: // west
+  case 1: // east
     if (cell[COUNT - 1].x == x + 1 && cell[COUNT - 1].y == y)
+      flag = true;
+    break;
+  case 2: // south
+    if (cell[COUNT - 1].x == x && cell[COUNT - 1].y == y - 1)
+      flag = true;
+    break;
+  case 3: // west
+    if (cell[COUNT - 1].x == x - 1 && cell[COUNT - 1].y == y)
       flag = true;
     break;
   }

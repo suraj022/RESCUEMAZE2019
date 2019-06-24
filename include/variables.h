@@ -65,8 +65,8 @@ tile cell[80];
 int8_t HEAD = 3;
 
 // Global count
-int8_t COUNT = 0;
-int8_t COUNTMAX = 0;
+int8_t COUNT = 1;
+int8_t COUNTMAX = 1;
 
 // Current coordinates of the bot
 int8_t gridX = 0, gridY = 0;

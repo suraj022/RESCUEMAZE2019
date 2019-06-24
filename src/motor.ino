@@ -56,8 +56,8 @@ void moveStraight(int pos) {
         D = 0;
         lastError = 0;
       }
-      P = 0.35 * err;   // 1.818
-      I += 0.001 * err; // 0.4
+      P = 0.3 * err; // 1.818
+      I += 0 * err;  // 0.4
       D = 0 * (err - lastError);
       lastError = err;
       offset = P + I + D;
@@ -109,8 +109,8 @@ void moveStraight(int pos) {
       encoderpos = (encoderposL + encoderposR) / 2;
       int pwm = constrain((encoderpos - desiredpos), 0, MAXSPEED / 1.5);
       int err = yaw;
-      P = 2 * err;      // 1.818
-      I += 0.001 * err; // 0.4
+      P = 2 * err;  // 1.818
+      I += 0 * err; // 0.4
       D = 0 * (err - lastError);
       lastError = err;
       int offset = P + I + D;
@@ -128,7 +128,7 @@ void moveStraight(int pos) {
   delay(50);
   moveMotor(0, 0); // stop motors
   lastError = 0;
-  offsetStraight(125);
+  offsetStraight(110);
   switch (HEAD) {
   case 0:
     gridY++;
@@ -161,9 +161,9 @@ void turnBot(int angle, int dir, bool align) {
     flag = true;
   }
   if (getDistance(1) < WALLDISTANCE) {
-    offsetStraight(53);
+    offsetStraight(55);
   } else {
-    offsetStraight(78);
+    offsetStraight(90);
   }
   delay(10);
   moveMotor(0, 0);
@@ -199,6 +199,8 @@ void turnBot(int angle, int dir, bool align) {
     delay(800);
     moveMotor(0, 0);
     yaw = 0;
+  } else {
+    delay(500);
   }
 
   // update heading on rotation
@@ -210,6 +212,7 @@ void turnBot(int angle, int dir, bool align) {
 
   leftBumpFlag = false;
   rightBumpFlag = false;
+  delay(50);
   bumpcheck = true;
 }
 
@@ -242,13 +245,11 @@ void offsetStraight(int value) {
   moveMotor(0, 0);
 }
 
-// int rpmOffset() {
-//  int L = 60000 / (((currentpulsetime1) / 1000.0) * 562.215);
-//  L = constrain(L, 0, 255);
-//  float KL = kalman.updateEstimate(L);
-//  int R = 60000 / (((currentpulsetime2) / 1000.0) * 562.215);
-//  R = constrain(R, 0, 255);
-//  float KR = kalman.updateEstimate(R);
-//  int offset = (KL - KR) * 2;
-//  return offset;
-//}
+int rpmOffset() {
+  int L = 60000 / (((currentpulsetime1) / 1000.0) * 562.215);
+  L = constrain(L, 0, 255);
+  int R = 60000 / (((currentpulsetime2) / 1000.0) * 562.215);
+  R = constrain(R, 0, 255);
+  int offset = (L - R) * 2;
+  return offset;
+}
