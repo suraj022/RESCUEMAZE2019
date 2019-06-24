@@ -7,7 +7,6 @@ void oledbegin() {
 void clearScreen() { display.clearDisplay(); }
 
 void displayPos(int x, int y, String txt, int posX, int posY) {
-  clearScreen();
   String msg = txt;
   msg += posX;
   msg += ",";

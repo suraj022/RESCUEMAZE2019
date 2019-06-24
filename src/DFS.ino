@@ -43,80 +43,120 @@ void setWalls() {
 }
 
 bool nextTile(int x, int y) {
-  bool flag = false;
-  int i = COUNT;
+  int i = COUNT - 1;
   switch (HEAD) {
   case 0: // north
     while (i >= 0) {
-      if (cell[i].x == x && cell[i].y == y + 1)
-        flag = true;
+      // clearScreen();
+      // displayPos(0, 0, "cnt:", i, 0);
+      // displayPos(0, 21, "nxt:", x, y + 1);
+      // displayPos(0, 42, "chk:", cell[i].x, cell[i].y);
+      // delay(20);
+      if (cell[i].x == x && cell[i].y == y + 1) {
+        beep(50);
+        delay(100);
+        beep(50);
+        return true;
+      }
       i--;
     }
     break;
   case 1: // east
     while (i >= 0) {
-      if (cell[i].x == x + 1 && cell[i].y == y)
-        flag = true;
+      // clearScreen();
+      // displayPos(0, 0, "cnt:", i, 0);
+      // displayPos(0, 21, "nxt:", x + 1, y);
+      // displayPos(0, 42, "chk:", cell[i].x, cell[i].y);
+      // delay(20);
+      if (cell[i].x == x + 1 && cell[i].y == y) {
+        beep(50);
+        delay(100);
+        beep(50);
+        return true;
+      }
       i--;
     }
     break;
   case 2: // south
     while (i >= 0) {
-      if (cell[i].x == x && cell[i].y == y - 1)
-        flag = true;
+      // clearScreen();
+      // displayPos(0, 0, "cnt:", i, 0);
+      // displayPos(0, 21, "nxt:", x, y - 1);
+      // displayPos(0, 42, "chk:", cell[i].x, cell[i].y);
+      // delay(20);
+      if (cell[i].x == x && cell[i].y == y - 1) {
+        beep(50);
+        delay(100);
+        beep(50);
+        return true;
+      }
       i--;
     }
     break;
   case 3: // west
     while (i >= 0) {
-      if (cell[i].x == x - 1 && cell[i].y == y)
-        flag = true;
+      // clearScreen();
+      // displayPos(0, 0, "cnt:", i, 0);
+      // displayPos(0, 21, "nxt:", x - 1, y);
+      // displayPos(0, 42, "chk:", cell[i].x, cell[i].y);
+      // delay(20);
+      if (cell[i].x == x - 1 && cell[i].y == y) {
+        beep(50);
+        delay(100);
+        beep(50);
+        return true;
+      }
       i--;
     }
     break;
   }
-  return flag;
+  return false;
 }
 
 bool setHeading() {
   int head = -1;
   bool flag = false;
-  if (!cell[COUNT].S && cell[COUNT].testCount < 1 && flag == false) {
-    if (prevTile(2, cell[COUNT].x, cell[COUNT].y)) {
-      cell[COUNT].backWay = 2;
-    } else {
-      head = 2;
-      flag = true;
+  bool nextTileFound = nextTile(cell[COUNT].x, cell[COUNT].y);
+  if (!nextTileFound) {
+    if (!cell[COUNT].S && cell[COUNT].testCount < 1 && flag == false) {
+      if (prevTile(2, cell[COUNT].x, cell[COUNT].y)) {
+        cell[COUNT].backWay = 2;
+      } else {
+        head = 2;
+        flag = true;
+      }
+      cell[COUNT].testCount = 1;
     }
-    cell[COUNT].testCount = 1;
-  }
-  if (!cell[COUNT].W && cell[COUNT].testCount < 2 && flag == false) {
-    if (prevTile(3, cell[COUNT].x, cell[COUNT].y)) {
-      cell[COUNT].backWay = 3;
-    } else {
-      head = 3;
-      flag = true;
+    if (!cell[COUNT].W && cell[COUNT].testCount < 2 && flag == false) {
+      if (prevTile(3, cell[COUNT].x, cell[COUNT].y)) {
+        cell[COUNT].backWay = 3;
+      } else {
+        head = 3;
+        flag = true;
+      }
+      cell[COUNT].testCount = 2;
     }
-    cell[COUNT].testCount = 2;
-  }
-  if (!cell[COUNT].N && cell[COUNT].testCount < 3 && flag == false) {
-    if (prevTile(0, cell[COUNT].x, cell[COUNT].y)) {
-      cell[COUNT].backWay = 0;
-    } else {
-      head = 0;
-      flag = true;
+    if (!cell[COUNT].N && cell[COUNT].testCount < 3 && flag == false) {
+      if (prevTile(0, cell[COUNT].x, cell[COUNT].y)) {
+        cell[COUNT].backWay = 0;
+      } else {
+        head = 0;
+        flag = true;
+      }
+      cell[COUNT].testCount = 3;
     }
-    cell[COUNT].testCount = 3;
-  }
 
-  if (!cell[COUNT].E && cell[COUNT].testCount < 4 && flag == false) {
-    if (prevTile(1, cell[COUNT].x, cell[COUNT].y)) {
-      cell[COUNT].backWay = 1;
-    } else {
-      head = 1;
-      flag = true;
+    if (!cell[COUNT].E && cell[COUNT].testCount < 4 && flag == false) {
+      if (prevTile(1, cell[COUNT].x, cell[COUNT].y)) {
+        cell[COUNT].backWay = 1;
+      } else {
+        head = 1;
+        flag = true;
+      }
+      cell[COUNT].testCount = 4;
     }
-    cell[COUNT].testCount = 4;
+  } else {
+    flag = false;
   }
 
   if (!flag) {

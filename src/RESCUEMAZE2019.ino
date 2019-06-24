@@ -109,8 +109,9 @@ void loop() {
     cell[COUNT].x = gridX;
     cell[COUNT].y = gridY;
 
+    clearScreen();
     // Display coordinates on Oled
-    displayPos(0, 0, "COUNT:", COUNT, HEAD);
+    displayPos(0, 0, "curr:", gridX, gridY);
 
     // set walls
     setWalls();
@@ -123,10 +124,25 @@ void loop() {
     // set heading
     bool headingResult = setHeading();
     bool nextTileFound = nextTile(cell[COUNT].x, cell[COUNT].y);
-    // displayPos(0, 0, "H,N: ", headingResult, nextTileFound);
-    delay(100);
+    delay(300);
 
-    if (headingResult && !nextTileFound) {
+    /*switch (HEAD) {
+    case 0: // north
+      displayPos(0, 21, "next:", gridX, gridY + 1);
+      break;
+    case 1: // east
+      displayPos(0, 21, "next:", gridX + 1, gridY);
+      break;
+    case 2: // south
+      displayPos(0, 21, "next:", gridX, gridY - 1);
+      break;
+    case 3: // west
+      displayPos(0, 21, "next:", gridX - 1, gridY);
+      break;
+    }
+    delay(1000);
+    */
+    if (headingResult == true && nextTileFound == false) {
       // if available way and next tile is empty then move forward and count++
       moveStraight(300);
       COUNT++;
@@ -147,7 +163,7 @@ void loop() {
       COUNT--;
     }
     yield();
-  } while (COUNT >= 1);
+  } while (COUNT > 1);
   turnBot(90, 1, true);
   turnBot(90, 1, true);
   displayPos(0, 0, "FINISH!", 0, 0);
