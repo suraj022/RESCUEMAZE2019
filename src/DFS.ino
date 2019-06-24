@@ -46,7 +46,7 @@ bool nextTile(int x, int y) {
   int i = COUNT - 1;
   switch (HEAD) {
   case 0: // north
-    while (i >= 0) {
+    while (i > 0) {
       // clearScreen();
       // displayPos(0, 0, "cnt:", i, 0);
       // displayPos(0, 21, "nxt:", x, y + 1);
@@ -62,7 +62,7 @@ bool nextTile(int x, int y) {
     }
     break;
   case 1: // east
-    while (i >= 0) {
+    while (i > 0) {
       // clearScreen();
       // displayPos(0, 0, "cnt:", i, 0);
       // displayPos(0, 21, "nxt:", x + 1, y);
@@ -78,7 +78,7 @@ bool nextTile(int x, int y) {
     }
     break;
   case 2: // south
-    while (i >= 0) {
+    while (i > 0) {
       // clearScreen();
       // displayPos(0, 0, "cnt:", i, 0);
       // displayPos(0, 21, "nxt:", x, y - 1);
@@ -94,7 +94,7 @@ bool nextTile(int x, int y) {
     }
     break;
   case 3: // west
-    while (i >= 0) {
+    while (i > 0) {
       // clearScreen();
       // displayPos(0, 0, "cnt:", i, 0);
       // displayPos(0, 21, "nxt:", x - 1, y);
@@ -116,47 +116,42 @@ bool nextTile(int x, int y) {
 bool setHeading() {
   int head = -1;
   bool flag = false;
-  bool nextTileFound = nextTile(cell[COUNT].x, cell[COUNT].y);
-  if (!nextTileFound) {
-    if (!cell[COUNT].S && cell[COUNT].testCount < 1 && flag == false) {
-      if (prevTile(2, cell[COUNT].x, cell[COUNT].y)) {
-        cell[COUNT].backWay = 2;
-      } else {
-        head = 2;
-        flag = true;
-      }
-      cell[COUNT].testCount = 1;
+  if (!cell[COUNT].S && cell[COUNT].testCount < 1 && flag == false) {
+    if (prevTile(2, cell[COUNT].x, cell[COUNT].y)) {
+      cell[COUNT].backWay = 2;
+    } else {
+      head = 2;
+      flag = true;
     }
-    if (!cell[COUNT].W && cell[COUNT].testCount < 2 && flag == false) {
-      if (prevTile(3, cell[COUNT].x, cell[COUNT].y)) {
-        cell[COUNT].backWay = 3;
-      } else {
-        head = 3;
-        flag = true;
-      }
-      cell[COUNT].testCount = 2;
+    cell[COUNT].testCount = 1;
+  }
+  if (!cell[COUNT].W && cell[COUNT].testCount < 2 && flag == false) {
+    if (prevTile(3, cell[COUNT].x, cell[COUNT].y)) {
+      cell[COUNT].backWay = 3;
+    } else {
+      head = 3;
+      flag = true;
     }
-    if (!cell[COUNT].N && cell[COUNT].testCount < 3 && flag == false) {
-      if (prevTile(0, cell[COUNT].x, cell[COUNT].y)) {
-        cell[COUNT].backWay = 0;
-      } else {
-        head = 0;
-        flag = true;
-      }
-      cell[COUNT].testCount = 3;
+    cell[COUNT].testCount = 2;
+  }
+  if (!cell[COUNT].N && cell[COUNT].testCount < 3 && flag == false) {
+    if (prevTile(0, cell[COUNT].x, cell[COUNT].y)) {
+      cell[COUNT].backWay = 0;
+    } else {
+      head = 0;
+      flag = true;
     }
+    cell[COUNT].testCount = 3;
+  }
 
-    if (!cell[COUNT].E && cell[COUNT].testCount < 4 && flag == false) {
-      if (prevTile(1, cell[COUNT].x, cell[COUNT].y)) {
-        cell[COUNT].backWay = 1;
-      } else {
-        head = 1;
-        flag = true;
-      }
-      cell[COUNT].testCount = 4;
+  if (!cell[COUNT].E && cell[COUNT].testCount < 4 && flag == false) {
+    if (prevTile(1, cell[COUNT].x, cell[COUNT].y)) {
+      cell[COUNT].backWay = 1;
+    } else {
+      head = 1;
+      flag = true;
     }
-  } else {
-    flag = false;
+    cell[COUNT].testCount = 4;
   }
 
   if (!flag) {

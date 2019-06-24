@@ -124,25 +124,11 @@ void loop() {
     // set heading
     bool headingResult = setHeading();
     bool nextTileFound = nextTile(cell[COUNT].x, cell[COUNT].y);
+    if (nextTileFound)
+      headingResult = setHeading();
     delay(300);
 
-    /*switch (HEAD) {
-    case 0: // north
-      displayPos(0, 21, "next:", gridX, gridY + 1);
-      break;
-    case 1: // east
-      displayPos(0, 21, "next:", gridX + 1, gridY);
-      break;
-    case 2: // south
-      displayPos(0, 21, "next:", gridX, gridY - 1);
-      break;
-    case 3: // west
-      displayPos(0, 21, "next:", gridX - 1, gridY);
-      break;
-    }
-    delay(1000);
-    */
-    if (headingResult == true && nextTileFound == false) {
+    if (headingResult) {
       // if available way and next tile is empty then move forward and count++
       moveStraight(300);
       COUNT++;
@@ -155,7 +141,7 @@ void loop() {
       } else {
         setWalls();
         delay(50);
-        bool tmmp = setHeading();
+        setHeading();
       }
       moveStraight(300);
       tile tmp;
