@@ -91,8 +91,9 @@ void setup() {
 
   // Intialize grid variables
   COUNT = 1;
-  gridX = 0;
-  gridY = 0;
+  mazeNum = 0;
+  maze[mazeNum].gridX = 0;
+  maze[mazeNum].gridY = 0;
   HEAD = 3; // Start facing west direction
   // while (1) {
   //   SerialUSB.println(accY * 3);
@@ -115,12 +116,12 @@ void setup() {
 void loop() {
   do {
     // update x, y coordinates of current tile
-    cell[COUNT].x = gridX;
-    cell[COUNT].y = gridY;
+    maze[mazeNum].cell[COUNT].x = maze[mazeNum].gridX;
+    maze[mazeNum].cell[COUNT].y = maze[mazeNum].gridY;
 
     clearScreen();
     // Display coordinates on Oled
-    displayPos(0, 0, "curr:", gridX, gridY);
+    displayPos(0, 0, "XY:", maze[mazeNum].gridX, maze[mazeNum].gridY);
 
     // set walls
     setWalls();
@@ -132,7 +133,7 @@ void loop() {
 
     // set heading
     bool headingResult = setHeading();
-    bool nextTileFound = nextTile(cell[COUNT].x, cell[COUNT].y);
+    bool nextTileFound = nextTile(maze[mazeNum].cell[COUNT].x, maze[mazeNum].cell[COUNT].y);
     if (nextTileFound)
       headingResult = setHeading();
     delay(300);
@@ -145,8 +146,8 @@ void loop() {
       COUNT++;
     } else { // else backtrack to last node
       // backtrack code here and count-- until last node
-      if (cell[COUNT].backWay >= 0) {
-        orient(cell[COUNT].backWay);
+      if (maze[mazeNum].cell[COUNT].backWay >= 0) {
+        orient(maze[mazeNum].cell[COUNT].backWay);
       } else {
         setWalls();
         delay(50);
@@ -156,7 +157,7 @@ void loop() {
       moveStraight(300);
       ramp(-1);
       tile tmp;
-      cell[COUNT] = tmp;
+      maze[mazeNum].cell[COUNT] = tmp;
       COUNT--;
     }
     yield();

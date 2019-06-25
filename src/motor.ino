@@ -131,16 +131,16 @@ void moveStraight(int pos) {
   offsetStraight(110);
   switch (HEAD) {
   case 0:
-    gridY++;
+    maze[mazeNum].gridY++;
     break;
   case 1:
-    gridX++;
+    maze[mazeNum].gridX++;
     break;
   case 2:
-    gridY--;
+    maze[mazeNum].gridY--;
     break;
   case 3:
-    gridX--;
+    maze[mazeNum].gridX--;
     break;
   }
 }
@@ -258,81 +258,31 @@ void offsetStraight(int value) {
 void ramp(int8_t dir) {
   if (accX > 19) {
     bumpcheck = false;
-    for (int i = COUNT; i < COUNT + 10; i++) {
-      setHeading();
-      switch (HEAD) {
-      case 0:
-        gridY++;
-        break;
-      case 1:
-        gridX++;
-        break;
-      case 2:
-        gridY--;
-        break;
-      case 3:
-        gridX--;
-        break;
-      }
-      if (dir > 0)
-        COUNT++;
-      else
-        COUNT--;
-    }
     while (accX > 19) {
       int pwm = 100;
-      int err = 0;
       int offset = 0;
-      //-accY * 1.2 +
+      // offset = -accY * 1.2;
       offset = 0.8 * (wallDistance - getDistance(LEFT));
       moveMotor(pwm + offset, pwm - offset);
       delay(5);
       yield();
     }
     moveMotor(0, 0);
-    beep(50);
-    delay(100);
-    beep(50);
-    delay(800);
+    delay(500);
     bumpcheck = true;
   } else if (accX < -19) {
     bumpcheck = false;
-    for (int i = COUNT; i < COUNT + 10; i++) {
-      setHeading();
-      switch (HEAD) {
-      case 0:
-        gridY++;
-        break;
-      case 1:
-        gridX++;
-        break;
-      case 2:
-        gridY--;
-        break;
-      case 3:
-        gridX--;
-        break;
-      }
-      if (dir > 0)
-        COUNT++;
-      else
-        COUNT--;
-    }
     while (accX < -19) {
       int pwm = 100;
-      int err = 0;
       int offset = 0;
-      //-accY * 1.2 +
+      // offset = -accY * 1.2;
       offset = 0.8 * (wallDistance - getDistance(LEFT));
       moveMotor(pwm + offset, pwm - offset);
       delay(5);
       yield();
     }
     moveMotor(0, 0);
-    beep(50);
-    delay(100);
-    beep(50);
-    delay(1500);
+    delay(500);
     bumpcheck = true;
   }
 }
