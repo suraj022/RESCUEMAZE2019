@@ -177,11 +177,4 @@ void loop() {
     delay(100);
     yield();
   }
-
-  count++;
-  // pr_x=p_x;
-  // pr_y=p_y;
-  heading();
-  delay(500);
-  yield();
 } // End of main loop
