@@ -55,6 +55,8 @@ volatile int encoderposR = 0, encoderposL = 0;
 // Variables for each tile
 tile cell[80];
 
+MAZE maze[5];
+
 // global heading
 /*
   0=NORTH

@@ -255,7 +255,7 @@ void offsetStraight(int value) {
   moveMotor(0, 0);
 }
 
-void ramp() {
+void ramp(int8_t dir) {
   if (accX > 19) {
     bumpcheck = false;
     for (int i = COUNT; i < COUNT + 10; i++) {
@@ -274,6 +274,10 @@ void ramp() {
         gridX--;
         break;
       }
+      if (dir > 0)
+        COUNT++;
+      else
+        COUNT--;
     }
     while (accX > 19) {
       int pwm = 100;
@@ -289,10 +293,31 @@ void ramp() {
     beep(50);
     delay(100);
     beep(50);
-
+    delay(800);
     bumpcheck = true;
   } else if (accX < -19) {
     bumpcheck = false;
+    for (int i = COUNT; i < COUNT + 10; i++) {
+      setHeading();
+      switch (HEAD) {
+      case 0:
+        gridY++;
+        break;
+      case 1:
+        gridX++;
+        break;
+      case 2:
+        gridY--;
+        break;
+      case 3:
+        gridX--;
+        break;
+      }
+      if (dir > 0)
+        COUNT++;
+      else
+        COUNT--;
+    }
     while (accX < -19) {
       int pwm = 100;
       int err = 0;
@@ -307,22 +332,7 @@ void ramp() {
     beep(50);
     delay(100);
     beep(50);
-
-    switch (HEAD) {
-    case 0:
-      gridY += 10;
-      break;
-    case 1:
-      gridX += 10;
-      break;
-    case 2:
-      gridY -= 10;
-      break;
-    case 3:
-      gridX -= 10;
-      break;
-    }
-    delay(2000);
+    delay(1500);
     bumpcheck = true;
   }
 }

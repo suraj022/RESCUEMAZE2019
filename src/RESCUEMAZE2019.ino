@@ -135,7 +135,7 @@ void loop() {
       // if available way and next tile is empty then move forward and count++
       indicatePath(FRONT);
       moveStraight(300);
-      ramp();
+      ramp(1);
       COUNT++;
     } else { // else backtrack to last node
       // backtrack code here and count-- until last node
@@ -148,7 +148,7 @@ void loop() {
       }
       indicatePath(FRONT);
       moveStraight(300);
-      ramp();
+      ramp(-1);
       tile tmp;
       cell[COUNT] = tmp;
       COUNT--;
