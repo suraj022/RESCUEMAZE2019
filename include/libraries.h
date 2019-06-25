@@ -22,9 +22,6 @@
 // Servo library
 #include <Servo.h>
 
-// Library for managing stacks
-#include "StackArray.h"
-
 // Oled related libraries
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
