@@ -16,7 +16,7 @@ void moveMotor(int L, int R) {
 }
 
 void moveStraight(int pos) {
-  offsetStraight(80);
+  // offsetStraight(125);
   P = 0;
   I = 0;
   D = 0;
@@ -31,8 +31,8 @@ void moveStraight(int pos) {
   int encoderbackupR = 0;
   yaw = 0;
   delay(50);
-  if ((desiredpos - encoderpos) > 0) {
-    while ((desiredpos - encoderpos) > 10) {
+  if ((desiredpos - encoderpos) > 5) {
+    while ((desiredpos - encoderpos) > 10 && accX < 20) {
       encoderpos = (encoderposL + encoderposR) / 2;
       int pwm = constrain((desiredpos - encoderpos), 0, MAXSPEED);
       int err = 0;
@@ -56,8 +56,8 @@ void moveStraight(int pos) {
         D = 0;
         lastError = 0;
       }
-      P = 0.35 * err; // 1.818
-      I += 0 * err;   // 0.4
+      P = 0.3 * err; // 1.818
+      I += 0 * err;  // 0.4
       D = 0 * (err - lastError);
       lastError = err;
       offset = P + I + D;
@@ -74,7 +74,7 @@ void moveStraight(int pos) {
         delay(300);
         moveMotor(0, 0);
         delay(50);
-        moveMotor(40, 50);
+        moveMotor(60, 50);
         delay(600);
         encoderposL = encoderbackupL;
         encoderposR = encoderbackupR;
@@ -93,7 +93,7 @@ void moveStraight(int pos) {
         delay(300);
         moveMotor(0, 0);
         delay(50);
-        moveMotor(50, 40);
+        moveMotor(50, 60);
         delay(600);
         encoderposL = encoderbackupL;
         encoderposR = encoderbackupR;
@@ -105,12 +105,12 @@ void moveStraight(int pos) {
       yield();
     }
   } else {
-    while ((encoderpos - desiredpos) > 0) {
+    while ((encoderpos - desiredpos) > 5 && accX < 20) {
       encoderpos = (encoderposL + encoderposR) / 2;
-      int pwm = constrain((encoderpos - desiredpos), 0, MAXSPEED);
-      int err = -yaw;
-      P = 0.4 * err; // 1.818
-      I += 0 * err;  // 0.4
+      int pwm = constrain((encoderpos - desiredpos), 0, MAXSPEED / 1.5);
+      int err = yaw;
+      P = 2 * err;  // 1.818
+      I += 0 * err; // 0.4
       D = 0 * (err - lastError);
       lastError = err;
       int offset = P + I + D;
@@ -119,7 +119,8 @@ void moveStraight(int pos) {
       yield();
     }
   }
-  beep();
+  offsetStraight(80);
+  beep(50);
   P = 0;
   I = 0;
   D = 0;
@@ -127,37 +128,42 @@ void moveStraight(int pos) {
   delay(50);
   moveMotor(0, 0); // stop motors
   lastError = 0;
+  offsetStraight(110);
+  switch (HEAD) {
+  case 0:
+    gridY++;
+    break;
+  case 1:
+    gridX++;
+    break;
+  case 2:
+    gridY--;
+    break;
+  case 3:
+    gridX--;
+    break;
+  }
 }
-void turn90(int angle, int dir, int align) {
 
-  if (dir == 1) {
-    if (head == 3) {
-      head = 0;
-    } else {
-      head += dir;
-    }
-  }
-
-  if (dir == -1) {
-    if (head == 0) {
-      head = 3;
-    } else {
-      head -= dir;
-    }
-  }
+void turnBot(int angle, int dir, bool align) {
   bumpcheck = false;
   bool flag = false;
   int ANGLE = angle;
+  if (dir == 1)
+    indicatePath(RIGHT);
+  else
+    indicatePath(LEFT);
+  delay(200);
+
   // int ANGLE = angle - 6;
-  if (getDistance(0) < WALLDISTANCE && dir == 1 ||
-      getDistance(2) < WALLDISTANCE && dir == -1) {
+  if ((getDistance(0) < WALLDISTANCE && dir == 1) ||
+      (getDistance(2) < WALLDISTANCE && dir == -1)) {
     flag = true;
   }
-  unsigned long lastTime = 0;
   if (getDistance(1) < WALLDISTANCE) {
-    offsetStraight(35);
+    offsetStraight(55);
   } else {
-    offsetStraight(75);
+    offsetStraight(90);
   }
   delay(10);
   moveMotor(0, 0);
@@ -169,72 +175,173 @@ void turn90(int angle, int dir, int align) {
   yaw = 0;
   delay(10);
   do {
-    unsigned long now = millis();
-    double timeChange = (double)(now - lastTime);
     err = (ANGLE - abs(yaw));
     if (err < 5)
       err *= 2;
     if (abs(pitch) > 2.7) {
-      beep();
+      beep(50);
       delay(80);
     }
     Pr = err;
-    Ir += err * timeChange;
-    Dr = (err - lastErrorTurn) / timeChange;
-    lastErrorTurn = err;
-    lastTime = now;
-    int diff = 1.1 * Pr;
-    moveMotor(dir * constrain(diff, 30, 100), -dir * constrain(diff, 30, 100));
+    // Ir += err * 0.001;
+    int diff = 1.1 * Pr + Ir;
+    moveMotor(dir * constrain(diff, 25, 100), -dir * constrain(diff, 25, 100));
     delay(1);
     yield();
   } while (abs(err) > 20);
   // delay(10);
-  beep();
+  beep(50);
   moveMotor(0, 0);
   delay(50);
+
   if (flag && align) {
     moveMotor(-50, -50);
     delay(800);
     moveMotor(0, 0);
     yaw = 0;
+  } else {
+    delay(500);
   }
+
+  // update heading on rotation
+  HEAD += dir;
+  if (HEAD > 3)
+    HEAD = 0;
+  if (HEAD < 0)
+    HEAD = 3;
+
   leftBumpFlag = false;
   rightBumpFlag = false;
+  delay(50);
   bumpcheck = true;
 }
 
 void offsetStraight(int value) {
-  yaw = 0;
-  delay(100);
+  if (getDistance(FRONT) > 8000 || accX > 20) {
+    moveMotor(60, 60);
+    delay(100);
+    moveMotor(0, 0);
+    return;
+  }
+  // yaw = 0;
+  delay(20);
+  int expGain = 0;
   int dist = (getDistance(1) % 300);
   if (dist > value) {
-    while (dist > value) {
+    while (dist - value > 10) {
+      if (getDistance(FRONT) > 8000 || accX > 20)
+        return;
       dist = (getDistance(1) % 300);
-      int pwm = constrain((dist - value), 40, 100);
-      int err = 1.5 * yaw; // readGyroZ() / 14;
+      float pwm = constrain((dist - value), 30, 70);
+      expGain += (dist - value) * 0.0001;
+      pwm += expGain;
+      int err = 1.5 * yaw;
       moveMotor(pwm + err, pwm - err);
       delay(2);
-      // yield();
     }
   } else {
-    while (dist < value) {
+    while (value - dist > 10) {
+      if (getDistance(FRONT) > 8000 || accX > 20)
+        return;
       dist = (getDistance(1) % 300);
-      int pwm = constrain((value - dist), 40, 100);
-      int err = -1.5 * yaw; // readGyroZ() / 14;
+      float pwm = constrain((value - dist), 30, 70);
+      expGain += (value - dist) * 0.0001;
+      pwm += expGain;
+      int err = -1.5 * yaw;
       moveMotor(-(pwm + err), -(pwm - err));
       delay(2);
-      // yield();
     }
+  }
+  moveMotor(0, 0);
+}
+
+void ramp(int8_t dir) {
+  if (accX > 19) {
+    bumpcheck = false;
+    for (int i = COUNT; i < COUNT + 10; i++) {
+      setHeading();
+      switch (HEAD) {
+      case 0:
+        gridY++;
+        break;
+      case 1:
+        gridX++;
+        break;
+      case 2:
+        gridY--;
+        break;
+      case 3:
+        gridX--;
+        break;
+      }
+      if (dir > 0)
+        COUNT++;
+      else
+        COUNT--;
+    }
+    while (accX > 19) {
+      int pwm = 100;
+      int err = 0;
+      int offset = 0;
+      //-accY * 1.2 +
+      offset = 0.8 * (wallDistance - getDistance(LEFT));
+      moveMotor(pwm + offset, pwm - offset);
+      delay(5);
+      yield();
+    }
+    moveMotor(0, 0);
+    beep(50);
+    delay(100);
+    beep(50);
+    delay(800);
+    bumpcheck = true;
+  } else if (accX < -19) {
+    bumpcheck = false;
+    for (int i = COUNT; i < COUNT + 10; i++) {
+      setHeading();
+      switch (HEAD) {
+      case 0:
+        gridY++;
+        break;
+      case 1:
+        gridX++;
+        break;
+      case 2:
+        gridY--;
+        break;
+      case 3:
+        gridX--;
+        break;
+      }
+      if (dir > 0)
+        COUNT++;
+      else
+        COUNT--;
+    }
+    while (accX < -19) {
+      int pwm = 100;
+      int err = 0;
+      int offset = 0;
+      //-accY * 1.2 +
+      offset = 0.8 * (wallDistance - getDistance(LEFT));
+      moveMotor(pwm + offset, pwm - offset);
+      delay(5);
+      yield();
+    }
+    moveMotor(0, 0);
+    beep(50);
+    delay(100);
+    beep(50);
+    delay(1500);
+    bumpcheck = true;
   }
 }
 
-// int rpmOffset() {
-//  int L = 60000 / (((currentpulsetime1) / 1000.0) * 562.215);
-//  L = constrain(L, 0, 255);
-//  float KL = kalman.updateEstimate(L);
-//  int R = 60000 / (((currentpulsetime2) / 1000.0) * 562.215);
-//  R = constrain(R, 0, 255);
-//  float KR = kalman.updateEstimate(R);
-//  int offset = (KL - KR) * 2;
-//  return offset;
-//}
+int rpmOffset() {
+  int L = 60000 / (((currentpulsetime1) / 1000.0) * 562.215);
+  L = constrain(L, 0, 255);
+  int R = 60000 / (((currentpulsetime2) / 1000.0) * 562.215);
+  R = constrain(R, 0, 255);
+  int offset = (L - R) * 2;
+  return offset;
+}

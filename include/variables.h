@@ -22,10 +22,10 @@ bool silverFlag = false;
 
 // MPU-6050 related variables
 int16_t CGyX, CGyY, CGyZ, GyX, GyY, GyZ;
+long accX, accY, accZ, accCX, accCY, accCZ;
 float pitch = 0;
 float roll = 0;
 float yaw = 0;
-long accX, accY, accZ, accCX, accCY, accCZ;
 
 // Triggers for temperature sensors
 bool Ltemp = false, Rtemp = false;
@@ -63,10 +63,23 @@ int count = 0;
 volatile int encoderposR = 0, encoderposL = 0;
 
 // Variables for each tile
-tile cell[20][20];
+tile cell[80];
 
-// Stacks to store paths.
-StackArray<int> stack1;
-StackArray<int> stack2;
+MAZE maze[5];
 
+// global heading
+/*
+  0=NORTH
+  1=EAST
+  2=SOUTH
+  3=WEST
+*/
+int8_t HEAD = 3;
+
+// Global count
+int8_t COUNT = 1;
+int8_t COUNTMAX = 1;
+
+// Current coordinates of the bot
+int8_t gridX = 0, gridY = 0;
 #endif

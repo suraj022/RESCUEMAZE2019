@@ -19,17 +19,27 @@ Servo dispencer;
 SimpleKalmanFilter kalmanX(2, 2, 0.01);
 SimpleKalmanFilter kalmanY(2, 2, 0.01);
 SimpleKalmanFilter kalmanZ(2, 2, 0.01);
+SimpleKalmanFilter kalmanColour(2, 2, 0.01);
+
+// object for 0.96inch SSD1306 oled diplay
+Adafruit_SSD1306 display(12);
 
 // structure for tiles in the maze
-struct tile {
-  /* data */
-  int nos;
-  int f = 0, l = 0, r = 0;
-  int pre_x, pre_y;
-  // int pos_x,pos_y;
-  int is_visited = 0; // 0 for not visited 1 for visited
-  int is_node = 0;    // 0 for not node 1 for node
-  int no_go = 0;      // 0 for go 1 for no go
+struct tile { // num stored in array index
+  bool N = false, E = false, S = false, W = false;
+  bool IN = false, IS = false, IW = false, IE = false; // intersections
+  int8_t testCount = 0;
+  int8_t backWay = -1; // N = 0, E = 1, S = 2, W = 3;
+  int8_t x = -1, y = -1;
+  bool node = false;
+  bool victim = false;
+};
+
+struct MAZE {
+  bool completed = false;
+  int8_t gridX = 0, gridY = 0;
+  int8_t entryHead = -1; // N = 0, E = 1, S = 2, W = 3;
+  tile cell[50];
 };
 
 #endif

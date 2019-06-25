@@ -25,4 +25,13 @@
 // Library for managing stacks
 #include "StackArray.h"
 
+// Oled related libraries
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <SPI.h>
+
+#if (SSD1306_LCDHEIGHT != 64)
+#error "incorrect height"
+#endif
+
 #endif

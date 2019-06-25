@@ -4,11 +4,6 @@
 // Uncomment the following to enable USB debug messages
 #define DEBUG
 
-// PID tuning constants
-#define kp 0.4  // proportional
-#define ki 0.01 // Integral
-#define kd 3    // derivative
-
 // Vistims temperature
 #define victimTemperature 29
 
@@ -23,9 +18,6 @@
 
 // Define base speed of the motor
 #define BASESPEED 90
-
-// Timeout duration to neutralize encoders (not in milliseconds).
-#define TIMEOUT 100
 
 // Motor variables
 #define LMF 7 // Left Motor Forward
@@ -45,18 +37,11 @@
 #define encoder1PinA 3
 #define encoder1PinB 2
 
-/*
-  Colour ranges
-  853-873 - silver
-  895-915 - white
-  935-955 - black
-*/
-
 // colour Values
 #define COLOURPIN A4
 #define SILVER 863
-#define WHITE 905
-#define BLACK 945
+#define NORMAL 905
+#define HAZARD 945
 
 // sensor numbers for TOF sensors
 #define LEFT 0

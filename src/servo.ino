@@ -17,12 +17,15 @@ void servoMovement() {
 }
 
 void dispence() {
-  if (Ltemp) {
+  if (Ltemp || Rtemp) {
     moveMotor(-20, -20);
     delay(200);
     moveMotor(0, 0);
     delay(200);
-    moveMotor(100, -100);
+    if (Ltemp)
+      moveMotor(100, -100);
+    else if (Rtemp)
+      moveMotor(-100, 100);
     delay(300);
     moveMotor(0, 0);
     for (int halt = 0; halt < 4; halt++) {
@@ -37,38 +40,14 @@ void dispence() {
     }
     servoMovement();
     delay(500);
-    moveMotor(-100, 100);
+    if (Ltemp)
+      moveMotor(-100, 100);
+    else if (Rtemp)
+      moveMotor(100, -100);
     delay(300);
     moveMotor(0, 0);
     delay(100);
     Ltemp = false;
     Rtemp = false;
-  }
-  if (Rtemp) {
-    moveMotor(-20, -20);
-    delay(200);
-    moveMotor(0, 0);
-    delay(200);
-    moveMotor(-100, 100);
-    delay(300);
-    moveMotor(0, 0);
-    for (int halt = 0; halt < 4; halt++) {
-      digitalWrite(buzzPin, HIGH);
-      for (int i = 0; i < 8; i++) {
-        setPixelColour(i, RED, 20);
-      }
-      delay(500);
-      digitalWrite(buzzPin, LOW);
-      clearPixels();
-      delay(500);
-    }
-    servoMovement();
-    delay(500);
-    moveMotor(100, -100);
-    delay(300);
-    moveMotor(0, 0);
-    delay(100);
-    Rtemp = false;
-    Ltemp = false;
   }
 }
