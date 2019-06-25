@@ -70,7 +70,7 @@ void moveStraight(int pos) {
         delay(50);
         moveMotor(-40, -40);
         delay(500);
-        moveMotor(40, -20);
+        moveMotor(40, -40);
         delay(300);
         moveMotor(0, 0);
         delay(50);
@@ -89,7 +89,7 @@ void moveStraight(int pos) {
         delay(50);
         moveMotor(-40, -40);
         delay(500);
-        moveMotor(-20, 40);
+        moveMotor(-40, 40);
         delay(300);
         moveMotor(0, 0);
         delay(50);

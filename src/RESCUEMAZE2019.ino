@@ -23,6 +23,13 @@
 #include "libraries.h"
 #include "objects.h"
 #include "variables.h"
+//#include "Stack.h"
+
+// StackArray <int> stack1;
+// StackArray <int> stack2;
+
+// stack.push(s_cell[0]);
+// stack.pop();
 
 void setup() {
 
@@ -106,7 +113,6 @@ void setup() {
 
 // Start main loop
 void loop() {
-
   do {
     // update x, y coordinates of current tile
     cell[COUNT].x = gridX;
@@ -171,5 +177,11 @@ void loop() {
     delay(100);
     yield();
   }
+
+  count++;
+  // pr_x=p_x;
+  // pr_y=p_y;
+  heading();
+  delay(500);
   yield();
 } // End of main loop
