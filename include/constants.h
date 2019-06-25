@@ -2,7 +2,7 @@
 #define _CONSTANTS_H
 
 // Uncomment the following to enable USB debug messages
-//#define DEBUG
+#define DEBUG
 
 // Vistims temperature
 #define victimTemperature 29

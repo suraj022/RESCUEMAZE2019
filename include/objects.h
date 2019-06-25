@@ -27,7 +27,7 @@ Adafruit_SSD1306 display(12);
 // structure for tiles in the maze
 struct tile { // num stored in array index
   bool N = false, E = false, S = false, W = false;
-  // bool NC = false, EC = false, SC = false, WC = false;
+  bool IN = false, IS = false, IW = false, IE = false; // intersections
   int8_t testCount = 0;
   int8_t backWay = -1; // N = 0, E = 1, S = 2, W = 3;
   int8_t x = -1, y = -1;

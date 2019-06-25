@@ -7,7 +7,7 @@
   5. Fix encoder movement using PID           DONE
   6. Implement Heated victim code             DONE
   7. try basic wall follow algorithm          DONE
-  8. Depth first search algorithm
+  8. Depth first search algorithm             DONE
   9. Visual victim Identification             DONE
   10. Turn 90 degree using mpu6050            DONE
   11. Implement colour sensor                 DONE
@@ -16,6 +16,7 @@
   14. Add visual victim code to main loop
   15. Add ramp detection
   16. Lack of progress switch
+  17. Fix next tile detection
 ***************************************************/
 
 #include "constants.h"
@@ -46,8 +47,12 @@ void setup() {
   // begin IMU functions
   beginMotion();
 
-  // Calibrate MPU6050
+  // Calibrate Gyroscope
   CalibrateMPU6050(50);
+
+  // Calibrate Accelerometer
+  delay(100);
+  CalibrateMPU6050_Acc(50);
 
   // setup VL53L0x tof sensors
   setupTOF();
@@ -67,7 +72,7 @@ void setup() {
   beep(50);
   // start parallel loops
   Scheduler.startLoop(MLXloop);    // constantly read temperatures
-  Scheduler.startLoop(gyroLoop);   // Calculate Gyro roll pitch and yaw reading
+  Scheduler.startLoop(IMUloop);    // Calculate Gyro roll pitch and yaw reading
   Scheduler.startLoop(bumpLoop);   // detect left and right bumps
   Scheduler.startLoop(colourLoop); // Constantly detect tile colour
 
@@ -77,19 +82,16 @@ void setup() {
   // Wait until a signal is given
   waitForSignal();
 
-  // move forward once only if front wall is open
-  // if (!(getDistance(FRONT) < WALLDISTANCE)) {
-  //   indicatePath(FRONT);
-  //   moveStraight(300);
-  // }
-
   // Intialize grid variables
   COUNT = 1;
   gridX = 0;
   gridY = 0;
-  HEAD = 3;
-  // cell[COUNT].E = true;
-}
+  HEAD = 3; // Start facing west direction
+  // while (1) {
+  //   SerialUSB.println(accY * 3);
+  //   delay(50);
+  // }
+} // end setup part
 
 /***************************************************
   DFS algorithm check sequence
@@ -102,6 +104,7 @@ void setup() {
     6. else backtrack to last node
 ***************************************************/
 
+// Start main loop
 void loop() {
 
   do {
@@ -130,10 +133,10 @@ void loop() {
 
     if (headingResult) {
       // if available way and next tile is empty then move forward and count++
+      indicatePath(FRONT);
       moveStraight(300);
+      ramp();
       COUNT++;
-      // tile tmp;
-      // cell[COUNT] = tmp;
     } else { // else backtrack to last node
       // backtrack code here and count-- until last node
       if (cell[COUNT].backWay >= 0) {
@@ -143,16 +146,30 @@ void loop() {
         delay(50);
         setHeading();
       }
+      indicatePath(FRONT);
       moveStraight(300);
+      ramp();
       tile tmp;
       cell[COUNT] = tmp;
       COUNT--;
     }
     yield();
   } while (COUNT > 1);
-  turnBot(90, 1, true);
-  turnBot(90, 1, true);
+
+  // display FINISH
+  clearScreen();
   displayPos(0, 0, "FINISH!", 0, 0);
-  waitForSignal();
+
+  // change neopixel to white
+  for (int i = 0; i < 8; i++) {
+    pixels.setPixelColor(i, pixels.Color(20, 20, 20));
+    pixels.show();
+  }
+
+  // Halt indefinitely
+  while (1) {
+    delay(100);
+    yield();
+  }
   yield();
-}
+} // End of main loop

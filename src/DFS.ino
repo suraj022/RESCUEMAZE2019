@@ -3,25 +3,20 @@ void setWalls() {
   case 0: // Heading north
     cell[COUNT].N = (getDistance(FRONT) < WALLDISTANCE);
     cell[COUNT].E = (getDistance(RIGHT) < WALLDISTANCE);
-    // cell[COUNT].S = false;
     cell[COUNT].W = (getDistance(LEFT) < WALLDISTANCE);
     break;
   case 1: // heading east
     cell[COUNT].N = (getDistance(LEFT) < WALLDISTANCE);
     cell[COUNT].E = (getDistance(FRONT) < WALLDISTANCE);
     cell[COUNT].S = (getDistance(RIGHT) < WALLDISTANCE);
-    // cell[COUNT].W = false;
     break;
   case 2: // heading south
-    // cell[COUNT].N = false;
     cell[COUNT].E = (getDistance(LEFT) < WALLDISTANCE);
     cell[COUNT].S = (getDistance(FRONT) < WALLDISTANCE);
     cell[COUNT].W = (getDistance(RIGHT) < WALLDISTANCE);
     break;
   case 3: // heading west
     cell[COUNT].N = (getDistance(RIGHT) < WALLDISTANCE);
-    // if (COUNT != 0)
-    //   cell[COUNT].E = false;
     cell[COUNT].S = (getDistance(LEFT) < WALLDISTANCE);
     cell[COUNT].W = (getDistance(FRONT) < WALLDISTANCE);
     break;
@@ -32,14 +27,6 @@ void setWalls() {
   bitWrite(ways, 0, (getDistance(LEFT) < WALLDISTANCE));
 
   cell[COUNT].node = ((ways >= 0 && ways <= 2) || ways == 4);
-  if (cell[COUNT].node) {
-    for (int i = 0; i < 8; i++) {
-      pixels.setPixelColor(i, pixels.Color(0, 20, 20));
-      pixels.show();
-    }
-    delay(100);
-    clearPixels();
-  }
 }
 
 bool nextTile(int x, int y) {
@@ -47,15 +34,8 @@ bool nextTile(int x, int y) {
   switch (HEAD) {
   case 0: // north
     while (i > 0) {
-      // clearScreen();
-      // displayPos(0, 0, "cnt:", i, 0);
-      // displayPos(0, 21, "nxt:", x, y + 1);
-      // displayPos(0, 42, "chk:", cell[i].x, cell[i].y);
-      // delay(20);
       if (cell[i].x == x && cell[i].y == y + 1) {
-        beep(50);
-        delay(100);
-        beep(50);
+        cell[i].IS = true;
         return true;
       }
       i--;
@@ -63,15 +43,8 @@ bool nextTile(int x, int y) {
     break;
   case 1: // east
     while (i > 0) {
-      // clearScreen();
-      // displayPos(0, 0, "cnt:", i, 0);
-      // displayPos(0, 21, "nxt:", x + 1, y);
-      // displayPos(0, 42, "chk:", cell[i].x, cell[i].y);
-      // delay(20);
       if (cell[i].x == x + 1 && cell[i].y == y) {
-        beep(50);
-        delay(100);
-        beep(50);
+        cell[i].IW = true;
         return true;
       }
       i--;
@@ -79,15 +52,8 @@ bool nextTile(int x, int y) {
     break;
   case 2: // south
     while (i > 0) {
-      // clearScreen();
-      // displayPos(0, 0, "cnt:", i, 0);
-      // displayPos(0, 21, "nxt:", x, y - 1);
-      // displayPos(0, 42, "chk:", cell[i].x, cell[i].y);
-      // delay(20);
       if (cell[i].x == x && cell[i].y == y - 1) {
-        beep(50);
-        delay(100);
-        beep(50);
+        cell[i].IN = true;
         return true;
       }
       i--;
@@ -95,15 +61,8 @@ bool nextTile(int x, int y) {
     break;
   case 3: // west
     while (i > 0) {
-      // clearScreen();
-      // displayPos(0, 0, "cnt:", i, 0);
-      // displayPos(0, 21, "nxt:", x - 1, y);
-      // displayPos(0, 42, "chk:", cell[i].x, cell[i].y);
-      // delay(20);
       if (cell[i].x == x - 1 && cell[i].y == y) {
-        beep(50);
-        delay(100);
-        beep(50);
+        cell[i].IE = true;
         return true;
       }
       i--;
@@ -116,7 +75,8 @@ bool nextTile(int x, int y) {
 bool setHeading() {
   int head = -1;
   bool flag = false;
-  if (!cell[COUNT].S && cell[COUNT].testCount < 1 && flag == false) {
+  if (!cell[COUNT].S && cell[COUNT].testCount < 1 && !cell[COUNT].IS &&
+      flag == false) {
     if (prevTile(2, cell[COUNT].x, cell[COUNT].y)) {
       cell[COUNT].backWay = 2;
     } else {
@@ -125,7 +85,8 @@ bool setHeading() {
     }
     cell[COUNT].testCount = 1;
   }
-  if (!cell[COUNT].W && cell[COUNT].testCount < 2 && flag == false) {
+  if (!cell[COUNT].W && cell[COUNT].testCount < 2 && !cell[COUNT].IW &&
+      flag == false) {
     if (prevTile(3, cell[COUNT].x, cell[COUNT].y)) {
       cell[COUNT].backWay = 3;
     } else {
@@ -134,7 +95,8 @@ bool setHeading() {
     }
     cell[COUNT].testCount = 2;
   }
-  if (!cell[COUNT].N && cell[COUNT].testCount < 3 && flag == false) {
+  if (!cell[COUNT].N && cell[COUNT].testCount < 3 && !cell[COUNT].IN &&
+      flag == false) {
     if (prevTile(0, cell[COUNT].x, cell[COUNT].y)) {
       cell[COUNT].backWay = 0;
     } else {
@@ -143,8 +105,8 @@ bool setHeading() {
     }
     cell[COUNT].testCount = 3;
   }
-
-  if (!cell[COUNT].E && cell[COUNT].testCount < 4 && flag == false) {
+  if (!cell[COUNT].E && cell[COUNT].testCount < 4 && !cell[COUNT].IE &&
+      flag == false) {
     if (prevTile(1, cell[COUNT].x, cell[COUNT].y)) {
       cell[COUNT].backWay = 1;
     } else {
