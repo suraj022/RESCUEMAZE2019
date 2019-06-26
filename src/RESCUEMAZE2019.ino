@@ -14,9 +14,9 @@
   12. Add Heated victim code to main loop
   13. Implement visual victim code
   14. Add visual victim code to main loop
-  15. Add ramp detection
+  15. Add ramp detection                      DONE
   16. Lack of progress switch
-  17. Fix next tile detection
+  17. Fix next tile detection                 DONE
 ***************************************************/
 
 #include "constants.h"
@@ -89,16 +89,8 @@ void setup() {
   // Wait until a signal is given
   waitForSignal();
 
-  // Intialize grid variables
-  COUNT = 1;
   mazeNum = 0;
-  maze[mazeNum].gridX = 0;
-  maze[mazeNum].gridY = 0;
   HEAD = 3; // Start facing west direction
-  // while (1) {
-  //   SerialUSB.println(accY * 3);
-  //   delay(50);
-  // }
 } // end setup part
 
 /***************************************************
@@ -115,53 +107,135 @@ void setup() {
 // Start main loop
 void loop() {
   do {
-    // update x, y coordinates of current tile
-    maze[mazeNum].cell[COUNT].x = maze[mazeNum].gridX;
-    maze[mazeNum].cell[COUNT].y = maze[mazeNum].gridY;
+    do {
+      // update x, y coordinates of current tile
+      maze[mazeNum].cell[maze[mazeNum].COUNT].x = maze[mazeNum].gridX;
+      maze[mazeNum].cell[maze[mazeNum].COUNT].y = maze[mazeNum].gridY;
 
-    clearScreen();
-    // Display coordinates on Oled
-    displayPos(0, 0, "XY:", maze[mazeNum].gridX, maze[mazeNum].gridY);
+      // set walls
+      setWalls();
 
-    // set walls
-    setWalls();
+      //**********************
+      // Add victim check code here
+      // for both visual and heated victims
+      //**********************
 
-    //**********************
-    // Add victim check code here
-    // for both visual and heated victims
-    //**********************
+      // set heading
+      bool headingResult = setHeading();
+      bool nextTileFound = nextTile(maze[mazeNum].cell[maze[mazeNum].COUNT].x,
+                                    maze[mazeNum].cell[maze[mazeNum].COUNT].y);
+      if (nextTileFound)
+        headingResult = setHeading();
+      delay(300);
 
-    // set heading
-    bool headingResult = setHeading();
-    bool nextTileFound = nextTile(maze[mazeNum].cell[COUNT].x, maze[mazeNum].cell[COUNT].y);
-    if (nextTileFound)
-      headingResult = setHeading();
-    delay(300);
+      if (headingResult) {
+        // if available way and next tile is empty then move forward and count++
+        clearScreen();
+        // Display coordinates on Oled
+        displayPos(0, 0, "X/Y:", maze[mazeNum].gridX, maze[mazeNum].gridY);
+        displayPos(0, 21, "N/C:", mazeNum, maze[mazeNum].COUNT);
 
-    if (headingResult) {
-      // if available way and next tile is empty then move forward and count++
-      indicatePath(FRONT);
-      moveStraight(300);
-      ramp(1);
-      COUNT++;
-    } else { // else backtrack to last node
-      // backtrack code here and count-- until last node
-      if (maze[mazeNum].cell[COUNT].backWay >= 0) {
-        orient(maze[mazeNum].cell[COUNT].backWay);
-      } else {
-        setWalls();
-        delay(50);
-        setHeading();
+        indicatePath(FRONT);
+        moveStraight(300);
+        if (ramp()) {
+          mazeNum++;
+          maze[mazeNum].entryHead = HEAD;
+          continue;
+        } else {
+          maze[mazeNum].COUNT++;
+        }
+        // else
+        // continue;
+      } else { // else backtrack to last node
+        // backtrack code here and count-- until last node
+        clearScreen();
+        // Display coordinates on Oled
+        displayPos(0, 0, "BACKTRACK:", maze[mazeNum].gridX,
+                   maze[mazeNum].gridY);
+        displayPos(0, 45, "COUNT:", maze[mazeNum].COUNT, 0);
+
+        if (maze[mazeNum].cell[maze[mazeNum].COUNT].backWay >= 0) {
+          orient(maze[mazeNum].cell[maze[mazeNum].COUNT].backWay);
+        } else {
+          setWalls();
+          delay(50);
+          setHeading();
+        }
+        indicatePath(FRONT);
+        moveStraight(300);
+        tile tmp;
+        maze[mazeNum].cell[maze[mazeNum].COUNT] = tmp;
+        maze[mazeNum].COUNT--;
+        if (maze[mazeNum].COUNT == 1 &&
+            maze[mazeNum].cell[maze[mazeNum].COUNT].testCount > 3 &&
+            mazeNum > 0)
+          maze[mazeNum].completed = true;
+        else if (maze[mazeNum].COUNT == 1 && mazeNum == 0) {
+          maze[mazeNum].completed = true;
+        }
       }
-      indicatePath(FRONT);
-      moveStraight(300);
-      ramp(-1);
-      tile tmp;
-      maze[mazeNum].cell[COUNT] = tmp;
-      COUNT--;
+      yield();
+    } while (maze[mazeNum].completed == false); // end of maze
+
+    for (int i = 0; i < 8; i++) {
+      pixels.setPixelColor(i, pixels.Color(20, 20, 20));
+      pixels.show();
     }
-    yield();
-  } while (COUNT > 1);
+    delay(200);
+    clearPixels();
+
+    if (mazeNum > 0) {
+      clearScreen();
+      // Display coordinates on Oled
+      displayPos(0, 0, "BACKTRACK:", 0, 0);
+
+      int tmpHead = maze[mazeNum].entryHead;
+      switch (tmpHead) {
+      case 0:
+        orient(2);
+        HEAD = 2;
+        break;
+      case 1:
+        orient(3);
+        HEAD = 3;
+        break;
+      case 2:
+        orient(0);
+        HEAD = 0;
+        break;
+      case 3:
+        orient(1);
+        HEAD = 1;
+        break;
+      default:
+        break;
+      }
+      moveStraight(300);
+      while (getDistance(FRONT) > 80) {
+        moveMotor(100, 100);
+        beep(50);
+        delay(100);
+      }
+      moveMotor(0, 0);
+      mazeNum--;
+      switch (HEAD) {
+      case 0:
+        maze[mazeNum].gridY++;
+        break;
+      case 1:
+        maze[mazeNum].gridX++;
+        break;
+      case 2:
+        maze[mazeNum].gridY--;
+        break;
+      case 3:
+        maze[mazeNum].gridX--;
+        break;
+      }
+    } else {
+      mazeNum--;
+    }
+  } while (mazeNum >= 0);
 
   // display FINISH
   clearScreen();

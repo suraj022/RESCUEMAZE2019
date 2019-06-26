@@ -255,11 +255,11 @@ void offsetStraight(int value) {
   moveMotor(0, 0);
 }
 
-void ramp(int8_t dir) {
+bool ramp() {
   if (accX > 19) {
     bumpcheck = false;
     while (accX > 19) {
-      int pwm = 100;
+      int pwm = 110;
       int offset = 0;
       // offset = -accY * 1.2;
       offset = 0.8 * (wallDistance - getDistance(LEFT));
@@ -270,10 +270,11 @@ void ramp(int8_t dir) {
     moveMotor(0, 0);
     delay(500);
     bumpcheck = true;
+    return true;
   } else if (accX < -19) {
     bumpcheck = false;
     while (accX < -19) {
-      int pwm = 100;
+      int pwm = 10;
       int offset = 0;
       // offset = -accY * 1.2;
       offset = 0.8 * (wallDistance - getDistance(LEFT));
@@ -284,7 +285,9 @@ void ramp(int8_t dir) {
     moveMotor(0, 0);
     delay(500);
     bumpcheck = true;
+    return true;
   }
+  return false;
 }
 
 int rpmOffset() {

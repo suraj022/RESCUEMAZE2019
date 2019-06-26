@@ -1,36 +1,134 @@
 void setWalls() {
   switch (HEAD) {
+    //////////////////////////////////////////////////////////////////////
   case 0: // Heading north
-    maze[mazeNum].cell[COUNT].N = (getDistance(FRONT) < WALLDISTANCE);
-    maze[mazeNum].cell[COUNT].E = (getDistance(RIGHT) < WALLDISTANCE);
-    maze[mazeNum].cell[COUNT].W = (getDistance(LEFT) < WALLDISTANCE);
+    if (getDistance(FRONT) < 8000)
+      if (getDistance(FRONT) < WALLDISTANCE)
+        maze[mazeNum].cell[maze[mazeNum].COUNT].N = true;
+      else
+        maze[mazeNum].cell[maze[mazeNum].COUNT].N = false;
+    else
+      maze[mazeNum].cell[maze[mazeNum].COUNT].N = true;
+
+    if (getDistance(RIGHT) < 8000)
+      if (getDistance(RIGHT) < WALLDISTANCE)
+        maze[mazeNum].cell[maze[mazeNum].COUNT].E = true;
+      else
+        maze[mazeNum].cell[maze[mazeNum].COUNT].E = false;
+    else
+      maze[mazeNum].cell[maze[mazeNum].COUNT].E = true;
+
+    if (getDistance(LEFT) < 8000)
+      if (getDistance(LEFT) < WALLDISTANCE)
+        maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
+      else
+        maze[mazeNum].cell[maze[mazeNum].COUNT].W = false;
+    else
+      maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
+
+    if (maze[mazeNum].COUNT == 1)
+      maze[mazeNum].cell[maze[mazeNum].COUNT].S = true;
     break;
+    //////////////////////////////////////////////////////////////////////
   case 1: // heading east
-    maze[mazeNum].cell[COUNT].N = (getDistance(LEFT) < WALLDISTANCE);
-    maze[mazeNum].cell[COUNT].E = (getDistance(FRONT) < WALLDISTANCE);
-    maze[mazeNum].cell[COUNT].S = (getDistance(RIGHT) < WALLDISTANCE);
+    if (getDistance(LEFT) < 8000)
+      if (getDistance(LEFT) < WALLDISTANCE)
+        maze[mazeNum].cell[maze[mazeNum].COUNT].N = true;
+      else
+        maze[mazeNum].cell[maze[mazeNum].COUNT].N = false;
+    else
+      maze[mazeNum].cell[maze[mazeNum].COUNT].N = true;
+
+    if (getDistance(FRONT) < 8000)
+      if (getDistance(FRONT) < WALLDISTANCE)
+        maze[mazeNum].cell[maze[mazeNum].COUNT].E = true;
+      else
+        maze[mazeNum].cell[maze[mazeNum].COUNT].E = false;
+    else
+      maze[mazeNum].cell[maze[mazeNum].COUNT].E = true;
+
+    if (getDistance(RIGHT) < 8000)
+      if (getDistance(RIGHT) < WALLDISTANCE)
+        maze[mazeNum].cell[maze[mazeNum].COUNT].S = true;
+      else
+        maze[mazeNum].cell[maze[mazeNum].COUNT].S = false;
+    else
+      maze[mazeNum].cell[maze[mazeNum].COUNT].S = true;
+
+    if (maze[mazeNum].COUNT == 1)
+      maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
     break;
+    //////////////////////////////////////////////////////////////////////
   case 2: // heading south
-    maze[mazeNum].cell[COUNT].E = (getDistance(LEFT) < WALLDISTANCE);
-    maze[mazeNum].cell[COUNT].S = (getDistance(FRONT) < WALLDISTANCE);
-    maze[mazeNum].cell[COUNT].W = (getDistance(RIGHT) < WALLDISTANCE);
+    if (getDistance(LEFT) < 8000)
+      if (getDistance(LEFT) < WALLDISTANCE)
+        maze[mazeNum].cell[maze[mazeNum].COUNT].E = true;
+      else
+        maze[mazeNum].cell[maze[mazeNum].COUNT].E = false;
+    else
+      maze[mazeNum].cell[maze[mazeNum].COUNT].E = true;
+
+    if (getDistance(FRONT) < 8000)
+      if (getDistance(FRONT) < WALLDISTANCE)
+        maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
+      else
+        maze[mazeNum].cell[maze[mazeNum].COUNT].W = false;
+    else
+      maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
+
+    if (getDistance(RIGHT) < 8000)
+      if (getDistance(RIGHT) < WALLDISTANCE)
+        maze[mazeNum].cell[maze[mazeNum].COUNT].S = true;
+      else
+        maze[mazeNum].cell[maze[mazeNum].COUNT].S = false;
+    else
+      maze[mazeNum].cell[maze[mazeNum].COUNT].S = true;
+
+    if (maze[mazeNum].COUNT == 1)
+      maze[mazeNum].cell[maze[mazeNum].COUNT].N = true;
     break;
+    //////////////////////////////////////////////////////////////////////
   case 3: // heading west
-    maze[mazeNum].cell[COUNT].N = (getDistance(RIGHT) < WALLDISTANCE);
-    maze[mazeNum].cell[COUNT].S = (getDistance(LEFT) < WALLDISTANCE);
-    maze[mazeNum].cell[COUNT].W = (getDistance(FRONT) < WALLDISTANCE);
+    if (getDistance(RIGHT) < 8000)
+      if (getDistance(RIGHT) < WALLDISTANCE)
+        maze[mazeNum].cell[maze[mazeNum].COUNT].N = true;
+      else
+        maze[mazeNum].cell[maze[mazeNum].COUNT].N = false;
+    else
+      maze[mazeNum].cell[maze[mazeNum].COUNT].N = true;
+
+    if (getDistance(LEFT) < 8000)
+      if (getDistance(LEFT) < WALLDISTANCE)
+        maze[mazeNum].cell[maze[mazeNum].COUNT].S = true;
+      else
+        maze[mazeNum].cell[maze[mazeNum].COUNT].S = false;
+    else
+      maze[mazeNum].cell[maze[mazeNum].COUNT].S = true;
+
+    if (getDistance(FRONT) < 8000)
+      if (getDistance(FRONT) < WALLDISTANCE)
+        maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
+      else
+        maze[mazeNum].cell[maze[mazeNum].COUNT].W = false;
+    else
+      maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
+
+    if (maze[mazeNum].COUNT == 1)
+      maze[mazeNum].cell[maze[mazeNum].COUNT].E = true;
     break;
   }
+  //////////////////////////////////////////////////////////////////////
   int ways = 0;
   bitWrite(ways, 2, (getDistance(RIGHT) < WALLDISTANCE));
   bitWrite(ways, 1, (getDistance(FRONT) < WALLDISTANCE));
   bitWrite(ways, 0, (getDistance(LEFT) < WALLDISTANCE));
 
-  maze[mazeNum].cell[COUNT].node = ((ways >= 0 && ways <= 2) || ways == 4);
+  maze[mazeNum].cell[maze[mazeNum].COUNT].node =
+      ((ways >= 0 && ways <= 2) || ways == 4);
 }
 
 bool nextTile(int x, int y) {
-  int i = COUNT - 1;
+  int i = maze[mazeNum].COUNT - 1;
   switch (HEAD) {
   case 0: // north
     while (i > 0) {
@@ -75,45 +173,53 @@ bool nextTile(int x, int y) {
 bool setHeading() {
   int head = -1;
   bool flag = false;
-  if (!maze[mazeNum].cell[COUNT].S && maze[mazeNum].cell[COUNT].testCount < 1 && !maze[mazeNum].cell[COUNT].IS &&
-      flag == false) {
-    if (prevTile(2, maze[mazeNum].cell[COUNT].x, maze[mazeNum].cell[COUNT].y)) {
-      maze[mazeNum].cell[COUNT].backWay = 2;
+  if (!maze[mazeNum].cell[maze[mazeNum].COUNT].S &&
+      maze[mazeNum].cell[maze[mazeNum].COUNT].testCount < 1 &&
+      !maze[mazeNum].cell[maze[mazeNum].COUNT].IS && flag == false) {
+    if (prevTile(2, maze[mazeNum].cell[maze[mazeNum].COUNT].x,
+                 maze[mazeNum].cell[maze[mazeNum].COUNT].y)) {
+      maze[mazeNum].cell[maze[mazeNum].COUNT].backWay = 2;
     } else {
       head = 2;
       flag = true;
     }
-    maze[mazeNum].cell[COUNT].testCount = 1;
+    maze[mazeNum].cell[maze[mazeNum].COUNT].testCount = 1;
   }
-  if (!maze[mazeNum].cell[COUNT].W && maze[mazeNum].cell[COUNT].testCount < 2 && !maze[mazeNum].cell[COUNT].IW &&
-      flag == false) {
-    if (prevTile(3, maze[mazeNum].cell[COUNT].x, maze[mazeNum].cell[COUNT].y)) {
-      maze[mazeNum].cell[COUNT].backWay = 3;
+  if (!maze[mazeNum].cell[maze[mazeNum].COUNT].W &&
+      maze[mazeNum].cell[maze[mazeNum].COUNT].testCount < 2 &&
+      !maze[mazeNum].cell[maze[mazeNum].COUNT].IW && flag == false) {
+    if (prevTile(3, maze[mazeNum].cell[maze[mazeNum].COUNT].x,
+                 maze[mazeNum].cell[maze[mazeNum].COUNT].y)) {
+      maze[mazeNum].cell[maze[mazeNum].COUNT].backWay = 3;
     } else {
       head = 3;
       flag = true;
     }
-    maze[mazeNum].cell[COUNT].testCount = 2;
+    maze[mazeNum].cell[maze[mazeNum].COUNT].testCount = 2;
   }
-  if (!maze[mazeNum].cell[COUNT].N && maze[mazeNum].cell[COUNT].testCount < 3 && !maze[mazeNum].cell[COUNT].IN &&
-      flag == false) {
-    if (prevTile(0, maze[mazeNum].cell[COUNT].x, maze[mazeNum].cell[COUNT].y)) {
-      maze[mazeNum].cell[COUNT].backWay = 0;
+  if (!maze[mazeNum].cell[maze[mazeNum].COUNT].N &&
+      maze[mazeNum].cell[maze[mazeNum].COUNT].testCount < 3 &&
+      !maze[mazeNum].cell[maze[mazeNum].COUNT].IN && flag == false) {
+    if (prevTile(0, maze[mazeNum].cell[maze[mazeNum].COUNT].x,
+                 maze[mazeNum].cell[maze[mazeNum].COUNT].y)) {
+      maze[mazeNum].cell[maze[mazeNum].COUNT].backWay = 0;
     } else {
       head = 0;
       flag = true;
     }
-    maze[mazeNum].cell[COUNT].testCount = 3;
+    maze[mazeNum].cell[maze[mazeNum].COUNT].testCount = 3;
   }
-  if (!maze[mazeNum].cell[COUNT].E && maze[mazeNum].cell[COUNT].testCount < 4 && !maze[mazeNum].cell[COUNT].IE &&
-      flag == false) {
-    if (prevTile(1, maze[mazeNum].cell[COUNT].x, maze[mazeNum].cell[COUNT].y)) {
-      maze[mazeNum].cell[COUNT].backWay = 1;
+  if (!maze[mazeNum].cell[maze[mazeNum].COUNT].E &&
+      maze[mazeNum].cell[maze[mazeNum].COUNT].testCount < 4 &&
+      !maze[mazeNum].cell[maze[mazeNum].COUNT].IE && flag == false) {
+    if (prevTile(1, maze[mazeNum].cell[maze[mazeNum].COUNT].x,
+                 maze[mazeNum].cell[maze[mazeNum].COUNT].y)) {
+      maze[mazeNum].cell[maze[mazeNum].COUNT].backWay = 1;
     } else {
       head = 1;
       flag = true;
     }
-    maze[mazeNum].cell[COUNT].testCount = 4;
+    maze[mazeNum].cell[maze[mazeNum].COUNT].testCount = 4;
   }
 
   if (!flag) {
@@ -159,19 +265,23 @@ bool prevTile(int head, int x, int y) {
   bool flag = false;
   switch (head) {
   case 0: // north
-    if (maze[mazeNum].cell[COUNT - 1].x == x && maze[mazeNum].cell[COUNT - 1].y == y + 1)
+    if (maze[mazeNum].cell[maze[mazeNum].COUNT - 1].x == x &&
+        maze[mazeNum].cell[maze[mazeNum].COUNT - 1].y == y + 1)
       flag = true;
     break;
   case 1: // east
-    if (maze[mazeNum].cell[COUNT - 1].x == x + 1 && maze[mazeNum].cell[COUNT - 1].y == y)
+    if (maze[mazeNum].cell[maze[mazeNum].COUNT - 1].x == x + 1 &&
+        maze[mazeNum].cell[maze[mazeNum].COUNT - 1].y == y)
       flag = true;
     break;
   case 2: // south
-    if (maze[mazeNum].cell[COUNT - 1].x == x && maze[mazeNum].cell[COUNT - 1].y == y - 1)
+    if (maze[mazeNum].cell[maze[mazeNum].COUNT - 1].x == x &&
+        maze[mazeNum].cell[maze[mazeNum].COUNT - 1].y == y - 1)
       flag = true;
     break;
   case 3: // west
-    if (maze[mazeNum].cell[COUNT - 1].x == x - 1 && maze[mazeNum].cell[COUNT - 1].y == y)
+    if (maze[mazeNum].cell[maze[mazeNum].COUNT - 1].x == x - 1 &&
+        maze[mazeNum].cell[maze[mazeNum].COUNT - 1].y == y)
       flag = true;
     break;
   }

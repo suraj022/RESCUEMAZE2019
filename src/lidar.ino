@@ -16,7 +16,6 @@ void setupTOF() {
   sensorL.startContinuous();
   delay(50);
   sensorL.setAddress((uint8_t)21);
-  sensorL.startContinuous();
 
   digitalWrite(9, HIGH);
   delay(50);
@@ -26,7 +25,6 @@ void setupTOF() {
   sensorF.startContinuous();
   delay(50);
   sensorF.setAddress((uint8_t)22);
-  sensorF.startContinuous();
 
   digitalWrite(8, HIGH);
   delay(50);
@@ -36,7 +34,6 @@ void setupTOF() {
   sensorR.startContinuous();
   delay(50);
   sensorR.setAddress((uint8_t)23);
-  sensorR.startContinuous();
 }
 
 int getDistance(int x) {

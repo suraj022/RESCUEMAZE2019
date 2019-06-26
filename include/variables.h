@@ -48,12 +48,6 @@ int desiredposR = 0, desiredposL = 0;
 // last error for PIDs on motors
 int lastError = 0, lastErrorTurn = 0;
 
-// Direction Headed 0-> F  1-> R  2->B  3->L
-int head = 0;
-
-// Count the tile number
-int count = 0;
-
 // Variables to store encoder positions for Left and Right encoders
 // set to volatile type to ensure it doesn't get omitted during compile time.
 volatile int encoderposR = 0, encoderposL = 0;
@@ -72,9 +66,7 @@ MAZE maze[5];
 */
 int8_t HEAD = 3;
 
-// Global count
-int8_t COUNT = 1;
-
+// maze number
 int8_t mazeNum = 0;
 
 // Current coordinates of the bot

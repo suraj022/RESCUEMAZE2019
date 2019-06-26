@@ -24,7 +24,7 @@ void dispence() {
     delay(200);
     if (Ltemp)
       moveMotor(100, -100);
-    else if (Rtemp)
+    else
       moveMotor(-100, 100);
     delay(300);
     moveMotor(0, 0);
@@ -42,7 +42,7 @@ void dispence() {
     delay(500);
     if (Ltemp)
       moveMotor(-100, 100);
-    else if (Rtemp)
+    else
       moveMotor(100, -100);
     delay(300);
     moveMotor(0, 0);
