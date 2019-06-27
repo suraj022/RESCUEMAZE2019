@@ -68,16 +68,16 @@ void setWalls() {
     else
       maze[mazeNum].cell[maze[mazeNum].COUNT].E = true;
 
-    if (getDistance(FRONT) < 8000)
-      if (getDistance(FRONT) < WALLDISTANCE)
+    if (getDistance(RIGHT) < 8000)
+      if (getDistance(RIGHT) < WALLDISTANCE)
         maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
       else
         maze[mazeNum].cell[maze[mazeNum].COUNT].W = false;
     else
       maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
 
-    if (getDistance(RIGHT) < 8000)
-      if (getDistance(RIGHT) < WALLDISTANCE)
+    if (getDistance(FRONT) < 8000)
+      if (getDistance(FRONT) < WALLDISTANCE)
         maze[mazeNum].cell[maze[mazeNum].COUNT].S = true;
       else
         maze[mazeNum].cell[maze[mazeNum].COUNT].S = false;
@@ -119,12 +119,39 @@ void setWalls() {
   }
   //////////////////////////////////////////////////////////////////////
   int ways = 0;
-  bitWrite(ways, 2, (getDistance(RIGHT) < WALLDISTANCE));
-  bitWrite(ways, 1, (getDistance(FRONT) < WALLDISTANCE));
-  bitWrite(ways, 0, (getDistance(LEFT) < WALLDISTANCE));
+  bool l, f, r;
+  if (getDistance(FRONT) < 8000)
+    if (getDistance(FRONT) < WALLDISTANCE)
+      f = true;
+    else
+      f = false;
+  else
+    f = true;
 
-  maze[mazeNum].cell[maze[mazeNum].COUNT].node =
-      ((ways >= 0 && ways <= 2) || ways == 4);
+  if (getDistance(RIGHT) < 8000)
+    if (getDistance(RIGHT) < WALLDISTANCE)
+      r = true;
+    else
+      r = false;
+  else
+    r = true;
+
+  if (getDistance(LEFT) < 8000)
+    if (getDistance(LEFT) < WALLDISTANCE)
+      l = true;
+    else
+      l = false;
+  else
+    l = true;
+
+  bitWrite(ways, 2, r);
+  bitWrite(ways, 1, f);
+  bitWrite(ways, 0, l);
+
+  if (!maze[mazeNum].cell[maze[mazeNum].COUNT].node) {
+    maze[mazeNum].cell[maze[mazeNum].COUNT].node =
+        ((ways >= 0 && ways <= 2) || ways == 4);
+  }
 }
 
 bool nextTile(int x, int y) {
@@ -197,6 +224,7 @@ bool setHeading() {
     }
     maze[mazeNum].cell[maze[mazeNum].COUNT].testCount = 2;
   }
+
   if (!maze[mazeNum].cell[maze[mazeNum].COUNT].N &&
       maze[mazeNum].cell[maze[mazeNum].COUNT].testCount < 3 &&
       !maze[mazeNum].cell[maze[mazeNum].COUNT].IN && flag == false) {
@@ -258,7 +286,7 @@ void orient(int head) {
     break;
   }
   indicateWalls();
-  delay(20);
+  delay(100);
 }
 
 bool prevTile(int head, int x, int y) {

@@ -1,22 +1,22 @@
 /***************************************************
-  TODO list-
-  1. move 1 tile function                     DONE
-  2. change encoder loop to function          DONE
-  3. implement rescue mechanism               DONE
-  4. Fix wall align using PID                 DONE
-  5. Fix encoder movement using PID           DONE
-  6. Implement Heated victim code             DONE
-  7. try basic wall follow algorithm          DONE
-  8. Depth first search algorithm             DONE
-  9. Visual victim Identification             DONE
-  10. Turn 90 degree using mpu6050            DONE
-  11. Implement colour sensor                 DONE
-  12. Add Heated victim code to main loop
-  13. Implement visual victim code
-  14. Add visual victim code to main loop
-  15. Add ramp detection                      DONE
-  16. Lack of progress switch
-  17. Fix next tile detection                 DONE
+TODO list-
+1. move 1 tile function                     DONE
+2. change encoder loop to function          DONE
+3. implement rescue mechanism               DONE
+4. Fix wall align using PID                 DONE
+5. Fix encoder movement using PID           DONE
+6. Implement Heated victim code             DONE
+7. try basic wall follow algorithm          DONE
+8. Depth first search algorithm             DONE
+9. Visual victim Identification             DONE
+10. Turn 90 degree using mpu6050            DONE
+11. Implement colour sensor                 DONE
+12. Add Heated victim code to main loop
+13. Implement visual victim code
+14. Add visual victim code to main loop
+15. Add ramp detection                      DONE
+16. Lack of progress switch
+17. Fix next tile detection                 DONE
 ***************************************************/
 
 #include "constants.h"
@@ -90,18 +90,18 @@ void setup() {
   waitForSignal();
 
   mazeNum = 0;
-  HEAD = 3; // Start facing west direction
+  HEAD = 2; // Start facing north direction
 } // end setup part
 
 /***************************************************
-  DFS algorithm check sequence
-    0. update x, y coordinates of current tile
-    1. set walls
-    2. set heading
-    3. if deadend then backtrack to last node
-    4. else check next tile
-    5. if next tile is not visited then move forward and count++
-    6. else backtrack to last node
+DFS algorithm check sequence
+0. update x, y coordinates of current tile
+1. set walls
+2. set heading
+3. if deadend then backtrack to last node
+4. else check next tile
+5. if next tile is not visited then move forward and count++
+6. else backtrack to last node
 ***************************************************/
 
 // Start main loop
@@ -113,6 +113,7 @@ void loop() {
       maze[mazeNum].cell[maze[mazeNum].COUNT].y = maze[mazeNum].gridY;
 
       // set walls
+      // if (maze[mazeNum].cell[maze[mazeNum].COUNT].testCount < 1)
       setWalls();
 
       //**********************
@@ -124,9 +125,15 @@ void loop() {
       bool headingResult = setHeading();
       bool nextTileFound = nextTile(maze[mazeNum].cell[maze[mazeNum].COUNT].x,
                                     maze[mazeNum].cell[maze[mazeNum].COUNT].y);
+
+      if (maze[mazeNum].COUNT <= 1 && !headingResult) {
+        beep(50);
+        maze[mazeNum].completed = true;
+        continue;
+      }
+
       if (nextTileFound)
         headingResult = setHeading();
-      delay(300);
 
       if (headingResult) {
         // if available way and next tile is empty then move forward and count++
@@ -137,23 +144,16 @@ void loop() {
 
         indicatePath(FRONT);
         moveStraight(300);
-        if (ramp()) {
-          mazeNum++;
-          maze[mazeNum].entryHead = HEAD;
-          continue;
-        } else {
-          maze[mazeNum].COUNT++;
-        }
-        // else
-        // continue;
+        // if (ramp()) {
+        //   mazeNum++;
+        //   maze[mazeNum].entryHead = HEAD;
+        //   continue;
+        // } else {
+        maze[mazeNum].COUNT++;
+        //}
       } else { // else backtrack to last node
-        // backtrack code here and count-- until last node
         clearScreen();
-        // Display coordinates on Oled
-        displayPos(0, 0, "BACKTRACK:", maze[mazeNum].gridX,
-                   maze[mazeNum].gridY);
-        displayPos(0, 45, "COUNT:", maze[mazeNum].COUNT, 0);
-
+        displayPos(0, 0, "BACKTRACK:", 0, 0);
         if (maze[mazeNum].cell[maze[mazeNum].COUNT].backWay >= 0) {
           orient(maze[mazeNum].cell[maze[mazeNum].COUNT].backWay);
         } else {
@@ -161,28 +161,16 @@ void loop() {
           delay(50);
           setHeading();
         }
+        if (!maze[mazeNum].cell[maze[mazeNum].COUNT].node) {
+          tile tmp;
+          maze[mazeNum].cell[maze[mazeNum].COUNT] = tmp;
+        }
         indicatePath(FRONT);
         moveStraight(300);
-        tile tmp;
-        maze[mazeNum].cell[maze[mazeNum].COUNT] = tmp;
         maze[mazeNum].COUNT--;
-        if (maze[mazeNum].COUNT == 1 &&
-            maze[mazeNum].cell[maze[mazeNum].COUNT].testCount > 3 &&
-            mazeNum > 0)
-          maze[mazeNum].completed = true;
-        else if (maze[mazeNum].COUNT == 1 && mazeNum == 0) {
-          maze[mazeNum].completed = true;
-        }
       }
       yield();
-    } while (maze[mazeNum].completed == false); // end of maze
-
-    for (int i = 0; i < 8; i++) {
-      pixels.setPixelColor(i, pixels.Color(20, 20, 20));
-      pixels.show();
-    }
-    delay(200);
-    clearPixels();
+    } while (!maze[mazeNum].completed); // end of maze
 
     if (mazeNum > 0) {
       clearScreen();
@@ -211,12 +199,7 @@ void loop() {
         break;
       }
       moveStraight(300);
-      while (getDistance(FRONT) > 80) {
-        moveMotor(100, 100);
-        beep(50);
-        delay(100);
-      }
-      moveMotor(0, 0);
+      ramp();
       mazeNum--;
       switch (HEAD) {
       case 0:

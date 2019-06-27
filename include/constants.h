@@ -2,7 +2,7 @@
 #define _CONSTANTS_H
 
 // Uncomment the following to enable USB debug messages
-#define DEBUG
+//#define DEBUG
 
 // Vistims temperature
 #define victimTemperature 29
@@ -26,7 +26,7 @@
 #define RMR 4 // Right Motor Reverse
 
 // define Wall Detect distance
-#define WALLDISTANCE 160
+#define WALLDISTANCE 180
 
 #define LEFTBUMP A1
 #define RIGHTBUMP A3

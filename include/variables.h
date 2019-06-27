@@ -30,7 +30,7 @@ float yaw = 0;
 // Triggers for temperature sensors
 bool Ltemp = false, Rtemp = false;
 
-// wall distance
+// wall align distance
 int wallDistance = 105;
 
 // flag to enable and disable encoders
