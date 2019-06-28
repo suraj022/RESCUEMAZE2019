@@ -35,8 +35,7 @@ struct tile { // num stored in array index
   bool victim = false;
 };
 
-tile cell[40];
-
+// structure for each maze
 struct MAZE {
   bool completed = false;
   int8_t gridX = 0, gridY = 0;

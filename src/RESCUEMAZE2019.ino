@@ -54,13 +54,6 @@ void setup() {
   // begin IMU functions
   beginMotion();
 
-  // Calibrate Gyroscope
-  CalibrateMPU6050(50);
-
-  // Calibrate Accelerometer
-  delay(100);
-  CalibrateMPU6050_Acc(50);
-
   // setup VL53L0x tof sensors
   setupTOF();
 
@@ -76,18 +69,27 @@ void setup() {
   // begin Oled function
   oledbegin();
 
-  beep(50);
+  // Wait until a signal is given
+  // waitForSignal();
+
+  // Calibrate Gyroscope
+  CalibrateMPU6050(50);
+
+  delay(100);
+
+  // Calibrate Accelerometer
+  CalibrateMPU6050_Acc(50);
+
   // start parallel loops
   Scheduler.startLoop(MLXloop);    // constantly read temperatures
   Scheduler.startLoop(IMUloop);    // Calculate Gyro roll pitch and yaw reading
   Scheduler.startLoop(bumpLoop);   // detect left and right bumps
   Scheduler.startLoop(colourLoop); // Constantly detect tile colour
 
-  delay(200);
-  beep(50);
-
   // Wait until a signal is given
   waitForSignal();
+
+  beep(50);
 
   mazeNum = 0;
   HEAD = 2; // Start facing north direction
@@ -126,8 +128,30 @@ void loop() {
       bool nextTileFound = nextTile(maze[mazeNum].cell[maze[mazeNum].COUNT].x,
                                     maze[mazeNum].cell[maze[mazeNum].COUNT].y);
 
-      if (maze[mazeNum].COUNT <= 1 && !headingResult) {
+      bool condition = false;
+      bool condition1 = false;
+      condition = (maze[mazeNum].COUNT == 1 && !headingResult);
+      int tmphead = maze[mazeNum].entryHead;
+      tmphead -= 2;
+      if (tmphead < 0)
+        tmphead += 4;
+      condition1 = (maze[mazeNum].COUNT == 1 && HEAD == tmphead);
+
+      if (condition1) {
+        beep(500);
+        delay(500);
+        beep(500);
+        maze[mazeNum].completed = true;
+        continue;
+      }
+
+      if (condition) {
         beep(50);
+        delay(50);
+        beep(50);
+        delay(50);
+        beep(50);
+        delay(50);
         maze[mazeNum].completed = true;
         continue;
       }
@@ -144,13 +168,12 @@ void loop() {
 
         indicatePath(FRONT);
         moveStraight(300);
-        // if (ramp()) {
-        //   mazeNum++;
-        //   maze[mazeNum].entryHead = HEAD;
-        //   continue;
-        // } else {
         maze[mazeNum].COUNT++;
-        //}
+        if (ramp()) {
+          mazeNum++;
+          maze[mazeNum].entryHead = HEAD;
+          continue;
+        }
       } else { // else backtrack to last node
         clearScreen();
         displayPos(0, 0, "BACKTRACK:", 0, 0);
@@ -176,31 +199,17 @@ void loop() {
       clearScreen();
       // Display coordinates on Oled
       displayPos(0, 0, "BACKTRACK:", 0, 0);
-
-      int tmpHead = maze[mazeNum].entryHead;
-      switch (tmpHead) {
-      case 0:
-        orient(2);
-        HEAD = 2;
-        break;
-      case 1:
-        orient(3);
-        HEAD = 3;
-        break;
-      case 2:
-        orient(0);
-        HEAD = 0;
-        break;
-      case 3:
-        orient(1);
-        HEAD = 1;
-        break;
-      default:
-        break;
-      }
+      //
+      // int tmpHead = maze[mazeNum].entryHead;
+      // tmpHead -= 2;
+      // if (tmpHead < 0)
+      //   tmpHead += 4;
+      // orient(tmpHead);
+      // HEAD = tmpHead;
       moveStraight(300);
       ramp();
       mazeNum--;
+      maze[mazeNum].COUNT--;
       switch (HEAD) {
       case 0:
         maze[mazeNum].gridY++;
@@ -224,14 +233,13 @@ void loop() {
   clearScreen();
   displayPos(0, 0, "FINISH!", 0, 0);
 
-  // change neopixel to white
-  for (int i = 0; i < 8; i++) {
-    pixels.setPixelColor(i, pixels.Color(20, 20, 20));
-    pixels.show();
-  }
-
   // Halt indefinitely
   while (1) {
+    for (int i = 0; i < 8; i++) {
+      pixels.setPixelColor(
+          i, pixels.Color(random(0, 255), random(0, 255), random(0, 255)));
+    }
+    pixels.show();
     delay(100);
     yield();
   }

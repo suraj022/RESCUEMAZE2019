@@ -126,12 +126,12 @@ void moveStraight(int pos) {
   I = 0;
   D = 0;
   lastError = 0;
-  moveMotor(-50, 50);
+  moveMotor(-50, -50);
   delay(50);
   moveMotor(0, 0); // stop motors
   delay(300);
   lastError = 0;
-  offsetStraight(100);
+  offsetStraight(125);
   switch (HEAD) {
   case 0:
     maze[mazeNum].gridY++;
@@ -164,9 +164,9 @@ void turnBot(int angle, int dir, bool align) {
     flag = true;
   }
   if (getDistance(1) < WALLDISTANCE) {
-    offsetStraight(55);
+    offsetStraight(65);
   } else {
-    offsetStraight(100);
+    offsetStraight(105);
   }
   delay(10);
   moveMotor(0, 0);
@@ -187,7 +187,7 @@ void turnBot(int angle, int dir, bool align) {
     }
     Pr = err;
     // Ir += err * 0.001;
-    int diff = 1.1 * Pr + Ir;
+    int diff = Pr + Ir;
     moveMotor(dir * constrain(diff, 25, 100), -dir * constrain(diff, 25, 100));
     delay(1);
     yield();
@@ -228,37 +228,47 @@ void offsetStraight(int value) {
   int expGain = 0;
   int dist = (getDistance(1) % 300);
   if (dist > value) {
-    while (dist - value > 10) {
-      if (getDistance(FRONT) > 8000 || accX > 20)
+    while (dist - value > 15) {
+      if (getDistance(FRONT) > 8100) {
+        moveMotor(50, 50);
+        delay(200);
+        moveMotor(0, 0);
         return;
+      }
       dist = (getDistance(1) % 300);
-      float pwm = constrain((dist - value), 15, 70);
+      float pwm = constrain((dist - value), 35, 70);
       expGain += (dist - value) * 0.05;
       pwm += expGain;
-      int err = 1.5 * yaw;
+      int err = 0.9 * yaw;
       moveMotor(pwm + err, pwm - err);
       delay(2);
     }
   } else {
-    while (value - dist > 10) {
-      if (getDistance(FRONT) > 8000 || accX > 20)
+    while (value - dist > 5) {
+      if (getDistance(FRONT) > 8100) {
+        moveMotor(50, 50);
+        delay(200);
+        moveMotor(0, 0);
         return;
+      }
       dist = (getDistance(1) % 300);
-      float pwm = constrain((value - dist), 15, 70);
+      float pwm = constrain((value - dist), 35, 70);
       expGain += (value - dist) * 0.05;
       pwm += expGain;
-      int err = -1.5 * yaw;
+      int err = -0.9 * yaw;
       moveMotor(-(pwm + err), -(pwm - err));
       delay(2);
     }
   }
-  moveMotor(0, 0);
+  moveMotor(-50, -50);
+  delay(50);
+  moveMotor(0, 0); // stop motors
 }
 
 bool ramp() {
   if (accX > 12) {
-    moveMotor(100, 100);
-    delay(300);
+    // moveMotor(100, 100);
+    // delay(300);
     bumpcheck = false;
     int I = 0;
     while (accX > 14) {
@@ -266,7 +276,7 @@ bool ramp() {
       int offset = 0;
       // offset = -accY * 1.2;
       offset = 0.3 * (wallDistance - getDistance(LEFT));
-      I -= 0.0001 * (wallDistance - getDistance(LEFT));
+      I -= 0.0003 * (wallDistance - getDistance(LEFT));
       offset += I;
       moveMotor(pwm + offset, pwm - offset);
       delay(5);
@@ -284,8 +294,8 @@ bool ramp() {
     bumpcheck = true;
     return true;
   } else if (accX < -12) {
-    moveMotor(100, 100);
-    delay(300);
+    // moveMotor(100, 100);
+    // delay(300);
     bumpcheck = false;
     while (accX < -14) {
       int pwm = 70;

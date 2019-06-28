@@ -2,152 +2,54 @@ void setWalls() {
   switch (HEAD) {
     //////////////////////////////////////////////////////////////////////
   case 0: // Heading north
-    if (getDistance(FRONT) < 8000)
-      if (getDistance(FRONT) < WALLDISTANCE)
-        maze[mazeNum].cell[maze[mazeNum].COUNT].N = true;
-      else
-        maze[mazeNum].cell[maze[mazeNum].COUNT].N = false;
-    else
-      maze[mazeNum].cell[maze[mazeNum].COUNT].N = true;
-
-    if (getDistance(RIGHT) < 8000)
-      if (getDistance(RIGHT) < WALLDISTANCE)
-        maze[mazeNum].cell[maze[mazeNum].COUNT].E = true;
-      else
-        maze[mazeNum].cell[maze[mazeNum].COUNT].E = false;
-    else
-      maze[mazeNum].cell[maze[mazeNum].COUNT].E = true;
-
-    if (getDistance(LEFT) < 8000)
-      if (getDistance(LEFT) < WALLDISTANCE)
-        maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
-      else
-        maze[mazeNum].cell[maze[mazeNum].COUNT].W = false;
-    else
-      maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
-
+    maze[mazeNum].cell[maze[mazeNum].COUNT].N =
+        (getDistance(FRONT) < WALLDISTANCE);
+    maze[mazeNum].cell[maze[mazeNum].COUNT].E =
+        (getDistance(RIGHT) < WALLDISTANCE);
+    maze[mazeNum].cell[maze[mazeNum].COUNT].W =
+        (getDistance(LEFT) < WALLDISTANCE);
     if (maze[mazeNum].COUNT == 1)
       maze[mazeNum].cell[maze[mazeNum].COUNT].S = true;
     break;
     //////////////////////////////////////////////////////////////////////
   case 1: // heading east
-    if (getDistance(LEFT) < 8000)
-      if (getDistance(LEFT) < WALLDISTANCE)
-        maze[mazeNum].cell[maze[mazeNum].COUNT].N = true;
-      else
-        maze[mazeNum].cell[maze[mazeNum].COUNT].N = false;
-    else
-      maze[mazeNum].cell[maze[mazeNum].COUNT].N = true;
-
-    if (getDistance(FRONT) < 8000)
-      if (getDistance(FRONT) < WALLDISTANCE)
-        maze[mazeNum].cell[maze[mazeNum].COUNT].E = true;
-      else
-        maze[mazeNum].cell[maze[mazeNum].COUNT].E = false;
-    else
-      maze[mazeNum].cell[maze[mazeNum].COUNT].E = true;
-
-    if (getDistance(RIGHT) < 8000)
-      if (getDistance(RIGHT) < WALLDISTANCE)
-        maze[mazeNum].cell[maze[mazeNum].COUNT].S = true;
-      else
-        maze[mazeNum].cell[maze[mazeNum].COUNT].S = false;
-    else
-      maze[mazeNum].cell[maze[mazeNum].COUNT].S = true;
-
+    maze[mazeNum].cell[maze[mazeNum].COUNT].N =
+        (getDistance(LEFT) < WALLDISTANCE);
+    maze[mazeNum].cell[maze[mazeNum].COUNT].E =
+        (getDistance(FRONT) < WALLDISTANCE);
+    maze[mazeNum].cell[maze[mazeNum].COUNT].S =
+        (getDistance(RIGHT) < WALLDISTANCE);
     if (maze[mazeNum].COUNT == 1)
       maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
     break;
     //////////////////////////////////////////////////////////////////////
   case 2: // heading south
-    if (getDistance(LEFT) < 8000)
-      if (getDistance(LEFT) < WALLDISTANCE)
-        maze[mazeNum].cell[maze[mazeNum].COUNT].E = true;
-      else
-        maze[mazeNum].cell[maze[mazeNum].COUNT].E = false;
-    else
-      maze[mazeNum].cell[maze[mazeNum].COUNT].E = true;
-
-    if (getDistance(RIGHT) < 8000)
-      if (getDistance(RIGHT) < WALLDISTANCE)
-        maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
-      else
-        maze[mazeNum].cell[maze[mazeNum].COUNT].W = false;
-    else
-      maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
-
-    if (getDistance(FRONT) < 8000)
-      if (getDistance(FRONT) < WALLDISTANCE)
-        maze[mazeNum].cell[maze[mazeNum].COUNT].S = true;
-      else
-        maze[mazeNum].cell[maze[mazeNum].COUNT].S = false;
-    else
-      maze[mazeNum].cell[maze[mazeNum].COUNT].S = true;
-
+    maze[mazeNum].cell[maze[mazeNum].COUNT].E =
+        (getDistance(LEFT) < WALLDISTANCE);
+    maze[mazeNum].cell[maze[mazeNum].COUNT].S =
+        (getDistance(FRONT) < WALLDISTANCE);
+    maze[mazeNum].cell[maze[mazeNum].COUNT].W =
+        (getDistance(RIGHT) < WALLDISTANCE);
     if (maze[mazeNum].COUNT == 1)
       maze[mazeNum].cell[maze[mazeNum].COUNT].N = true;
     break;
     //////////////////////////////////////////////////////////////////////
   case 3: // heading west
-    if (getDistance(RIGHT) < 8000)
-      if (getDistance(RIGHT) < WALLDISTANCE)
-        maze[mazeNum].cell[maze[mazeNum].COUNT].N = true;
-      else
-        maze[mazeNum].cell[maze[mazeNum].COUNT].N = false;
-    else
-      maze[mazeNum].cell[maze[mazeNum].COUNT].N = true;
-
-    if (getDistance(LEFT) < 8000)
-      if (getDistance(LEFT) < WALLDISTANCE)
-        maze[mazeNum].cell[maze[mazeNum].COUNT].S = true;
-      else
-        maze[mazeNum].cell[maze[mazeNum].COUNT].S = false;
-    else
-      maze[mazeNum].cell[maze[mazeNum].COUNT].S = true;
-
-    if (getDistance(FRONT) < 8000)
-      if (getDistance(FRONT) < WALLDISTANCE)
-        maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
-      else
-        maze[mazeNum].cell[maze[mazeNum].COUNT].W = false;
-    else
-      maze[mazeNum].cell[maze[mazeNum].COUNT].W = true;
-
+    maze[mazeNum].cell[maze[mazeNum].COUNT].N =
+        (getDistance(RIGHT) < WALLDISTANCE);
+    maze[mazeNum].cell[maze[mazeNum].COUNT].S =
+        (getDistance(LEFT) < WALLDISTANCE);
+    maze[mazeNum].cell[maze[mazeNum].COUNT].W =
+        (getDistance(FRONT) < WALLDISTANCE);
     if (maze[mazeNum].COUNT == 1)
       maze[mazeNum].cell[maze[mazeNum].COUNT].E = true;
     break;
   }
   //////////////////////////////////////////////////////////////////////
   int ways = 0;
-  bool l, f, r;
-  if (getDistance(FRONT) < 8000)
-    if (getDistance(FRONT) < WALLDISTANCE)
-      f = true;
-    else
-      f = false;
-  else
-    f = true;
-
-  if (getDistance(RIGHT) < 8000)
-    if (getDistance(RIGHT) < WALLDISTANCE)
-      r = true;
-    else
-      r = false;
-  else
-    r = true;
-
-  if (getDistance(LEFT) < 8000)
-    if (getDistance(LEFT) < WALLDISTANCE)
-      l = true;
-    else
-      l = false;
-  else
-    l = true;
-
-  bitWrite(ways, 2, r);
-  bitWrite(ways, 1, f);
-  bitWrite(ways, 0, l);
-
+  bitWrite(ways, 2, (getDistance(RIGHT) < WALLDISTANCE));
+  bitWrite(ways, 1, (getDistance(FRONT) < WALLDISTANCE));
+  bitWrite(ways, 0, (getDistance(LEFT) < WALLDISTANCE));
   if (!maze[mazeNum].cell[maze[mazeNum].COUNT].node) {
     maze[mazeNum].cell[maze[mazeNum].COUNT].node =
         ((ways >= 0 && ways <= 2) || ways == 4);
