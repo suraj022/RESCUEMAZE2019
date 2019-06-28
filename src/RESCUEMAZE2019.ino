@@ -90,6 +90,12 @@ void setup() {
   beep(50);
 
   mazeNum = 0;
+  // while (1) {
+  //   int val = analogRead(COLOURPIN);
+  //   val = kalmanColour.updateEstimate(val);
+  //   SerialUSB.println(val);
+  //   delay(100);
+  // }
   HEAD = 2; // Start facing north direction
 } // end setup part
 
@@ -163,20 +169,26 @@ void loop() {
         // Display coordinates on Oled
         displayPos(0, 0, "X/Y:", maze[mazeNum].gridX, maze[mazeNum].gridY);
         displayPos(0, 21, "N/C:", mazeNum, maze[mazeNum].COUNT);
-
+        displayPos(0, 42, "N/C:", HEAD, HEAD);
         indicatePath(FRONT);
         moveStraight(300);
-        maze[mazeNum].COUNT++;
         ////////////////////////////////////////////////////
         // check for black tile
-        // if (blackFlag) {
-        //   beep(50);
-        //   delay(500);
-        //   beep(500);
-        //   moveStraight(-300);
-        //   maze[mazeNum].COUNT--;
-        // 	setHeading();
-        // }
+        if (blackFlag) {
+          clearPixels();
+          beep(100);
+          for (int i = 1; i < 7; i += 2) {
+            pixels.setPixelColor(i, pixels.Color(20, 0, 0));
+            pixels.show();
+          }
+          delay(100);
+          clearPixels();
+          moveStraight(-300);
+          offsetStraight(125);
+          delay(200);
+        } else {
+          maze[mazeNum].COUNT++;
+        }
         ////////////////////////////////////////////////////
 
         if (ramp()) {
@@ -186,7 +198,9 @@ void loop() {
         }
       } else { // else backtrack to last node
         clearScreen();
-        displayPos(0, 0, "BACKTRACK:", 0, 0);
+        displayPos(0, 0, "BT:", maze[mazeNum].gridX, maze[mazeNum].gridY);
+        displayPos(0, 21, "N/C:", mazeNum, maze[mazeNum].COUNT);
+        displayPos(0, 42, "N/C:", HEAD, HEAD);
         if (maze[mazeNum].cell[maze[mazeNum].COUNT].backWay >= 0) {
           orient(maze[mazeNum].cell[maze[mazeNum].COUNT].backWay);
         } else {
@@ -194,10 +208,8 @@ void loop() {
           delay(50);
           setHeading();
         }
-        if (!maze[mazeNum].cell[maze[mazeNum].COUNT].node) {
-          tile tmp;
-          maze[mazeNum].cell[maze[mazeNum].COUNT] = tmp;
-        }
+        tile tmp;
+        maze[mazeNum].cell[maze[mazeNum].COUNT] = tmp;
         indicatePath(FRONT);
         moveStraight(300);
         maze[mazeNum].COUNT--;

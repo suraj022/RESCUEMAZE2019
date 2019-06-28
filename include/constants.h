@@ -39,9 +39,9 @@
 
 // colour Values
 #define COLOURPIN A4
-#define SILVER 863
-#define NORMAL 905
-#define HAZARD 945
+#define SILVER 837
+#define NORMAL 898
+#define HAZARD 941
 
 // sensor numbers for TOF sensors
 #define LEFT 0

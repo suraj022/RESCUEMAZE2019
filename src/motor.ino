@@ -23,8 +23,8 @@ void moveStraight(int pos) {
   lastError = 0;
   encoderposL = 0;
   encoderposR = 0;
-  desiredposL = map(pos, 0, 300, 0, 360);
-  desiredposR = map(pos, 0, 300, 0, 360);
+  desiredposL = map(pos, 0, 300, 0, 370);
+  desiredposR = map(pos, 0, 300, 0, 370);
   int encoderpos = (encoderposL + encoderposR) / 2;
   int desiredpos = (desiredposL + desiredposR) / 2;
   int encoderbackupL = 0;
@@ -75,7 +75,7 @@ void moveStraight(int pos) {
         moveMotor(0, 0);
         delay(50);
         moveMotor(50, 60);
-        delay(200);
+        delay(350);
         moveMotor(0, 0);
         encoderposL = encoderbackupL;
         encoderposR = encoderbackupR;
@@ -95,7 +95,7 @@ void moveStraight(int pos) {
         moveMotor(0, 0);
         delay(50);
         moveMotor(60, 50);
-        delay(200);
+        delay(350);
         moveMotor(0, 0);
         encoderposL = encoderbackupL;
         encoderposR = encoderbackupR;
@@ -132,19 +132,36 @@ void moveStraight(int pos) {
   delay(300);
   lastError = 0;
   offsetStraight(125);
-  switch (HEAD) {
-  case 0:
-    maze[mazeNum].gridY++;
-    break;
-  case 1:
-    maze[mazeNum].gridX++;
-    break;
-  case 2:
-    maze[mazeNum].gridY--;
-    break;
-  case 3:
-    maze[mazeNum].gridX--;
-    break;
+  if (pos > 0) {
+    switch (HEAD) {
+    case 0:
+      maze[mazeNum].gridY++;
+      break;
+    case 1:
+      maze[mazeNum].gridX++;
+      break;
+    case 2:
+      maze[mazeNum].gridY--;
+      break;
+    case 3:
+      maze[mazeNum].gridX--;
+      break;
+    }
+  } else {
+    switch (HEAD) {
+    case 0:
+      maze[mazeNum].gridY--;
+      break;
+    case 1:
+      maze[mazeNum].gridX--;
+      break;
+    case 2:
+      maze[mazeNum].gridY++;
+      break;
+    case 3:
+      maze[mazeNum].gridX++;
+      break;
+    }
   }
 }
 
@@ -191,7 +208,7 @@ void turnBot(int angle, int dir, bool align) {
     moveMotor(dir * constrain(diff, 25, 100), -dir * constrain(diff, 25, 100));
     delay(1);
     yield();
-  } while (abs(err) > 20);
+  } while (abs(err) > 22);
   // delay(10);
   beep(50);
   moveMotor(0, 0);
@@ -222,7 +239,7 @@ void turnBot(int angle, int dir, bool align) {
 void offsetStraight(int value) {
   if (getDistance(FRONT) > 8100) {
     moveMotor(80, 80);
-    delay(200);
+    delay(100);
     moveMotor(0, 0);
     return;
     return;
