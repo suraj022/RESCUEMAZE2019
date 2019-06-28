@@ -19,17 +19,18 @@ TODO list-
 17. Fix next tile detection                 DONE
 ***************************************************/
 
+/***************************************************
+CHECK list-
+1. Notedown and set tile dimensions
+2. Calibrate victim temperature
+3. Calculate brightness threshold in camera
+4. Calibrate 3 tile brightness values
+***************************************************/
+
 #include "constants.h"
 #include "libraries.h"
 #include "objects.h"
 #include "variables.h"
-//#include "Stack.h"
-
-// StackArray <int> stack1;
-// StackArray <int> stack2;
-
-// stack.push(s_cell[0]);
-// stack.pop();
 
 void setup() {
 
@@ -68,9 +69,6 @@ void setup() {
 
   // begin Oled function
   oledbegin();
-
-  // Wait until a signal is given
-  // waitForSignal();
 
   // Calibrate Gyroscope
   CalibrateMPU6050(50);
@@ -169,6 +167,18 @@ void loop() {
         indicatePath(FRONT);
         moveStraight(300);
         maze[mazeNum].COUNT++;
+        ////////////////////////////////////////////////////
+        // check for black tile
+        // if (blackFlag) {
+        //   beep(50);
+        //   delay(500);
+        //   beep(500);
+        //   moveStraight(-300);
+        //   maze[mazeNum].COUNT--;
+        // 	setHeading();
+        // }
+        ////////////////////////////////////////////////////
+
         if (ramp()) {
           mazeNum++;
           maze[mazeNum].entryHead = HEAD;
@@ -199,7 +209,6 @@ void loop() {
       clearScreen();
       // Display coordinates on Oled
       displayPos(0, 0, "BACKTRACK:", 0, 0);
-      //
       // int tmpHead = maze[mazeNum].entryHead;
       // tmpHead -= 2;
       // if (tmpHead < 0)

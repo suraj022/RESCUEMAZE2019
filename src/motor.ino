@@ -220,7 +220,11 @@ void turnBot(int angle, int dir, bool align) {
 }
 
 void offsetStraight(int value) {
-  if (getDistance(FRONT) > 8000 || accX > 20) {
+  if (getDistance(FRONT) > 8100) {
+    moveMotor(80, 80);
+    delay(200);
+    moveMotor(0, 0);
+    return;
     return;
   }
   // yaw = 0;
