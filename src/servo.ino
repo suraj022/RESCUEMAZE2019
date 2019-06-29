@@ -18,40 +18,43 @@ void servoMovement() {
     delay(5);             // waits 5ms for the servo to reach the position
   }
   dispencer.detach();
+  delay(10);
 }
 
-void dispence() {
-  if (Ltemp || Rtemp) {
-    moveMotor(-20, -20);
-    delay(200);
-    moveMotor(0, 0);
-    delay(200);
-    if (Ltemp)
-      moveMotor(100, -100);
+void dispence(int8 times, int8_t side) {
+  moveMotor(-50, -50);
+  delay(60);
+  moveMotor(0, 0);
+  delay(200);
+  if (times > 0) {
+    if (side == -1)
+      turnBot(90, 1, false);
     else
-      moveMotor(-100, 100);
-    delay(300);
-    moveMotor(0, 0);
-    for (int halt = 0; halt < 4; halt++) {
-      digitalWrite(buzzPin, HIGH);
-      for (int i = 0; i < 8; i++) {
-        setPixelColour(i, RED, 20);
-      }
-      delay(500);
-      digitalWrite(buzzPin, LOW);
-      clearPixels();
-      delay(500);
+      turnBot(90, -1, false);
+  }
+  moveMotor(0, 0);
+  for (int halt = 0; halt < 4; halt++) {
+    digitalWrite(buzzPin, HIGH);
+    for (int i = 0; i < 8; i++) {
+      setPixelColour(i, RED, 20);
     }
+    delay(500);
+    digitalWrite(buzzPin, LOW);
+    clearPixels();
+    delay(500);
+  }
+  for (int i = 0; i < times; i++) {
     servoMovement();
     delay(500);
-    if (Ltemp)
-      moveMotor(-100, 100);
-    else
-      moveMotor(100, -100);
-    delay(300);
-    moveMotor(0, 0);
-    delay(100);
-    Ltemp = false;
-    Rtemp = false;
   }
+  if (times > 0) {
+    if (side == -1)
+      turnBot(90, -1, false);
+    else
+      turnBot(90, 1, false);
+  } else {
+    delay(800);
+  }
+  moveMotor(0, 0);
+  delay(100);
 }

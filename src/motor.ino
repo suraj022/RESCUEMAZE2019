@@ -32,7 +32,7 @@ void moveStraight(int pos) {
   yaw = 0;
   delay(50);
   if ((desiredpos - encoderpos) > 5) {
-    while ((desiredpos - encoderpos) > 10 && accX < 20) {
+    while ((desiredpos - encoderpos) > 10) {
       encoderpos = (encoderposL + encoderposR) / 2;
       int pwm = constrain((desiredpos - encoderpos), 0, MAXSPEED);
       int err = 0;
@@ -107,7 +107,7 @@ void moveStraight(int pos) {
       yield();
     }
   } else {
-    while ((encoderpos - desiredpos) > 5 && accX < 20) {
+    while ((encoderpos - desiredpos) > 5) {
       encoderpos = (encoderposL + encoderposR) / 2;
       int pwm = constrain((encoderpos - desiredpos), 0, MAXSPEED / 1.5);
       int err = yaw;

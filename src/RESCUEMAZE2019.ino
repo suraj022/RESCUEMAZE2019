@@ -121,10 +121,35 @@ void loop() {
       // if (maze[mazeNum].cell[maze[mazeNum].COUNT].testCount < 1)
       setWalls();
 
-      //**********************
-      // Add victim check code here
-      // for both visual and heated victims
-      //**********************
+      // victim check code
+      if (Lvictim) {
+        dispence(1, -1);
+        Lvictim = false;
+        Rvictim = false;
+      }
+      if (Rvictim) {
+        dispence(1, 1);
+        Lvictim = false;
+        Rvictim = false;
+      }
+      switch (VisualVictim()) {
+      case 'H':
+        dispence(2, -1);
+        Lvictim = false;
+        Rvictim = false;
+        break;
+      case 'S':
+        dispence(1, -1);
+        Lvictim = false;
+        Rvictim = false;
+        break;
+      case 'U':
+        dispence(0, -1);
+        Lvictim = false;
+        Rvictim = false;
+        break;
+      default:
+      }
 
       storeCheckpoint();
 

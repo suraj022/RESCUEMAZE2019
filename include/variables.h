@@ -28,7 +28,7 @@ float roll = 0;
 float yaw = 0;
 
 // Triggers for temperature sensors
-bool Ltemp = false, Rtemp = false;
+bool Lvictim = false, Rvictim = false;
 
 // wall align distance
 int wallDistance = 105;
