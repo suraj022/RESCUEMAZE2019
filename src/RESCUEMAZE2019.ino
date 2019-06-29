@@ -17,6 +17,9 @@ TODO list-
 15. Add ramp detection                      DONE
 16. Lack of progress switch
 17. Fix next tile detection                 DONE
+18. Ramp up return fix
+19. Increase led light birghtness
+20. Redesign bumpers and side skirts
 ***************************************************/
 
 /***************************************************
@@ -25,6 +28,7 @@ CHECK list-
 2. Calibrate victim temperature
 3. Calculate brightness threshold in camera
 4. Calibrate 3 tile brightness values
+5. Ramp elevation
 ***************************************************/
 
 #include "constants.h"
@@ -84,19 +88,14 @@ void setup() {
   Scheduler.startLoop(bumpLoop);   // detect left and right bumps
   Scheduler.startLoop(colourLoop); // Constantly detect tile colour
 
+  // Start Calibration process if enabled in constants
+  CalibrationProcess();
+
   // Wait until a signal is given
   waitForSignal();
 
   beep(50);
 
-  mazeNum = 0;
-  // while (1) {
-  //   int val = analogRead(COLOURPIN);
-  //   val = kalmanColour.updateEstimate(val);
-  //   SerialUSB.println(val);
-  //   delay(100);
-  // }
-  HEAD = 2; // Start facing north direction
 } // end setup part
 
 /***************************************************
@@ -127,6 +126,20 @@ void loop() {
       // for both visual and heated victims
       //**********************
 
+      storeCheckpoint();
+
+      if (!digitalRead(Chkpt)) {
+        clearPixels();
+        clearScreen();
+        displayTxt(0, 0, "LACK OF   PROGRESS!");
+        while (!digitalRead(Chkpt)) {
+          delay(100);
+        }
+        clearScreen();
+        displayTxt(0, 0, "RESTART!");
+        restartCheckpoint();
+      }
+
       // set heading
       bool headingResult = setHeading();
       bool nextTileFound = nextTile(maze[mazeNum].cell[maze[mazeNum].COUNT].x,
@@ -134,28 +147,22 @@ void loop() {
 
       bool condition = false;
       bool condition1 = false;
+
       condition = (maze[mazeNum].COUNT == 1 && !headingResult);
+
       int tmphead = maze[mazeNum].entryHead;
       tmphead -= 2;
       if (tmphead < 0)
         tmphead += 4;
+
       condition1 = (maze[mazeNum].COUNT == 1 && HEAD == tmphead);
 
       if (condition1) {
-        beep(500);
-        delay(500);
-        beep(500);
         maze[mazeNum].completed = true;
         continue;
       }
 
       if (condition) {
-        beep(50);
-        delay(50);
-        beep(50);
-        delay(50);
-        beep(50);
-        delay(50);
         maze[mazeNum].completed = true;
         continue;
       }
@@ -165,11 +172,23 @@ void loop() {
 
       if (headingResult) {
         // if available way and next tile is empty then move forward and count++
+
         clearScreen();
         // Display coordinates on Oled
-        displayPos(0, 0, "X/Y:", maze[mazeNum].gridX, maze[mazeNum].gridY);
-        displayPos(0, 21, "N/C:", mazeNum, maze[mazeNum].COUNT);
-        displayPos(0, 42, "N/C:", HEAD, HEAD);
+        String msg = "X/Y:";
+        msg += maze[mazeNum].gridX;
+        msg += ",";
+        msg += maze[mazeNum].gridY;
+        displayTxt(0, 0, msg);
+        msg = "N/C:";
+        msg += mazeNum;
+        msg += ",";
+        msg += maze[mazeNum].COUNT;
+        displayTxt(0, 21, msg);
+        msg = "HEAD:";
+        msg += HEAD;
+        displayTxt(0, 42, msg);
+
         indicatePath(FRONT);
         moveStraight(300);
         ////////////////////////////////////////////////////
@@ -177,8 +196,8 @@ void loop() {
         if (blackFlag) {
           clearPixels();
           beep(100);
-          for (int i = 1; i < 7; i += 2) {
-            pixels.setPixelColor(i, pixels.Color(20, 0, 0));
+          for (int i = 1; i < 8; i += 2) {
+            pixels.setPixelColor(i, pixels.Color(50, 0, 0));
             pixels.show();
           }
           delay(100);
@@ -198,9 +217,20 @@ void loop() {
         }
       } else { // else backtrack to last node
         clearScreen();
-        displayPos(0, 0, "BT:", maze[mazeNum].gridX, maze[mazeNum].gridY);
-        displayPos(0, 21, "N/C:", mazeNum, maze[mazeNum].COUNT);
-        displayPos(0, 42, "N/C:", HEAD, HEAD);
+        String msg = "X/Y:";
+        msg += maze[mazeNum].gridX;
+        msg += ",";
+        msg += maze[mazeNum].gridY;
+        displayTxt(0, 0, msg);
+        msg = "N/C:";
+        msg += mazeNum;
+        msg += ",";
+        msg += maze[mazeNum].COUNT;
+        displayTxt(0, 21, msg);
+        msg = "HEAD:";
+        msg += HEAD;
+        displayTxt(0, 42, msg);
+
         if (maze[mazeNum].cell[maze[mazeNum].COUNT].backWay >= 0) {
           orient(maze[mazeNum].cell[maze[mazeNum].COUNT].backWay);
         } else {
@@ -219,15 +249,15 @@ void loop() {
 
     if (mazeNum > 0) {
       clearScreen();
-      // Display coordinates on Oled
-      displayPos(0, 0, "BACKTRACK:", 0, 0);
+      displayTxt(0, 0, "back to last maze");
       // int tmpHead = maze[mazeNum].entryHead;
       // tmpHead -= 2;
       // if (tmpHead < 0)
       //   tmpHead += 4;
       // orient(tmpHead);
       // HEAD = tmpHead;
-      moveStraight(300);
+      // moveStraight(300);
+      moveMotor(100, 100);
       ramp();
       mazeNum--;
       maze[mazeNum].COUNT--;
@@ -252,7 +282,7 @@ void loop() {
 
   // display FINISH
   clearScreen();
-  displayPos(0, 0, "FINISH!", 0, 0);
+  displayTxt(0, 0, "FINISH!");
 
   // Halt indefinitely
   while (1) {

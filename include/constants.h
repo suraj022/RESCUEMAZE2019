@@ -4,6 +4,15 @@
 // Uncomment the following to enable USB debug messages
 //#define DEBUG
 
+// uncomment the following to enable colour calibration
+//#define COLOURCHECK
+
+// uncomment the following to enable colour calibration
+//#define TEMPCHECK
+
+// uncomment the following to enable accelerometer calibration
+//#define ACCELCHECK
+
 // Vistims temperature
 #define victimTemperature 29
 
@@ -58,7 +67,13 @@
 #define FRONTPIXEL 4
 #define RIGHTPIXEL 6
 
+// define starting heading
+#define startHead 2
+
 // Buzzer connected to this pin
 #define buzzPin A5
+
+// Lack of progress Switch
+#define Chkpt 11
 
 #endif

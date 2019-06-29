@@ -64,11 +64,13 @@ MAZE maze[5];
   2=SOUTH
   3=WEST
 */
-int8_t HEAD = 3;
+int8_t HEAD = startHead;
+
+int8_t saveHead = startHead;
 
 // maze number
 int8_t mazeNum = 0;
 
-// Current coordinates of the bot
-// int8_t gridX = 0, gridY = 0;
+// Stored last checkpoint count
+int chkCount = 1;
 #endif

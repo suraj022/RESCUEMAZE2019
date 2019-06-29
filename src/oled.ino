@@ -6,15 +6,11 @@ void oledbegin() {
 
 void clearScreen() { display.clearDisplay(); }
 
-void displayPos(int x, int y, String txt, int posX, int posY) {
-  String msg = txt;
-  msg += posX;
-  msg += ",";
-  msg += posY;
+void displayTxt(int x, int y, String txt) {
   display.setTextSize(2);
   display.setTextColor(WHITE);
   display.setCursor(x, y);
-  display.println(msg);
+  display.println(txt);
   display.display();
   delay(1);
 }

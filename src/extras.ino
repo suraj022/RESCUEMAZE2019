@@ -10,6 +10,7 @@ void setupIO() {
   pinMode(buzzPin, OUTPUT);
   pinMode(LEFTBUMP, INPUT);
   pinMode(RIGHTBUMP, INPUT);
+  pinMode(Chkpt, INPUT_PULLUP);
 }
 
 void beginSerialUSB() {
@@ -83,4 +84,28 @@ void colourLoop() {
   }
   delay(10);
   yield();
+}
+
+void CalibrationProcess() {
+#ifdef COLOURCHECK
+  while (1) {
+    int val = analogRead(COLOURPIN);
+    val = kalmanColour.updateEstimate(val);
+    SerialUSB.println(val);
+    delay(100);
+  }
+#endif
+#ifdef TEMPCHECK
+  while (1) {
+    int val = mlxR.readObjectTempC();
+    SerialUSB.println(val);
+    delay(100);
+  }
+#endif
+#ifdef ACCELCHECK
+  while (1) {
+    SerialUSB.println(accX);
+    delay(10);
+  }
+#endif
 }

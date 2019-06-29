@@ -208,7 +208,7 @@ void turnBot(int angle, int dir, bool align) {
     moveMotor(dir * constrain(diff, 25, 100), -dir * constrain(diff, 25, 100));
     delay(1);
     yield();
-  } while (abs(err) > 22);
+  } while (abs(err) > 22 && digitalRead(Chkpt));
   // delay(10);
   beep(50);
   moveMotor(0, 0);
@@ -249,7 +249,7 @@ void offsetStraight(int value) {
   int expGain = 0;
   int dist = (getDistance(1) % 300);
   if (dist > value) {
-    while (dist - value > 15) {
+    while (dist - value > 15 && digitalRead(Chkpt)) {
       if (getDistance(FRONT) > 8100) {
         moveMotor(50, 50);
         delay(200);
@@ -265,7 +265,7 @@ void offsetStraight(int value) {
       delay(2);
     }
   } else {
-    while (value - dist > 5) {
+    while (value - dist > 5 && digitalRead(Chkpt)) {
       if (getDistance(FRONT) > 8100) {
         moveMotor(50, 50);
         delay(200);
@@ -287,18 +287,20 @@ void offsetStraight(int value) {
 }
 
 bool ramp() {
-  if (accX > 12) {
+  if (accX > 25) {
     // moveMotor(100, 100);
     // delay(300);
     bumpcheck = false;
     int I = 0;
-    while (accX > 14) {
-      int pwm = 100;
+    while (accX > 25) {
+      int pwm = 95;
       int offset = 0;
       // offset = -accY * 1.2;
-      offset = 0.3 * (wallDistance - getDistance(LEFT));
-      I -= 0.0003 * (wallDistance - getDistance(LEFT));
-      offset += I;
+      offset = 0.2 * (wallDistance - getDistance(LEFT));
+      I += 0.0003 * (wallDistance - getDistance(LEFT));
+      if (wallDistance - getDistance(LEFT) < 10)
+        I = 0;
+      offset -= I;
       moveMotor(pwm + offset, pwm - offset);
       delay(5);
       yield();
@@ -314,12 +316,16 @@ bool ramp() {
     // }
     bumpcheck = true;
     return true;
-  } else if (accX < -12) {
+  } else if (accX < -25) {
     // moveMotor(100, 100);
     // delay(300);
     bumpcheck = false;
-    while (accX < -14) {
-      int pwm = 70;
+    for (int i = 2; i < 7; i++) {
+      pixels.setPixelColor(i, pixels.Color(0, 0, 20));
+      pixels.show();
+    }
+    while (accX < -25) {
+      int pwm = 90;
       int offset = 0;
       // offset = -accY * 1.2;
       offset = 0.9 * (wallDistance - getDistance(LEFT));
@@ -327,6 +333,7 @@ bool ramp() {
       delay(5);
       yield();
     }
+    clearPixels();
     // moveMotor(-80, -80);
     // delay(50);
     moveMotor(0, 0);
