@@ -11,6 +11,7 @@ void storeCheckpoint() {
     clearScreen();
     clearPixels();
     chkCount = maze[mazeNum].COUNT;
+    saveHead = HEAD;
   }
 }
 
@@ -21,5 +22,6 @@ void restartCheckpoint() {
   }
   maze[mazeNum].COUNT = chkCount;
   HEAD = startHead;
+  orient(saveHead);
   waitForSignal();
 }

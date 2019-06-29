@@ -118,7 +118,6 @@ void loop() {
       maze[mazeNum].cell[maze[mazeNum].COUNT].y = maze[mazeNum].gridY;
 
       // set walls
-      // if (maze[mazeNum].cell[maze[mazeNum].COUNT].testCount < 1)
       setWalls();
 
       // victim check code
@@ -127,30 +126,29 @@ void loop() {
         Lvictim = false;
         Rvictim = false;
       }
+
       if (Rvictim) {
         dispence(1, 1);
         Lvictim = false;
         Rvictim = false;
       }
+
       switch (VisualVictim()) {
       case 'H':
         dispence(2, -1);
-        Lvictim = false;
-        Rvictim = false;
         break;
       case 'S':
         dispence(1, -1);
-        Lvictim = false;
-        Rvictim = false;
         break;
       case 'U':
         dispence(0, -1);
-        Lvictim = false;
-        Rvictim = false;
         break;
       default:
       }
+      Lvictim = false;
+      Rvictim = false;
 
+      // store store checkpoint of available
       storeCheckpoint();
 
       if (!digitalRead(Chkpt)) {
@@ -242,7 +240,7 @@ void loop() {
         }
       } else { // else backtrack to last node
         clearScreen();
-        String msg = "X/Y:";
+        String msg = "B/T:";
         msg += maze[mazeNum].gridX;
         msg += ",";
         msg += maze[mazeNum].gridY;

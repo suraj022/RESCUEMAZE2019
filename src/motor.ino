@@ -287,12 +287,12 @@ void offsetStraight(int value) {
 }
 
 bool ramp() {
-  if (accX > 25) {
+  if (accX > RAMPANGLE - 10) {
     // moveMotor(100, 100);
     // delay(300);
     bumpcheck = false;
     int I = 0;
-    while (accX > 25) {
+    while (accX > RAMPANGLE - 10) {
       int pwm = 95;
       int offset = 0;
       // offset = -accY * 1.2;
@@ -316,7 +316,7 @@ bool ramp() {
     // }
     bumpcheck = true;
     return true;
-  } else if (accX < -25) {
+  } else if (accX < -(RAMPANGLE - 10)) {
     // moveMotor(100, 100);
     // delay(300);
     bumpcheck = false;
@@ -324,7 +324,7 @@ bool ramp() {
       pixels.setPixelColor(i, pixels.Color(0, 0, 20));
       pixels.show();
     }
-    while (accX < -25) {
+    while (accX < -(RAMPANGLE - 10)) {
       int pwm = 90;
       int offset = 0;
       // offset = -accY * 1.2;

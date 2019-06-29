@@ -13,6 +13,9 @@
 // uncomment the following to enable accelerometer calibration
 //#define ACCELCHECK
 
+// Maze ramp angle
+#define RAMPANGLE 32
+
 // Vistims temperature
 #define victimTemperature 29
 
