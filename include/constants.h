@@ -16,7 +16,7 @@
 // Maze ramp angle
 #define RAMPANGLE 32
 
-// Vistims temperature
+// Victims temperature
 #define victimTemperature 29
 
 // define i2c address of mpu6050 imu
@@ -51,9 +51,9 @@
 
 // colour Values
 #define COLOURPIN A4
-#define SILVER 837
-#define NORMAL 898
-#define HAZARD 941
+#define SILVER 671
+#define NORMAL 837
+#define HAZARD 1009
 
 // sensor numbers for TOF sensors
 #define LEFT 0

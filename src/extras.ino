@@ -66,17 +66,17 @@ void colourLoop() {
   int val = analogRead(COLOURPIN);
   val = kalmanColour.updateEstimate(val);
   switch (val) {
-  case (SILVER - 10)...(SILVER + 10):
+  case (SILVER - 50)...(SILVER + 50):
     silverFlag = true;
     whiteFlag = false;
     blackFlag = false;
     break;
-  case (NORMAL - 10)...(NORMAL + 10):
+  case (NORMAL - 50)...(NORMAL + 50):
     silverFlag = false;
     whiteFlag = true;
     blackFlag = false;
     break;
-  case (HAZARD - 10)...(HAZARD + 10):
+  case (HAZARD - 50)...(HAZARD + 50):
     silverFlag = false;
     whiteFlag = false;
     blackFlag = true;
@@ -91,14 +91,25 @@ void CalibrationProcess() {
   while (1) {
     int val = analogRead(COLOURPIN);
     val = kalmanColour.updateEstimate(val);
+    clearScreen();
+    displayTxt(0, 0, "Colour");
+    displayTxt(0, 21, val);
     SerialUSB.println(val);
     delay(100);
   }
 #endif
 #ifdef TEMPCHECK
   while (1) {
-    int val = mlxR.readObjectTempC();
-    SerialUSB.println(val);
+    int val = mlxL.readObjectTempC();
+    int val1 = mlxL.readAmbientTempC();
+    int val2 = mlxR.readObjectTempC();
+    int val3 = mlxR.readAmbientTempC();
+    clearScreen();
+    displayTxt(0, 0, "tempL");
+    displayTxt(0, 21, val);
+    SerialUSB.print(val - val1);
+    SerialUSB.print(",");
+    SerialUSB.println(val2 - val3);
     delay(100);
   }
 #endif

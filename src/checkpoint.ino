@@ -12,16 +12,21 @@ void storeCheckpoint() {
     clearPixels();
     chkCount = maze[mazeNum].COUNT;
     saveHead = HEAD;
+    saveX = maze[mazeNum].gridX;
+    saveY = maze[mazeNum].gridY;
   }
 }
 
 void restartCheckpoint() {
-  for (int i = maze[mazeNum].COUNT; i > chkCount; i--) {
+  waitForSignal();
+  for (int i = maze[mazeNum].COUNT + 1; i > chkCount; i--) {
     tile tmp;
     maze[mazeNum].cell[i] = tmp;
   }
   maze[mazeNum].COUNT = chkCount;
+  maze[mazeNum].gridX = saveX;
+  maze[mazeNum].gridY = saveY;
+  yaw = 0;
   HEAD = startHead;
   orient(saveHead);
-  waitForSignal();
 }

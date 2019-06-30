@@ -32,7 +32,7 @@ void moveStraight(int pos) {
   yaw = 0;
   delay(50);
   if ((desiredpos - encoderpos) > 5) {
-    while ((desiredpos - encoderpos) > 10) {
+    while ((desiredpos - encoderpos) > 10 && accX < 20) {
       encoderpos = (encoderposL + encoderposR) / 2;
       int pwm = constrain((desiredpos - encoderpos), 0, MAXSPEED);
       int err = 0;
@@ -107,7 +107,7 @@ void moveStraight(int pos) {
       yield();
     }
   } else {
-    while ((encoderpos - desiredpos) > 5) {
+    while ((encoderpos - desiredpos) > 5 && accX < 20) {
       encoderpos = (encoderposL + encoderposR) / 2;
       int pwm = constrain((encoderpos - desiredpos), 0, MAXSPEED / 1.5);
       int err = yaw;
@@ -126,12 +126,13 @@ void moveStraight(int pos) {
   I = 0;
   D = 0;
   lastError = 0;
-  moveMotor(-50, -50);
-  delay(50);
-  moveMotor(0, 0); // stop motors
-  delay(300);
-  lastError = 0;
-  offsetStraight(125);
+  if (accX < 20) {
+    moveMotor(-50, -50);
+    delay(50);
+    moveMotor(0, 0); // stop motors
+    delay(300);
+    offsetStraight(125);
+  }
   if (pos > 0) {
     switch (HEAD) {
     case 0:
@@ -198,9 +199,11 @@ void turnBot(int angle, int dir, bool align) {
     err = (ANGLE - abs(yaw));
     if (err < 5)
       err *= 2;
-    if (abs(pitch) > 3.2) {
+    if (abs(accX) > 4) {
+      moveMotor(dir * 150, -dir * 150);
       beep(50);
-      delay(80);
+      moveMotor(0, 0);
+      delay(50);
     }
     Pr = err;
     // Ir += err * 0.001;
@@ -287,26 +290,27 @@ void offsetStraight(int value) {
 }
 
 bool ramp() {
-  if (accX > RAMPANGLE - 10) {
-    // moveMotor(100, 100);
-    // delay(300);
+  if (accX > RAMPANGLE - 5) {
+    moveMotor(100, 100);
+    delay(1000);
     bumpcheck = false;
     int I = 0;
-    while (accX > RAMPANGLE - 10) {
+    while (accX > RAMPANGLE - 5) {
       int pwm = 95;
       int offset = 0;
       // offset = -accY * 1.2;
-      offset = 0.2 * (wallDistance - getDistance(LEFT));
-      I += 0.0003 * (wallDistance - getDistance(LEFT));
-      if (wallDistance - getDistance(LEFT) < 10)
-        I = 0;
-      offset -= I;
+      offset = 0.04 * (90 - getDistance(LEFT));
+      // I += 0.003 * (wallDistance - getDistance(LEFT));
+      // if (wallDistance - getDistance(LEFT) < 5)
+      // I = 0;
+      // offset -= I;
       moveMotor(pwm + offset, pwm - offset);
-      delay(5);
+      delay(2);
       yield();
+      // moveMotor(offset / 2, -offset / 2);
     }
     // moveMotor(-80, -80);
-    // delay(50);
+    // delay(80);
     moveMotor(0, 0);
     delay(1000);
     // if (getDistance(FRONT) < WALLDISTANCE) {
@@ -315,8 +319,9 @@ bool ramp() {
     //   offsetStraight(100);
     // }
     bumpcheck = true;
+    yaw = 0;
     return true;
-  } else if (accX < -(RAMPANGLE - 10)) {
+  } else if (accX < -(RAMPANGLE - 8)) {
     // moveMotor(100, 100);
     // delay(300);
     bumpcheck = false;
@@ -324,7 +329,7 @@ bool ramp() {
       pixels.setPixelColor(i, pixels.Color(0, 0, 20));
       pixels.show();
     }
-    while (accX < -(RAMPANGLE - 10)) {
+    while (accX < -(RAMPANGLE - 8)) {
       int pwm = 90;
       int offset = 0;
       // offset = -accY * 1.2;
@@ -344,6 +349,7 @@ bool ramp() {
     //   offsetStraight(100);
     //}
     bumpcheck = true;
+    yaw = 0;
     return true;
   }
   return false;

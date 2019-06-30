@@ -21,7 +21,7 @@ void servoMovement() {
   delay(10);
 }
 
-void dispence(int8 times, int8_t side) {
+void dispence(int8_t times, int8_t side) {
   moveMotor(-50, -50);
   delay(60);
   moveMotor(0, 0);

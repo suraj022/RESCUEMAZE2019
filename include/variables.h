@@ -67,6 +67,8 @@ MAZE maze[5];
 int8_t HEAD = startHead;
 
 int8_t saveHead = startHead;
+int8_t saveX = 0;
+int8_t saveY = 0;
 
 // maze number
 int8_t mazeNum = 0;

@@ -1,7 +1,7 @@
 
 char VisualVictim() {
   int32_t temp = 0;
-  char buff[CHAR_BUF] = {0};
+  char buff[128] = {0};
 
   Wire.requestFrom(0x12, 2);
   if (Wire.available() == 2) { // got length?

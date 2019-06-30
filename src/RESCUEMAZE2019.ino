@@ -13,13 +13,14 @@ TODO list-
 11. Implement colour sensor                 DONE
 12. Add Heated victim code to main loop
 13. Implement visual victim code
-14. Add visual victim code to main loop
+14. Add visual victim code to main loop			DONE
 15. Add ramp detection                      DONE
 16. Lack of progress switch
 17. Fix next tile detection                 DONE
 18. Ramp up return fix
-19. Increase led light birghtness
+19. Increase led light birghtness           DONE
 20. Redesign bumpers and side skirts
+
 ***************************************************/
 
 /***************************************************
@@ -121,19 +122,19 @@ void loop() {
       setWalls();
 
       // victim check code
-      if (Lvictim) {
-        dispence(1, -1);
-        Lvictim = false;
-        Rvictim = false;
-      }
+      /* if (Lvictim) {
+         dispence(1, -1);
+         Lvictim = false;
+         Rvictim = false;
+       }
 
-      if (Rvictim) {
-        dispence(1, 1);
-        Lvictim = false;
-        Rvictim = false;
-      }
-
-      switch (VisualVictim()) {
+       if (Rvictim) {
+         dispence(1, 1);
+         Lvictim = false;
+         Rvictim = false;
+       }
+ */
+      /*switch (VisualVictim()) {
       case 'H':
         dispence(2, -1);
         break;
@@ -144,12 +145,16 @@ void loop() {
         dispence(0, -1);
         break;
       default:
-      }
-      Lvictim = false;
-      Rvictim = false;
+        break;
+      }*/
 
       // store store checkpoint of available
       storeCheckpoint();
+
+      // set heading
+      bool headingResult = setHeading();
+      bool nextTileFound = nextTile(maze[mazeNum].cell[maze[mazeNum].COUNT].x,
+                                    maze[mazeNum].cell[maze[mazeNum].COUNT].y);
 
       if (!digitalRead(Chkpt)) {
         clearPixels();
@@ -161,12 +166,8 @@ void loop() {
         clearScreen();
         displayTxt(0, 0, "RESTART!");
         restartCheckpoint();
+        headingResult = true;
       }
-
-      // set heading
-      bool headingResult = setHeading();
-      bool nextTileFound = nextTile(maze[mazeNum].cell[maze[mazeNum].COUNT].x,
-                                    maze[mazeNum].cell[maze[mazeNum].COUNT].y);
 
       bool condition = false;
       bool condition1 = false;
@@ -283,6 +284,7 @@ void loop() {
       moveMotor(100, 100);
       ramp();
       mazeNum--;
+      offsetStraight(125);
       maze[mazeNum].COUNT--;
       switch (HEAD) {
       case 0:
@@ -298,6 +300,7 @@ void loop() {
         maze[mazeNum].gridX--;
         break;
       }
+      moveMotor(0, 0);
     } else {
       mazeNum--;
     }
