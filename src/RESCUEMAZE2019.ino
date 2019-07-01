@@ -15,11 +15,11 @@ TODO list-
 13. Implement visual victim code
 14. Add visual victim code to main loop			DONE
 15. Add ramp detection                      DONE
-16. Lack of progress switch
+16. Lack of progress switch                 DONE
 17. Fix next tile detection                 DONE
-18. Ramp up return fix
+18. Ramp up return fix                      DONE
 19. Increase led light birghtness           DONE
-20. Redesign bumpers and side skirts
+20. Redesign bumpers and side skirts        CANCELLED
 
 ***************************************************/
 
@@ -227,7 +227,7 @@ void loop() {
           delay(100);
           clearPixels();
           moveStraight(-300);
-          offsetStraight(125);
+          offsetStraight(125, false);
           delay(200);
         } else {
           maze[mazeNum].COUNT++;
@@ -282,9 +282,10 @@ void loop() {
       // HEAD = tmpHead;
       // moveStraight(300);
       moveMotor(100, 100);
+      delay(1000);
       ramp();
       mazeNum--;
-      offsetStraight(125);
+      offsetStraight(125,false);
       maze[mazeNum].COUNT--;
       switch (HEAD) {
       case 0:

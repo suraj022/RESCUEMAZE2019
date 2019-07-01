@@ -4,9 +4,9 @@ void beginMLX() {
 }
 
 void MLXloop() {
-  if (mlxL.readObjectTempC() > 35)
+  if (mlxL.readObjectTempC() > victimTemperature)
     Lvictim = true;
-  if (mlxR.readObjectTempC() > 35)
+  if (mlxR.readObjectTempC() > victimTemperature)
     Rvictim = true;
   delay(10);
 }

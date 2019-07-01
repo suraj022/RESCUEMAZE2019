@@ -16,9 +16,9 @@ VL53L0X sensorR; // right
 // object for Servo on medkit dispencer
 Servo dispencer;
 
-SimpleKalmanFilter kalmanX(4, 3, 0.01);
-SimpleKalmanFilter kalmanY(4, 3, 0.01);
-SimpleKalmanFilter kalmanZ(4, 3, 0.01);
+SimpleKalmanFilter kalmanX(3, 3, 0.01);
+SimpleKalmanFilter kalmanY(3, 3, 0.01);
+SimpleKalmanFilter kalmanZ(3, 3, 0.01);
 SimpleKalmanFilter kalmanColour(3, 3, 0.01);
 
 // object for 0.96inch SSD1306 oled diplay

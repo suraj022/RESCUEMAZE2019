@@ -1,6 +1,6 @@
 void moveMotor(int L, int R) {
   if (L >= 0) {
-    analogWrite(LMF, L * 1.05);
+    analogWrite(LMF, L * 1.045);
     analogWrite(LMR, 0);
   } else {
     analogWrite(LMF, 0);
@@ -126,12 +126,12 @@ void moveStraight(int pos) {
   I = 0;
   D = 0;
   lastError = 0;
-  if (accX < 20) {
+  if (accX < RAMPANGLE / 3) {
     moveMotor(-50, -50);
     delay(50);
     moveMotor(0, 0); // stop motors
     delay(300);
-    offsetStraight(125);
+    offsetStraight(125,false);
   }
   if (pos > 0) {
     switch (HEAD) {
@@ -182,9 +182,9 @@ void turnBot(int angle, int dir, bool align) {
     flag = true;
   }
   if (getDistance(1) < WALLDISTANCE) {
-    offsetStraight(65);
+    offsetStraight(70,true);
   } else {
-    offsetStraight(105);
+    offsetStraight(110,true);
   }
   delay(10);
   moveMotor(0, 0);
@@ -199,11 +199,11 @@ void turnBot(int angle, int dir, bool align) {
     err = (ANGLE - abs(yaw));
     if (err < 5)
       err *= 2;
-    if (abs(accX) > 4) {
+    if (abs(pitch) > 4.5) {
       moveMotor(dir * 150, -dir * 150);
       beep(50);
       moveMotor(0, 0);
-      delay(50);
+      delay(100);
     }
     Pr = err;
     // Ir += err * 0.001;
@@ -239,12 +239,12 @@ void turnBot(int angle, int dir, bool align) {
   bumpcheck = true;
 }
 
-void offsetStraight(int value) {
-  if (getDistance(FRONT) > 8100) {
-    moveMotor(80, 80);
-    delay(100);
+void offsetStraight(int value, bool ifturning) {
+  if (getDistance(FRONT) > 8100 && !ifturning) {
+    // moveMotor(0, 80);
+    // delay(100);
+    moveStraight(120);
     moveMotor(0, 0);
-    return;
     return;
   }
   // yaw = 0;
@@ -290,29 +290,38 @@ void offsetStraight(int value) {
 }
 
 bool ramp() {
-  if (accX > RAMPANGLE - 5) {
+  if (accX > RAMPANGLE / 2.5) {
     moveMotor(100, 100);
-    delay(1000);
+    beep(500);
     bumpcheck = false;
     int I = 0;
-    while (accX > RAMPANGLE - 5) {
+    clearPixels();
+    for (int i = 2; i < 7; i++) {
+      pixels.setPixelColor(i, pixels.Color(10, 20, 5));
+      pixels.show();
+    }
+    while (accX > RAMPANGLE / 1.5) {
       int pwm = 95;
       int offset = 0;
       // offset = -accY * 1.2;
-      offset = 0.04 * (90 - getDistance(LEFT));
+      offset = 0.15 * (wallDistance - getDistance(LEFT));
       // I += 0.003 * (wallDistance - getDistance(LEFT));
-      // if (wallDistance - getDistance(LEFT) < 5)
+      // if (abs(wallDistance - getDistance(LEFT)) < 10)
+      // offset = 0;
       // I = 0;
       // offset -= I;
       moveMotor(pwm + offset, pwm - offset);
-      delay(2);
+      // delay(1);
       yield();
       // moveMotor(offset / 2, -offset / 2);
     }
+    clearPixels();
     // moveMotor(-80, -80);
     // delay(80);
     moveMotor(0, 0);
-    delay(1000);
+    // beep(300);
+    // CalibrateMPU6050_Acc(50);
+    // beep(300);
     // if (getDistance(FRONT) < WALLDISTANCE) {
     //   offsetStraight(55);
     // } else {
@@ -321,7 +330,7 @@ bool ramp() {
     bumpcheck = true;
     yaw = 0;
     return true;
-  } else if (accX < -(RAMPANGLE - 8)) {
+  } else if (accX < -RAMPANGLE / 2.5) {
     // moveMotor(100, 100);
     // delay(300);
     bumpcheck = false;
@@ -329,7 +338,7 @@ bool ramp() {
       pixels.setPixelColor(i, pixels.Color(0, 0, 20));
       pixels.show();
     }
-    while (accX < -(RAMPANGLE - 8)) {
+    while (accX < -RAMPANGLE / 1.2) {
       int pwm = 90;
       int offset = 0;
       // offset = -accY * 1.2;
@@ -339,10 +348,13 @@ bool ramp() {
       yield();
     }
     clearPixels();
-    // moveMotor(-80, -80);
-    // delay(50);
+    moveMotor(80, 80);
+    delay(500);
     moveMotor(0, 0);
-    delay(1000);
+    // beep(300);
+    // CalibrateMPU6050_Acc(50);
+    // beep(300);
+    // delay(1000);
     // if (getDistance(FRONT) < WALLDISTANCE) {
     //   offsetStraight(55);
     // } else {

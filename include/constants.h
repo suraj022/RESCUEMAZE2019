@@ -14,7 +14,7 @@
 //#define ACCELCHECK
 
 // Maze ramp angle
-#define RAMPANGLE 32
+#define RAMPANGLE 33
 
 // Victims temperature
 #define victimTemperature 29

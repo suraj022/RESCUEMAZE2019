@@ -93,7 +93,9 @@ void CalibrationProcess() {
     val = kalmanColour.updateEstimate(val);
     clearScreen();
     displayTxt(0, 0, "Colour");
-    displayTxt(0, 21, val);
+    String tmp = "";
+    tmp += val;
+    displayTxt(0, 21, tmp);
     SerialUSB.println(val);
     delay(100);
   }
@@ -106,17 +108,26 @@ void CalibrationProcess() {
     int val3 = mlxR.readAmbientTempC();
     clearScreen();
     displayTxt(0, 0, "tempL");
-    displayTxt(0, 21, val);
+    String tmp = "";
+    tmp += val;
+    displayTxt(0, 21, tmp);
     SerialUSB.print(val - val1);
     SerialUSB.print(",");
     SerialUSB.println(val2 - val3);
     delay(100);
+    yield();
   }
 #endif
 #ifdef ACCELCHECK
   while (1) {
+    clearScreen();
+    displayTxt(0, 0, "Accel");
+    String tmp = "";
+    tmp += accX;
+    displayTxt(0, 21, tmp);
     SerialUSB.println(accX);
     delay(10);
+    yield();
   }
 #endif
 }
