@@ -134,11 +134,35 @@ void CalibrationProcess() {
 #ifdef CAMCHECK
   while (1) {
     String tmp = "CAM: ";
-    tmp += VisualVictim();
-    clearScreen();
-    displayTxt(0, 21, tmp);
-    SerialUSB.println(accX);
+    String tmp2 = "";
+    // camLoop();
+    if (victim > 0) {
+      switch (victim) {
+      case 3:
+        tmp2 += "Harmed";
+        victim = 0;
+        break;
+      case 2:
+        tmp2 += "Stable";
+        victim = 0;
+        break;
+      case 1:
+        tmp2 += "Unharmed";
+        victim = 0;
+        break;
+      default:
+        break;
+      }
+      clearScreen();
+      displayTxt(0, 0, tmp);
+      displayTxt(0, 21, tmp2);
+    } else {
+      clearScreen();
+      displayTxt(0, 0, tmp);
+      displayTxt(0, 21, "Nothing");
+    }
     delay(100);
+    yield();
   }
 #endif
 }

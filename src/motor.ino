@@ -66,7 +66,7 @@ void moveStraight(int pos) {
         bumpcheck = false;
         encoderbackupL = encoderposL;
         encoderbackupR = encoderposR;
-        moveMotor(0, 0);
+        moveMotor(-30, -30);
         delay(50);
         moveMotor(-40, -40);
         delay(500);
@@ -75,8 +75,9 @@ void moveStraight(int pos) {
         moveMotor(0, 0);
         delay(50);
         moveMotor(50, 60);
-        delay(350);
+        delay(400);
         moveMotor(0, 0);
+        delay(200);
         encoderposL = encoderbackupL;
         encoderposR = encoderbackupR;
         leftBumpFlag = false;
@@ -86,7 +87,7 @@ void moveStraight(int pos) {
         bumpcheck = false;
         encoderbackupL = encoderposL;
         encoderbackupR = encoderposR;
-        moveMotor(0, 0);
+        moveMotor(-30, -30);
         delay(50);
         moveMotor(-40, -40);
         delay(500);
@@ -95,8 +96,9 @@ void moveStraight(int pos) {
         moveMotor(0, 0);
         delay(50);
         moveMotor(60, 50);
-        delay(350);
+        delay(400);
         moveMotor(0, 0);
+        delay(200);
         encoderposL = encoderbackupL;
         encoderposR = encoderbackupR;
         leftBumpFlag = false;
@@ -131,7 +133,7 @@ void moveStraight(int pos) {
     delay(50);
     moveMotor(0, 0); // stop motors
     delay(300);
-    offsetStraight(125,false);
+    offsetStraight(125, false);
   }
   if (pos > 0) {
     switch (HEAD) {
@@ -182,9 +184,9 @@ void turnBot(int angle, int dir, bool align) {
     flag = true;
   }
   if (getDistance(1) < WALLDISTANCE) {
-    offsetStraight(70,true);
+    offsetStraight(70, true);
   } else {
-    offsetStraight(110,true);
+    offsetStraight(110, true);
   }
   delay(10);
   moveMotor(0, 0);
@@ -201,9 +203,9 @@ void turnBot(int angle, int dir, bool align) {
       err *= 2;
     if (abs(pitch) > 4.5) {
       moveMotor(dir * 150, -dir * 150);
-      beep(50);
+      beep(30);
       moveMotor(0, 0);
-      delay(100);
+      delay(10);
     }
     Pr = err;
     // Ir += err * 0.001;

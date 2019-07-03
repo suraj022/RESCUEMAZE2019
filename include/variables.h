@@ -74,6 +74,9 @@ int8_t saveY = 0;
 // maze number
 int8_t mazeNum = 0;
 
+// Nogo tiles (backup use only)
+// int8_t nogoIndex = 0, nogoX[20], nogoY[20];
+
 // Stored last checkpoint count
 int chkCount = 1;
 #endif

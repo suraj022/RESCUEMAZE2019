@@ -14,10 +14,13 @@
 //#define ACCELCHECK
 
 // uncomment the following to enable Camera calibration
-#define CAMCHECK
+//#define CAMCHECK
 
 // Maze ramp angle
 #define RAMPANGLE 33
+
+// Tile dimension
+#define TILELENGTH 300
 
 // Victims temperature
 #define victimTemperature 29

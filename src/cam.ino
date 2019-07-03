@@ -1,7 +1,7 @@
 
 char VisualVictim() {
   int32_t temp = 0;
-  char buff[128] = {0};
+  char buff[50] = {0};
 
   Wire.requestFrom(0x12, 2);
   if (Wire.available() == 2) { // got length?
@@ -31,7 +31,8 @@ char VisualVictim() {
 
 void camLoop() {
   if (victim == 0) {
-    switch (VisualVictim()) {
+    char tmp = VisualVictim();
+    switch (tmp) {
     case 'H':
       victim = 3;
       break;
@@ -45,6 +46,7 @@ void camLoop() {
       break;
     }
   }
+  // beep(10);
   delay(10);
   yield();
 }

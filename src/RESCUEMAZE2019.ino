@@ -11,8 +11,8 @@ TODO list-
 9. Visual victim Identification             DONE
 10. Turn 90 degree using mpu6050            DONE
 11. Implement colour sensor                 DONE
-12. Add Heated victim code to main loop
-13. Implement visual victim code
+12. Add Heated victim code to main loop			DONE
+13. Implement visual victim code            DONE
 14. Add visual victim code to main loop			DONE
 15. Add ramp detection                      DONE
 16. Lack of progress switch                 DONE
@@ -24,8 +24,8 @@ TODO list-
 ***************************************************/
 
 /***************************************************
-CHECK list-
-1. Notedown and set tile dimensions
+CHECK list for sensor calibration-
+1. Notedown and set TILELENGTH dimension
 2. Calibrate victim temperature
 3. Calculate brightness threshold in camera
 4. Calibrate 3 tile brightness values
@@ -101,7 +101,7 @@ void setup() {
 } // end setup part
 
 /***************************************************
-DFS algorithm check sequence
+DFS algorithm sequence
 0. update x, y coordinates of current tile
 1. set walls
 2. set heading
@@ -141,12 +141,12 @@ void loop() {
         victim = 0;
         delay(10);
         break;
-      case 3:
+      case 2:
         dispence(1, -1); // case for harmed victim
         victim = 0;
         delay(10);
         break;
-      case 3:
+      case 1:
         dispence(0, -1); // case for harmed victim
         victim = 0;
         delay(10);
@@ -171,7 +171,7 @@ void loop() {
           delay(100);
         }
         clearScreen();
-        displayTxt(0, 0, "RESTART!");
+        displayTxt(0, 0, "START!");
         restartCheckpoint();
         headingResult = true;
       }
@@ -221,7 +221,7 @@ void loop() {
         displayTxt(0, 42, msg);
 
         indicatePath(FRONT);
-        moveStraight(300);
+        moveStraight(TILELENGTH);
         ////////////////////////////////////////////////////
         // check for black tile
         if (blackFlag) {
@@ -272,7 +272,7 @@ void loop() {
         tile tmp;
         maze[mazeNum].cell[maze[mazeNum].COUNT] = tmp;
         indicatePath(FRONT);
-        moveStraight(300);
+        moveStraight(TILELENGTH);
         maze[mazeNum].COUNT--;
       }
       yield();
@@ -287,7 +287,7 @@ void loop() {
       //   tmpHead += 4;
       // orient(tmpHead);
       // HEAD = tmpHead;
-      // moveStraight(300);
+      // moveStraight(TILELENGTH);
       moveMotor(100, 100);
       delay(1000);
       ramp();
