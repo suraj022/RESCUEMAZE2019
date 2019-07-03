@@ -88,6 +88,7 @@ void setup() {
   Scheduler.startLoop(IMUloop);    // Calculate Gyro roll pitch and yaw reading
   Scheduler.startLoop(bumpLoop);   // detect left and right bumps
   Scheduler.startLoop(colourLoop); // Constantly detect tile colour
+  Scheduler.startLoop(camLoop);    // Get victim values from camera
 
   // Start Calibration process if enabled in constants
   CalibrationProcess();
@@ -122,31 +123,37 @@ void loop() {
       setWalls();
 
       // victim check code
-      /* if (Lvictim) {
-         dispence(1, -1);
-         Lvictim = false;
-         Rvictim = false;
-       }
-
-       if (Rvictim) {
-         dispence(1, 1);
-         Lvictim = false;
-         Rvictim = false;
-       }
- */
-      /*switch (VisualVictim()) {
-      case 'H':
-        dispence(2, -1);
-        break;
-      case 'S':
+      if (Lvictim) {
         dispence(1, -1);
+        Lvictim = false;
+        Rvictim = false;
+      }
+
+      if (Rvictim) {
+        dispence(1, 1);
+        Lvictim = false;
+        Rvictim = false;
+      }
+
+      switch (victim) {
+      case 3:
+        dispence(2, -1); // case for harmed victim
+        victim = 0;
+        delay(10);
         break;
-      case 'U':
-        dispence(0, -1);
+      case 3:
+        dispence(1, -1); // case for harmed victim
+        victim = 0;
+        delay(10);
+        break;
+      case 3:
+        dispence(0, -1); // case for harmed victim
+        victim = 0;
+        delay(10);
         break;
       default:
         break;
-      }*/
+      }
 
       // store store checkpoint of available
       storeCheckpoint();
@@ -285,7 +292,7 @@ void loop() {
       delay(1000);
       ramp();
       mazeNum--;
-      offsetStraight(125,false);
+      offsetStraight(125, false);
       maze[mazeNum].COUNT--;
       switch (HEAD) {
       case 0:

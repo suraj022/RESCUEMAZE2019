@@ -25,5 +25,26 @@ char VisualVictim() {
       Wire.read(); // Toss garbage bytes.
   }
   delay(50);
+  yield();
   return buff[0];
+}
+
+void camLoop() {
+  if (victim == 0) {
+    switch (VisualVictim()) {
+    case 'H':
+      victim = 3;
+      break;
+    case 'S':
+      victim = 2;
+      break;
+    case 'U':
+      victim = 1;
+      break;
+    default:
+      break;
+    }
+  }
+  delay(10);
+  yield();
 }

@@ -13,6 +13,9 @@
 // uncomment the following to enable accelerometer calibration
 //#define ACCELCHECK
 
+// uncomment the following to enable Camera calibration
+#define CAMCHECK
+
 // Maze ramp angle
 #define RAMPANGLE 33
 

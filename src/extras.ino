@@ -130,4 +130,15 @@ void CalibrationProcess() {
     yield();
   }
 #endif
+
+#ifdef CAMCHECK
+  while (1) {
+    String tmp = "CAM: ";
+    tmp += VisualVictim();
+    clearScreen();
+    displayTxt(0, 21, tmp);
+    SerialUSB.println(accX);
+    delay(100);
+  }
+#endif
 }
